@@ -1,6 +1,15 @@
 RoadMap.md
 .vscode/
 
+# Dependencias y artefactos de build
+node_modules/
+dist/
+coverage/
+.astro/
+.vercel/
+*.tsbuildinfo
+*.log
+
 # Variables de entorno (claves)
 .env
 
