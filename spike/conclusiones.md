@@ -53,7 +53,7 @@ Script: `spike/aemet.ts` (se ejecuta con `node --env-file=.env`).
 - **No sirve como fuente principal**: la nota necesita direcciones y valores numéricos, que solo da Open-Meteo.
 - **Sí sirve como complemento:** temperatura del agua del Mar Menor y, quizá, contraste o "segunda opinión" en la ficha de las 30 playas que cubre.
 
-## 3. Censo de aguas de baño y guía de playas (2026-10-22, en curso)
+## 3. Censo de aguas de baño y guía de playas (2026-10-22)
 
 ### Certificados de las webs del Gobierno (afecta a MITECO y MAPA)
 - Usan certificados de la FNMT, cuyas raíces **no vienen** en el almacén de Ubuntu ni en el de Node. Sin ellas, `curl` y `fetch` fallan con error de certificado.
@@ -71,7 +71,20 @@ Script: `spike/aemet.ts` (se ejecuta con `node --env-file=.env`).
 - **Aviso: la descarga tiene un captcha antibots (ALTCHA).** No se puede automatizar. Como la publicación es anual, se descarga a mano una vez al año y el import trabaja con el fichero local.
 - El servicio WMS solo da imágenes del mapa. No hay WFS.
 - Licencia: uso libre y gratuito citando al Ministerio como autor.
-- Pendiente: ver los campos y cuántas zonas hay en Murcia, cuando se descargue el fichero.
+
+#### Contenido (script: `spike/censo.ts`, lector de shapefile sin dependencias)
+- Shapefile de puntos en **WGS84 (grados)** y UTF-8. 2.304 zonas en toda España y 31 campos, casi todos de metadatos INSPIRE.
+- Campos útiles: `localId` (código europeo de la zona, estable entre años), `nameText` (nombre), coordenadas, `spZoneType` (costera, de transición, de río…), `wEvolution` y `predecesId` (cambios de código respecto al año anterior) y `link` (ficha en Náyade).
+- **Sin campo de municipio, pero el código lo lleva dentro:** `ES620M` + código INE del municipio (3 dígitos) + número. `ES620` es el código NUTS de Murcia.
+- **83 zonas en Murcia, todas costeras:** Cartagena 32, Águilas 13, San Javier 13, Mazarrón 10, Los Alcázares 6, San Pedro del Pinatar 6, Lorca 2 y La Unión 1. AEMET solo cubre 30.
+- Una zona es un **punto de muestreo** (sufijo `PM1`), no exactamente una playa. Los Nietos y Los Urrutias tienen dos puntos (`PM1` y `PM2`).
+- Nombres en mayúsculas y con prefijo "PLAYA". Una tilde llega rota en `nameText` ("CARRI?N"). `nameTxtInt` es la versión sin tildes.
+- **Aviso: no incluye la calidad del agua.** Solo enlaza a la ficha de Náyade. La calidad por temporada (tabla `calidad_agua`) tendrá que salir de otra fuente: Náyade o los informes de la EEA.
+- **Aviso: hay playas conocidas que no están en el censo**, como Calblanque (la zona más cercana a la Calblanque de AEMET está a 2 km). El censo solo recoge las zonas vigiladas oficialmente, así que el catálogo necesitará otra fuente para calas y playas no censadas (OpenStreetMap).
+
+#### Cruce con AEMET
+- Emparejar por la zona más cercana **no basta**: 26 de las 30 quedan a menos de 500 m, pero hay errores. La Colonia y Poniente (Águilas) salen cruzadas, y El Espejo y Manzanares caen en el mismo punto.
+- Hará falta emparejar por nombre y distancia, con una tabla de correspondencias revisada a mano.
 
 ### Guía de playas
 - **No se encuentra como dato abierto descargable.** La app de playas del Ministerio está retirada (según datos.gob.es) y la página de la guía no ofrece ficheros.
