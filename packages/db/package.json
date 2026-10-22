@@ -1,0 +1,13 @@
+{
+  "name": "@playa-hoy/db",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Esquema de Drizzle, migraciones y consultas a PostgreSQL con PostGIS",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  }
+}

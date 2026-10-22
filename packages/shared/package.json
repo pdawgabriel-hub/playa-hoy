@@ -1,0 +1,13 @@
+{
+  "name": "@playa-hoy/shared",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Esquemas Zod y tipos compartidos entre la API, la web y los jobs",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  }
+}
