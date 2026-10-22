@@ -22,3 +22,33 @@ Script: `spike/open-meteo.ts`. Seis playas de prueba en una sola petición por A
 
 ### Pendiente de confirmar en la documentación
 - Condiciones de uso: gratis para uso no comercial con límite diario de llamadas. Licencia de los datos CC BY 4.0, con atribución obligatoria.
+
+## 2. AEMET OpenData, predicción de playas (2026-10-22)
+
+Script: `spike/aemet.ts` (se ejecuta con `node --env-file=.env`).
+
+### Cómo funciona
+- **Listado de playas:** CSV público con código, nombre, municipio y coordenadas en grados, minutos y segundos (`Playas_codigos.csv`, en ISO-8859-15).
+- **Predicción:** `GET /prediccion/especifica/playa/{id}` con la clave en la cabecera `api_key`. Devuelve una URL temporal (`datos`) y hay que hacer una **segunda petición** para descargar el contenido. Es decir, 2 llamadas por playa.
+- **Codificación:** ISO-8859-15. Hay que decodificarla bien o se rompen las tildes.
+- ⚠️ **Límite de peticiones:** tras unas 40 llamadas en menos de un minuto responde `429`. Hacen falta pausas y reintentos.
+- **Licencia:** uso y reproducción autorizados citando a AEMET como autora.
+
+### Cobertura
+- **Solo 30 playas en Murcia**: Águilas 6, Cartagena 7, Lorca 1, Mazarrón 5, San Javier 4, San Pedro del Pinatar 3, Los Alcázares 3 y La Unión 1. El censo tendrá muchas más.
+- 🆕 **La Unión** (playa del Lastre, Portmán) es municipio costero y faltaba en la lista del RoadMap.
+
+### Contenido: poco útil para la nota
+- **Solo 3 días** (hoy, mañana y pasado), con dos valores por día (mañana y tarde: `f1`/`f2`).
+- **Viento y oleaje solo como categoría** (flojo/moderado, débil…). **No hay dirección ni valores numéricos**, así que no sirven para el cálculo de orientación.
+- Cielo por categoría, temperatura máxima, sensación térmica, **índice UV máximo** y **temperatura del agua** (entera, en °C).
+- Las claves vienen duplicadas con distinta capitalización (`tMaxima`/`tmaxima`, `tAgua`/`tagua`).
+
+### Lo valioso: temperatura del agua del Mar Menor
+- AEMET **sí distingue la laguna**: Los Urrutias, Colón, Mistral, Villananitos, Punta Calera, El Espejo y Manzanares dan **20 °C**, frente a 23-25 °C en el Mediterráneo.
+- ⚠️ **Corrige una suposición del RoadMap:** el Mar Menor no siempre está "más templado". Al ser poco profundo, en verano está más caliente y en otoño o invierno más frío que el Mediterráneo.
+- Sospechoso: el valor es idéntico (20) en todas las playas de la laguna y en los 3 días. Puede ser un valor climatológico o de baja resolución. Hay que vigilarlo varios días.
+
+### Uso propuesto
+- **No sirve como fuente principal**: la nota necesita direcciones y valores numéricos, que solo da Open-Meteo.
+- **Sí sirve como complemento:** temperatura del agua del Mar Menor y, quizá, contraste o "segunda opinión" en la ficha de las 30 playas que cubre.
