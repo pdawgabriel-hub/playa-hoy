@@ -89,3 +89,30 @@ Script: `spike/aemet.ts` (se ejecuta con `node --env-file=.env`).
 ### Guía de playas
 - **No se encuentra como dato abierto descargable.** La app de playas del Ministerio está retirada (según datos.gob.es) y la página de la guía no ofrece ficheros.
 - Alternativa a probar en la fase 3: etiquetas de OpenStreetMap (`natural=beach` con `supervised`, `dog`, `wheelchair`, `nudism`…). Overpass exige un User-Agent identificado (sin él devuelve 406) y estaba saturado (502) al probarlo.
+
+## 4. Histórico de Open-Meteo (2026-10-22)
+
+Script: `spike/open-meteo-historico.ts`. Punto de prueba: Cabo de Palos. Se pidió un día de cada época y se contaron los huecos.
+
+### Qué hay y desde cuándo
+
+| Datos | API y modelo | Desde | Malla | Retraso |
+|---|---|---|---|---|
+| Viento, temperatura del aire y nubes | `archive` (reanálisis, por defecto) | **1940** | ~9 km | Al día (con datos de hace 3 días) |
+| Lo mismo | `archive`, `models=era5` | 1940 | 0,25° (~25 km) | Unos 5 días |
+| **Oleaje** | `marine` por defecto | **octubre de 2021** | ~9 km (la misma que la previsión) | Al día |
+| **Temperatura del agua** | `marine` por defecto | **enero de 2023** | ~9 km | Al día |
+| Oleaje | `marine`, `models=era5_ocean` | ~1950 (1940 vacío, 1960 sí) | 0,5° (~50 km; la celda queda a 20 km de la costa) | Unos 5 días |
+| Oleaje | `ecmwf_wam025` / `meteofrance_wave` | 2024 / 2022 | 0,25° / ~9 km | - |
+| Previsiones antiguas (la mejor de cada momento) | `historical-forecast` | 2016 según la API, **con datos reales desde 2017-2018** | ~2 km | - |
+| **Previsiones con antelación** (`_previous_day1` … `_previous_day7`) | `previous-runs` | **2024** (entre julio de 2023 y julio de 2024) | ~2 km | - |
+
+- El reanálisis (`archive`) **no da temperatura del agua**. `era5_ocean` da oleaje pero tampoco temperatura del agua.
+- La API marina también acepta variables `_previous_dayN` (por ejemplo, `wave_height_previous_day1`).
+
+### Consecuencias para el proyecto
+- **Estadísticas de viento (fase 11):** sin problema, más de 80 años de datos.
+- **Días buenos por playa y mes:** necesitan el oleaje a la misma resolución que la previsión, que solo existe **desde octubre de 2021**. Son 5 veranos (2022-2026): suficiente para porcentajes por mes, con la advertencia de que es una muestra corta. `era5_ocean` llega más atrás, pero su malla de 50 km no distingue playas.
+- **Aviso: tendencia de la temperatura del agua:** solo hay datos **desde 2023** (4 años), que no bastan para hablar de tendencia. Opciones: (a) mostrar solo la media por mes, sin tendencia; (b) buscar un reanálisis de temperatura del mar más largo, como Copernicus Marine (desde 1982, requiere cuenta gratuita). Pendiente de decidir.
+- **Fiabilidad de la previsión (fase 12): buena noticia.** `previous-runs` da lo que se predijo con 1 a 7 días de antelación desde 2024, también para el oleaje. Se puede medir el error **sin esperar meses** a acumular nuestras propias emisiones. Faltan las observaciones reales (paso 5).
+- Ingesta del histórico: una petición por punto puede cubrir un rango largo de fechas (`start_date`/`end_date`), así que rellenarlo cuesta pocas llamadas.
