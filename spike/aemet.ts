@@ -65,12 +65,12 @@ for (const playa of playas) {
     } catch (e) {
       const mensaje = (e as Error).message;
       if (mensaje.includes("HTTP 429") && intento < 3) {
-        console.log(`  … 429 en ${playa.nombre}, esperando 60 s`);
+        console.log(`  429 en ${playa.nombre}, esperando 60 s`);
         await esperar(60_000);
         continue;
       }
       errores++;
-      console.log(`  ✗ ${playa.nombre}: ${mensaje}`);
+      console.log(`  ERROR ${playa.nombre}: ${mensaje}`);
       break;
     }
   }
