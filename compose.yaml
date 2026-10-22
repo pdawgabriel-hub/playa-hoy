@@ -1,0 +1,27 @@
+# PostgreSQL con PostGIS para desarrollo y tests: pnpm db:up (ver README).
+# En producción la base de datos está en Neon; esto solo se usa en local y en CI.
+# El puerto solo se abre en 127.0.0.1 y se puede cambiar con DB_PORT.
+
+name: playa-hoy
+
+services:
+  db:
+    # Misma versión mayor que en Neon: PostgreSQL 18 con PostGIS 3.6
+    image: postgis/postgis:18-3.6
+    environment:
+      POSTGRES_USER: playa
+      POSTGRES_PASSWORD: playa
+      POSTGRES_DB: playahoy
+    ports:
+      - "127.0.0.1:${DB_PORT:-5435}:5432"
+    volumes:
+      # Desde PostgreSQL 18 los datos van en un subdirectorio por versión de /var/lib/postgresql
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "playa", "-d", "playahoy"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  db-data:
