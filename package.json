@@ -4,7 +4,9 @@
   "private": true,
   "description": "Recomendador de playas de la Región de Murcia según viento, oleaje, orientación y plan",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "typecheck": "pnpm -r --if-present typecheck"
+  },
   "engines": {
     "node": ">=22.18"
   },
@@ -15,5 +17,8 @@
       "onFail": "download"
     }
   },
-  "packageManager": "pnpm@12.15.0"
+  "packageManager": "pnpm@12.15.0",
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
 }
