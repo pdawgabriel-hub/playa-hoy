@@ -116,3 +116,35 @@ Script: `spike/open-meteo-historico.ts`. Punto de prueba: Cabo de Palos. Se pidi
 - **Aviso: tendencia de la temperatura del agua:** solo hay datos **desde 2023** (4 años), que no bastan para hablar de tendencia. Opciones: (a) mostrar solo la media por mes, sin tendencia; (b) buscar un reanálisis de temperatura del mar más largo, como Copernicus Marine (desde 1982, requiere cuenta gratuita). Pendiente de decidir.
 - **Fiabilidad de la previsión (fase 12): buena noticia.** `previous-runs` da lo que se predijo con 1 a 7 días de antelación desde 2024, también para el oleaje. Se puede medir el error **sin esperar meses** a acumular nuestras propias emisiones. Faltan las observaciones reales (paso 5).
 - Ingesta del histórico: una petición por punto puede cubrir un rango largo de fechas (`start_date`/`end_date`), así que rellenarlo cuesta pocas llamadas.
+
+## 5. Boyas y estaciones con datos medidos (2026-10-22)
+
+### Boyas (Puertos del Estado)
+- **Solo hay una plataforma fija cerca: la boya de aguas profundas de Cabo de Palos** (red REDEXT, código WMO 6100417, en 37,65 N 0,31 O, **unos 33 km mar adentro** al este del cabo). Mide oleaje, viento y temperatura del agua, con datos desde 2018.
+- No hay boyas costeras (REDCOS) ni mareógrafos de Puertos del Estado en Murcia. Las demás plataformas del catálogo son boyas a la deriva que pasaron unos meses por la zona, termosalinógrafos de barcos y una estación de río (Rojales, Segura).
+- **Cómo acceder a sus datos:**
+  - El THREDDS de Puertos del Estado (`opendap.puertos.es`) solo publica mareógrafos, radares y modelos, no boyas.
+  - EMODnet Physics la lista en su catálogo (ERDDAP de metadatos), pero sus mediciones no se pueden consultar por la API.
+  - **Vía oficial: Copernicus Marine In Situ** (producto del Mediterráneo, un fichero NetCDF por plataforma). **Requiere cuenta gratuita.** No probado.
+- Limitación: al estar a 33 km de la costa, sirve para contrastar el oleaje mar adentro de la previsión, no lo que llega a cada playa. Encaja con la previsión de la celda marina de La Manga y Cabo de Palos.
+
+### Estaciones meteorológicas (AEMET OpenData)
+Script: `spike/aemet-observacion.ts`. `GET /observacion/convencional/todas`, con la misma clave y el mismo sistema de dos pasos que la predicción.
+- Datos **horarios** de las **últimas 24 horas** de todas las estaciones de España (10.611 registros). Con una sola llamada están todas.
+- **Cinco estaciones útiles en la costa de Murcia**, con viento medio (`vv`, m/s), dirección (`dv`), racha (`vmax`) y temperatura (`ta`):
+
+| Estación | Código | Altitud | Sirve para |
+|---|---|---|---|
+| Águilas | 7002Y | 32 m | Calas de Águilas |
+| Mazarrón/Las Torres | 7007Y | 66 m | Bahía de Mazarrón (algo hacia el interior) |
+| Cartagena (puerto) | 7012X | 2 m | Costa de Cartagena |
+| Cartagena/Salinas Cabo de Palos | 7019X | 2,5 m | La Manga y Cabo de Palos |
+| Murcia/San Javier (aeropuerto) | 7031X | 4 m | Mar Menor |
+
+- Las demás de la zona (Lorca, Totana, Fuente Álamo, Alhama…) están en el interior y no sirven para medir el viento en la playa.
+- **Aviso: solo guarda 24 horas.** Para tener histórico hay que **descargarlas nosotros al menos una vez al día** y acumularlas en la tabla `observaciones`. AEMET tiene valores climatológicos diarios de años anteriores, pero son diarios (viento medio y racha máxima), no horarios.
+- No miden oleaje ni temperatura del agua.
+
+### Consecuencias para la fase 12 (fiabilidad)
+- **Viento: viable.** Previsiones con antelación de Open-Meteo (`previous-runs`, desde 2024) frente a las 5 estaciones costeras de AEMET. El histórico de observaciones empieza el día en que empiece nuestra ingesta, así que conviene **activar la descarga de observaciones cuanto antes** (en la fase 4), aunque la fase 12 llegue mucho después.
+- **Oleaje y temperatura del agua: solo con la boya de Cabo de Palos**, y para eso hace falta la cuenta de Copernicus Marine. Pendiente de decidir.
