@@ -1,0 +1,19 @@
+{
+  "name": "@playa-hoy/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "API pública de playa·hoy (Hono)",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.ts",
+    "start": "node src/server.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@hono/node-server": "2.1.5",
+    "hono": "4.13.13"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2"
+  }
+}

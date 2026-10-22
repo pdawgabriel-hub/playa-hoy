@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Vite resuelve los módulos como un bundler, no como Node.
+    "module": "preserve",
+    "moduleResolution": "bundler"
+  },
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"]
+}

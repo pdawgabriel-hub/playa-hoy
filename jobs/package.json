@@ -1,0 +1,10 @@
+{
+  "name": "@playa-hoy/jobs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Ingesta de datos, cálculo de notas y estadísticas (scripts para GitHub Actions)",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  }
+}

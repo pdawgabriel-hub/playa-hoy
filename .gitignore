@@ -1,5 +1,8 @@
 RoadMap.md
 .vscode/
+.oxlintrc.json
+.prettierignore
+.prettierrc.json
 
 # Dependencias y artefactos de build
 node_modules/
