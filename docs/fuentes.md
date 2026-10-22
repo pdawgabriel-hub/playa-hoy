@@ -4,17 +4,17 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 
 ## Resumen
 
-| Fuente | Uso en playa·hoy | Acceso | Licencia | Riesgo principal |
-|---|---|---|---|---|
-| [Open-Meteo Marine](#open-meteo-marine) | Oleaje y temperatura del agua (previsión e histórico) | API sin clave | CC BY 4.0, uso no comercial | Malla de ~9 km; no ve el Mar Menor |
-| [Open-Meteo Forecast](#open-meteo-forecast) | Viento, aire y nubes (previsión) | API sin clave | CC BY 4.0, uso no comercial | El resultado cambia mucho según la celda elegida |
-| [Open-Meteo históricos](#open-meteo-históricos) | Estadísticas y fiabilidad | API sin clave | CC BY 4.0, uso no comercial | Oleaje solo desde 2021 y agua desde 2023 |
-| [AEMET predicción de playas](#aemet-predicción-de-playas) | Temperatura del agua del Mar Menor | API con clave | Citar a AEMET | Solo 30 playas, datos por categorías |
-| [AEMET observación](#aemet-observación) | Viento medido en la costa | API con clave | Citar a AEMET | Solo guarda 24 horas |
-| [Censo de aguas de baño](#censo-de-zonas-de-aguas-de-baño) | Catálogo base de playas | Descarga manual anual | Citar al Ministerio | Captcha; faltan playas no vigiladas |
-| [Boya de Cabo de Palos](#boya-de-cabo-de-palos) | Oleaje y agua medidos | Copernicus Marine (con cuenta) | Por confirmar | Sin probar; a 33 km de la costa |
-| [OpenStreetMap](#openstreetmap) | Línea de costa y servicios | Overpass API | ODbL | Sin probar en esta fase |
-| [Guía de playas](#guía-de-playas) | (Servicios) | **No disponible** | - | Descartada |
+| Fuente                                                     | Uso en playa·hoy                                      | Acceso                         | Licencia                    | Riesgo principal                                 |
+| ---------------------------------------------------------- | ----------------------------------------------------- | ------------------------------ | --------------------------- | ------------------------------------------------ |
+| [Open-Meteo Marine](#open-meteo-marine)                    | Oleaje y temperatura del agua (previsión e histórico) | API sin clave                  | CC BY 4.0, uso no comercial | Malla de ~9 km; no ve el Mar Menor               |
+| [Open-Meteo Forecast](#open-meteo-forecast)                | Viento, aire y nubes (previsión)                      | API sin clave                  | CC BY 4.0, uso no comercial | El resultado cambia mucho según la celda elegida |
+| [Open-Meteo históricos](#open-meteo-históricos)            | Estadísticas y fiabilidad                             | API sin clave                  | CC BY 4.0, uso no comercial | Oleaje solo desde 2021 y agua desde 2023         |
+| [AEMET predicción de playas](#aemet-predicción-de-playas)  | Temperatura del agua del Mar Menor                    | API con clave                  | Citar a AEMET               | Solo 30 playas, datos por categorías             |
+| [AEMET observación](#aemet-observación)                    | Viento medido en la costa                             | API con clave                  | Citar a AEMET               | Solo guarda 24 horas                             |
+| [Censo de aguas de baño](#censo-de-zonas-de-aguas-de-baño) | Catálogo base de playas                               | Descarga manual anual          | Citar al Ministerio         | Captcha; faltan playas no vigiladas              |
+| [Boya de Cabo de Palos](#boya-de-cabo-de-palos)            | Oleaje y agua medidos                                 | Copernicus Marine (con cuenta) | Por confirmar               | Sin probar; a 33 km de la costa                  |
+| [OpenStreetMap](#openstreetmap)                            | Línea de costa y servicios                            | Overpass API                   | ODbL                        | Sin probar en esta fase                          |
+| [Guía de playas](#guía-de-playas)                          | (Servicios)                                           | **No disponible**              | -                           | Descartada                                       |
 
 ## Open-Meteo Marine
 
@@ -26,6 +26,7 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 - Admite varias coordenadas en una sola petición (`latitude=a,b,c&longitude=x,y,z`).
 
 **Huecos**
+
 - **No cubre el Mar Menor.** Las playas de la laguna caen en celdas del Mediterráneo, así que su oleaje se estima con el viento local (diseño de `laguna`).
 - Tampoco da la temperatura del agua del Mar Menor. Ver [AEMET predicción de playas](#aemet-predicción-de-playas).
 
@@ -39,27 +40,29 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 
 ## Open-Meteo históricos
 
-| Datos | Endpoint y modelo | Desde | Resolución | Retraso |
-|---|---|---|---|---|
-| Viento, aire y nubes | `archive-api.open-meteo.com/v1/archive` (por defecto) | 1940 | ~9 km | Unos 3 días |
-| Lo mismo | `archive`, `models=era5` | 1940 | ~25 km | Unos 5 días |
-| Oleaje | `marine` (por defecto) | octubre de 2021 | ~9 km | Al día |
-| Temperatura del agua | `marine` (por defecto) | enero de 2023 | ~9 km | Al día |
-| Oleaje | `marine`, `models=era5_ocean` | ~1950 | ~50 km | Unos 5 días |
-| Previsiones archivadas | `historical-forecast-api.open-meteo.com` | 2017-2018 | ~2 km | - |
-| **Previsiones por antelación** | `previous-runs-api.open-meteo.com` | 2024 | ~2 km | - |
+| Datos                          | Endpoint y modelo                                     | Desde           | Resolución | Retraso     |
+| ------------------------------ | ----------------------------------------------------- | --------------- | ---------- | ----------- |
+| Viento, aire y nubes           | `archive-api.open-meteo.com/v1/archive` (por defecto) | 1940            | ~9 km      | Unos 3 días |
+| Lo mismo                       | `archive`, `models=era5`                              | 1940            | ~25 km     | Unos 5 días |
+| Oleaje                         | `marine` (por defecto)                                | octubre de 2021 | ~9 km      | Al día      |
+| Temperatura del agua           | `marine` (por defecto)                                | enero de 2023   | ~9 km      | Al día      |
+| Oleaje                         | `marine`, `models=era5_ocean`                         | ~1950           | ~50 km     | Unos 5 días |
+| Previsiones archivadas         | `historical-forecast-api.open-meteo.com`              | 2017-2018       | ~2 km      | -           |
+| **Previsiones por antelación** | `previous-runs-api.open-meteo.com`                    | 2024            | ~2 km      | -           |
 
 - Un rango de fechas largo (`start_date`/`end_date`) cabe en una sola petición, así que rellenar el histórico cuesta pocas llamadas.
 - El reanálisis meteorológico no da temperatura del agua, y `era5_ocean` tampoco.
 - `previous-runs` devuelve variables `_previous_day1` … `_previous_day7`: lo que se predijo para esa hora con 1 a 7 días de antelación. La API marina también las admite (`wave_height_previous_day1`).
 
 **Consecuencias**
+
 - Estadísticas de viento: más de 80 años de datos.
 - Días buenos por playa y mes: necesitan el oleaje a ~9 km, que empieza en octubre de 2021. Son 5 veranos, suficiente para porcentajes por mes, avisando de que la muestra es corta. `era5_ocean` no distingue playas.
 - Tendencia de la temperatura del agua: solo 4 años, no basta. Ver [decisiones pendientes](#decisiones-pendientes).
 - Fiabilidad de la previsión: `previous-runs` permite medir el error desde 2024 sin esperar a acumular previsiones propias.
 
 ### Condiciones de uso de Open-Meteo
+
 - API gratuita solo para **uso no comercial**: webs personales o sin ánimo de lucro, sin suscripciones ni publicidad. Un portfolio sin anuncios encaja.
 - Límites: menos de 10.000 llamadas al día, 5.000 por hora, 600 por minuto y 300.000 al mes.
 - Datos con licencia **CC BY 4.0**: hay que citar a Open-Meteo como fuente.
@@ -84,13 +87,13 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 - Devuelve los datos horarios de las **últimas 24 horas** de todas las estaciones de España en una sola llamada.
 - **Variables:** `vv` (viento medio, m/s), `dv` (dirección, grados), `vmax` (racha), `ta` (temperatura), `hr` (humedad), `prec` (lluvia) y, en algunas estaciones, `inso` (horas de sol).
 
-| Estación | Código | Altitud | Zona |
-|---|---|---|---|
-| Águilas | 7002Y | 32 m | Calas de Águilas |
-| Mazarrón/Las Torres | 7007Y | 66 m | Bahía de Mazarrón |
-| Cartagena (puerto) | 7012X | 2 m | Costa de Cartagena |
-| Cartagena/Salinas Cabo de Palos | 7019X | 2,5 m | La Manga y Cabo de Palos |
-| Murcia/San Javier | 7031X | 4 m | Mar Menor |
+| Estación                        | Código | Altitud | Zona                     |
+| ------------------------------- | ------ | ------- | ------------------------ |
+| Águilas                         | 7002Y  | 32 m    | Calas de Águilas         |
+| Mazarrón/Las Torres             | 7007Y  | 66 m    | Bahía de Mazarrón        |
+| Cartagena (puerto)              | 7012X  | 2 m     | Costa de Cartagena       |
+| Cartagena/Salinas Cabo de Palos | 7019X  | 2,5 m   | La Manga y Cabo de Palos |
+| Murcia/San Javier               | 7031X  | 4 m     | Mar Menor                |
 
 - **Solo guarda 24 horas.** Para tener histórico hay que descargarlas al menos una vez al día. Los valores climatológicos de años anteriores son diarios, no horarios.
 - No miden oleaje ni temperatura del agua.
@@ -104,6 +107,7 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 - **Licencia:** uso libre citando al Ministerio como autor.
 
 **Campos útiles**
+
 - `localId`: código europeo de la zona, estable entre años. Formato `ES620M` + código INE del municipio (3 dígitos) + número. `ES620` es Murcia.
 - `nameText` (nombre, en mayúsculas) y `nameTxtInt` (el mismo nombre sin tildes, porque alguna tilde llega rota en `nameText`).
 - Coordenadas, `spZoneType` (costera, de transición, de río…), `wEvolution` y `predecesId` (cambios de código respecto al año anterior) y `link` (ficha en Náyade).
@@ -111,6 +115,7 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 **Murcia: 83 zonas**, todas costeras: Cartagena 32, Águilas 13, San Javier 13, Mazarrón 10, Los Alcázares 6, San Pedro del Pinatar 6, Lorca 2 y La Unión 1.
 
 **Limitaciones**
+
 - Cada zona es un **punto de muestreo**, no exactamente una playa. Los Nietos y Los Urrutias tienen dos.
 - **No incluye la calidad del agua.** Solo enlaza a la ficha de Náyade.
 - **Solo recoge zonas vigiladas oficialmente.** Faltan calas y playas conocidas, como Calblanque.
@@ -139,11 +144,11 @@ Las webs de MITECO y del Ministerio de Agricultura usan certificados de la FNMT,
 
 `spike/fnmt-ca.pem` reúne tres certificados descargados de la sede de la FNMT, con la huella SHA-1 comprobada contra la que publica:
 
-| Certificado | SHA-1 | Caduca |
-|---|---|---|
-| AC RAIZ FNMT-RCM SERVIDORES SEGUROS G2R | `19:87:94:8D:AB:7D:62:00:9E:2D:6B:BE:D8:83:DC:3A:F5:67:99:E8` | 2040 |
-| AC RAIZ FNMT-RCM | `EC:50:35:07:B2:15:C4:95:62:19:E2:A8:9A:5B:42:99:2C:4C:2C:20` | 2030 |
-| AC Componentes Informáticos (intermedio) | `C7:72:B4:8D:23:85:E5:02:E8:47:37:DB:E7:87:B6:43:11:91:12:47` | 2028 |
+| Certificado                              | SHA-1                                                         | Caduca |
+| ---------------------------------------- | ------------------------------------------------------------- | ------ |
+| AC RAIZ FNMT-RCM SERVIDORES SEGUROS G2R  | `19:87:94:8D:AB:7D:62:00:9E:2D:6B:BE:D8:83:DC:3A:F5:67:99:E8` | 2040   |
+| AC RAIZ FNMT-RCM                         | `EC:50:35:07:B2:15:C4:95:62:19:E2:A8:9A:5B:42:99:2C:4C:2C:20` | 2030   |
+| AC Componentes Informáticos (intermedio) | `C7:72:B4:8D:23:85:E5:02:E8:47:37:DB:E7:87:B6:43:11:91:12:47` | 2028   |
 
 Uso: `curl --cacert fnmt-ca.pem` o, en Node, `NODE_EXTRA_CA_CERTS=fnmt-ca.pem`. Nunca se desactiva la verificación. Cuando exista el monorepo, el fichero se moverá a una ubicación definitiva.
 
@@ -159,9 +164,9 @@ Uso: `curl --cacert fnmt-ca.pem` o, en Node, `NODE_EXTRA_CA_CERTS=fnmt-ca.pem`. 
 
 ## Decisiones pendientes
 
-| Decisión | Opciones | Cuándo |
-|---|---|---|
-| Tendencia de la temperatura del agua | (a) Solo media por mes, sin tendencia. (b) Añadir Copernicus Marine (desde 1982, con cuenta gratuita). | Fase 11 |
-| Fiabilidad del oleaje y del agua | Usar la boya de Cabo de Palos a través de Copernicus Marine, o limitar la fase 12 al viento. | Fase 12 |
-| Celda de Open-Meteo para la temperatura del aire | Tierra o mar | Fase 4 |
-| Playas con varios puntos de muestreo | Una playa o varias | Fase 3 |
+| Decisión                                         | Opciones                                                                                               | Cuándo  |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------- |
+| Tendencia de la temperatura del agua             | (a) Solo media por mes, sin tendencia. (b) Añadir Copernicus Marine (desde 1982, con cuenta gratuita). | Fase 11 |
+| Fiabilidad del oleaje y del agua                 | Usar la boya de Cabo de Palos a través de Copernicus Marine, o limitar la fase 12 al viento.           | Fase 12 |
+| Celda de Open-Meteo para la temperatura del aire | Tierra o mar                                                                                           | Fase 4  |
+| Playas con varios puntos de muestreo             | Una playa o varias                                                                                     | Fase 3  |

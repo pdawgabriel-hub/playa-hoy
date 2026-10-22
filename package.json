@@ -5,6 +5,8 @@
   "description": "Recomendador de playas de la Región de Murcia según viento, oleaje, orientación y plan",
   "type": "module",
   "scripts": {
+    "lint": "oxlint --type-aware --deny-warnings --no-error-on-unmatched-pattern && prettier --check .",
+    "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present typecheck"
   },
   "engines": {
@@ -19,6 +21,9 @@
   },
   "packageManager": "pnpm@12.15.0",
   "devDependencies": {
+    "oxlint": "1.89.0",
+    "oxlint-tsgolint": "7.0.2004",
+    "prettier": "3.9.10",
     "typescript": "7.0.2"
   }
 }
