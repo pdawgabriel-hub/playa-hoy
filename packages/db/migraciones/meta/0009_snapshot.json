@@ -1,0 +1,1027 @@
+{
+  "id": "5d72780c-ccf9-455b-8fab-ce39f01e4a60",
+  "prevId": "5172124f-2ff6-41b3-b3ed-0deeaa72c330",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.calidad_agua": {
+      "name": "calidad_agua",
+      "schema": "",
+      "columns": {
+        "playa_id": {
+          "name": "playa_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "temporada": {
+          "name": "temporada",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "calificacion": {
+          "name": "calificacion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "calidad_agua_playa_id_playas_id_fk": {
+          "name": "calidad_agua_playa_id_playas_id_fk",
+          "tableFrom": "calidad_agua",
+          "tableTo": "playas",
+          "columnsFrom": [
+            "playa_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "calidad_agua_playa_id_temporada_pk": {
+          "name": "calidad_agua_playa_id_temporada_pk",
+          "columns": [
+            "playa_id",
+            "temporada"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "calidad_agua_calificacion": {
+          "name": "calidad_agua_calificacion",
+          "value": "\"calidad_agua\".\"calificacion\" IN ('excelente', 'buena', 'suficiente', 'insuficiente', 'sin_clasificar')"
+        },
+        "calidad_agua_temporada": {
+          "name": "calidad_agua_temporada",
+          "value": "\"calidad_agua\".\"temporada\" >= 2011"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.estaciones": {
+      "name": "estaciones",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ubicacion": {
+          "name": "ubicacion",
+          "type": "geometry(Point,4326)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "altitud": {
+          "name": "altitud",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fuente": {
+          "name": "fuente",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "estaciones_ubicacion_idx": {
+          "name": "estaciones_ubicacion_idx",
+          "columns": [
+            {
+              "expression": "ubicacion",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gist",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "estaciones_fuente": {
+          "name": "estaciones_fuente",
+          "value": "\"estaciones\".\"fuente\" IN ('aemet', 'puertos_estado')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.municipios": {
+      "name": "municipios",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "municipios_slug_unique": {
+          "name": "municipios_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "municipios_id_ine": {
+          "name": "municipios_id_ine",
+          "value": "\"municipios\".\"id\" ~ '^[0-9]{5}$'"
+        },
+        "municipios_slug": {
+          "name": "municipios_slug",
+          "value": "\"municipios\".\"slug\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.notas": {
+      "name": "notas",
+      "schema": "",
+      "columns": {
+        "playa_id": {
+          "name": "playa_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "perfil": {
+          "name": "perfil",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hora": {
+          "name": "hora",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nota": {
+          "name": "nota",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "razones": {
+          "name": "razones",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::text[]"
+        },
+        "emitida_en": {
+          "name": "emitida_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "notas_ranking_idx": {
+          "name": "notas_ranking_idx",
+          "columns": [
+            {
+              "expression": "perfil",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "hora",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "nota",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "notas_playa_id_playas_id_fk": {
+          "name": "notas_playa_id_playas_id_fk",
+          "tableFrom": "notas",
+          "tableTo": "playas",
+          "columnsFrom": [
+            "playa_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "notas_playa_id_perfil_hora_pk": {
+          "name": "notas_playa_id_perfil_hora_pk",
+          "columns": [
+            "playa_id",
+            "perfil",
+            "hora"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "notas_perfil": {
+          "name": "notas_perfil",
+          "value": "\"notas\".\"perfil\" IN ('familia', 'snorkel', 'sol', 'surf')"
+        },
+        "notas_nota": {
+          "name": "notas_nota",
+          "value": "\"notas\".\"nota\" BETWEEN 0 AND 100"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.observaciones": {
+      "name": "observaciones",
+      "schema": "",
+      "columns": {
+        "estacion_id": {
+          "name": "estacion_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hora": {
+          "name": "hora",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "viento_velocidad": {
+          "name": "viento_velocidad",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "viento_direccion": {
+          "name": "viento_direccion",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "viento_racha": {
+          "name": "viento_racha",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "temperatura_aire": {
+          "name": "temperatura_aire",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ola_altura": {
+          "name": "ola_altura",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ola_direccion": {
+          "name": "ola_direccion",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ola_periodo": {
+          "name": "ola_periodo",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "temperatura_agua": {
+          "name": "temperatura_agua",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "observaciones_estacion_id_estaciones_id_fk": {
+          "name": "observaciones_estacion_id_estaciones_id_fk",
+          "tableFrom": "observaciones",
+          "tableTo": "estaciones",
+          "columnsFrom": [
+            "estacion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "observaciones_estacion_id_hora_pk": {
+          "name": "observaciones_estacion_id_hora_pk",
+          "columns": [
+            "estacion_id",
+            "hora"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "observaciones_viento_direccion": {
+          "name": "observaciones_viento_direccion",
+          "value": "\"observaciones\".\"viento_direccion\" BETWEEN 0 AND 360"
+        },
+        "observaciones_ola_direccion": {
+          "name": "observaciones_ola_direccion",
+          "value": "\"observaciones\".\"ola_direccion\" BETWEEN 0 AND 360"
+        },
+        "observaciones_no_negativos": {
+          "name": "observaciones_no_negativos",
+          "value": "\"observaciones\".\"viento_velocidad\" >= 0 AND \"observaciones\".\"viento_racha\" >= 0 AND \"observaciones\".\"ola_altura\" >= 0 AND \"observaciones\".\"ola_periodo\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.playa_servicios": {
+      "name": "playa_servicios",
+      "schema": "",
+      "columns": {
+        "playa_id": {
+          "name": "playa_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "socorrista": {
+          "name": "socorrista",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "perros": {
+          "name": "perros",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "accesible": {
+          "name": "accesible",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aseos": {
+          "name": "aseos",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "duchas": {
+          "name": "duchas",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nudista": {
+          "name": "nudista",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "suelo": {
+          "name": "suelo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ocupacion": {
+          "name": "ocupacion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fuente": {
+          "name": "fuente",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fuentes": {
+          "name": "fuentes",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::text[]"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "playa_servicios_playa_id_playas_id_fk": {
+          "name": "playa_servicios_playa_id_playas_id_fk",
+          "tableFrom": "playa_servicios",
+          "tableTo": "playas",
+          "columnsFrom": [
+            "playa_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "playa_servicios_fuentes": {
+          "name": "playa_servicios_fuentes",
+          "value": "\"playa_servicios\".\"fuentes\" <@ ARRAY['itrem', 'osm', 'manual']"
+        },
+        "playa_servicios_suelo": {
+          "name": "playa_servicios_suelo",
+          "value": "\"playa_servicios\".\"suelo\" IN ('arena_fina', 'arena', 'arena_y_grava', 'grava', 'bolos', 'roca')"
+        },
+        "playa_servicios_ocupacion": {
+          "name": "playa_servicios_ocupacion",
+          "value": "\"playa_servicios\".\"ocupacion\" IN ('baja', 'media', 'alta')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.playas": {
+      "name": "playas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "playas_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "municipio_id": {
+          "name": "municipio_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "zona_id": {
+          "name": "zona_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ubicacion": {
+          "name": "ubicacion",
+          "type": "geometry(Point,4326)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mira": {
+          "name": "mira",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "abrigo": {
+          "name": "abrigo",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "laguna": {
+          "name": "laguna",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "codigo_censo": {
+          "name": "codigo_censo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "codigo_aemet": {
+          "name": "codigo_aemet",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "osm_id": {
+          "name": "osm_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "playas_ubicacion_idx": {
+          "name": "playas_ubicacion_idx",
+          "columns": [
+            {
+              "expression": "ubicacion",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gist",
+          "with": {}
+        },
+        "playas_ubicacion_geography_idx": {
+          "name": "playas_ubicacion_geography_idx",
+          "columns": [
+            {
+              "expression": "(\"ubicacion\"::geography)",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gist",
+          "with": {}
+        },
+        "playas_municipio_idx": {
+          "name": "playas_municipio_idx",
+          "columns": [
+            {
+              "expression": "municipio_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "playas_zona_idx": {
+          "name": "playas_zona_idx",
+          "columns": [
+            {
+              "expression": "zona_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "playas_municipio_id_municipios_id_fk": {
+          "name": "playas_municipio_id_municipios_id_fk",
+          "tableFrom": "playas",
+          "tableTo": "municipios",
+          "columnsFrom": [
+            "municipio_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "playas_zona_id_zonas_id_fk": {
+          "name": "playas_zona_id_zonas_id_fk",
+          "tableFrom": "playas",
+          "tableTo": "zonas",
+          "columnsFrom": [
+            "zona_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "playas_slug_unique": {
+          "name": "playas_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        },
+        "playas_codigo_censo_unique": {
+          "name": "playas_codigo_censo_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "codigo_censo"
+          ]
+        },
+        "playas_codigo_aemet_unique": {
+          "name": "playas_codigo_aemet_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "codigo_aemet"
+          ]
+        },
+        "playas_osm_id_unique": {
+          "name": "playas_osm_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "osm_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "playas_slug": {
+          "name": "playas_slug",
+          "value": "\"playas\".\"slug\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
+        },
+        "playas_mira": {
+          "name": "playas_mira",
+          "value": "\"playas\".\"mira\" >= 0 AND \"playas\".\"mira\" < 360"
+        },
+        "playas_abrigo": {
+          "name": "playas_abrigo",
+          "value": "\"playas\".\"abrigo\" BETWEEN 0 AND 1"
+        },
+        "playas_origen": {
+          "name": "playas_origen",
+          "value": "\"playas\".\"codigo_censo\" IS NOT NULL OR \"playas\".\"osm_id\" IS NOT NULL"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.previsiones": {
+      "name": "previsiones",
+      "schema": "",
+      "columns": {
+        "punto_id": {
+          "name": "punto_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emitida_en": {
+          "name": "emitida_en",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hora": {
+          "name": "hora",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "viento_velocidad": {
+          "name": "viento_velocidad",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "viento_direccion": {
+          "name": "viento_direccion",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "viento_racha": {
+          "name": "viento_racha",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "temperatura_aire": {
+          "name": "temperatura_aire",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nubosidad": {
+          "name": "nubosidad",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ola_altura": {
+          "name": "ola_altura",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ola_direccion": {
+          "name": "ola_direccion",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ola_periodo": {
+          "name": "ola_periodo",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "temperatura_agua": {
+          "name": "temperatura_agua",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "previsiones_hora_idx": {
+          "name": "previsiones_hora_idx",
+          "columns": [
+            {
+              "expression": "hora",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "previsiones_emitida_en_idx": {
+          "name": "previsiones_emitida_en_idx",
+          "columns": [
+            {
+              "expression": "emitida_en",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "previsiones_punto_id_puntos_consulta_id_fk": {
+          "name": "previsiones_punto_id_puntos_consulta_id_fk",
+          "tableFrom": "previsiones",
+          "tableTo": "puntos_consulta",
+          "columnsFrom": [
+            "punto_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "previsiones_punto_id_emitida_en_hora_pk": {
+          "name": "previsiones_punto_id_emitida_en_hora_pk",
+          "columns": [
+            "punto_id",
+            "emitida_en",
+            "hora"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "previsiones_viento_direccion": {
+          "name": "previsiones_viento_direccion",
+          "value": "\"previsiones\".\"viento_direccion\" BETWEEN 0 AND 360"
+        },
+        "previsiones_ola_direccion": {
+          "name": "previsiones_ola_direccion",
+          "value": "\"previsiones\".\"ola_direccion\" BETWEEN 0 AND 360"
+        },
+        "previsiones_nubosidad": {
+          "name": "previsiones_nubosidad",
+          "value": "\"previsiones\".\"nubosidad\" BETWEEN 0 AND 100"
+        },
+        "previsiones_no_negativos": {
+          "name": "previsiones_no_negativos",
+          "value": "\"previsiones\".\"viento_velocidad\" >= 0 AND \"previsiones\".\"viento_racha\" >= 0 AND \"previsiones\".\"ola_altura\" >= 0 AND \"previsiones\".\"ola_periodo\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.puntos_consulta": {
+      "name": "puntos_consulta",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "puntos_consulta_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "ubicacion": {
+          "name": "ubicacion",
+          "type": "geometry(Point,4326)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "puntos_consulta_ubicacion_idx": {
+          "name": "puntos_consulta_ubicacion_idx",
+          "columns": [
+            {
+              "expression": "ubicacion",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gist",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "puntos_consulta_ubicacion_unique": {
+          "name": "puntos_consulta_ubicacion_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "ubicacion"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.zonas": {
+      "name": "zonas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "zonas_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "zonas_slug_unique": {
+          "name": "zonas_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "zonas_slug": {
+          "name": "zonas_slug",
+          "value": "\"zonas\".\"slug\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

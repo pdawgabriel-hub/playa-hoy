@@ -1,0 +1,1 @@
+ALTER TABLE "playa_servicios" DROP COLUMN "fuente";

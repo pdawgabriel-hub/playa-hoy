@@ -1,0 +1,615 @@
+{
+  "descripcion": "Correspondencia entre las playas del censo y las de ITREM, revisada a mano. Propuesta automática cuando el nombre coincide y la distancia es menor de 1 km (con las coordenadas de ITREM convertidas desde ED50); el resto, revisión manual. Una playa ITREM puede corresponder a varias del censo (Islas Menores).",
+  "sinCorrespondencia": {
+    "ES620M0161605 La Gola": "Ninguna playa ITREM con nombre parecido cerca.",
+    "ES620M0161612 Villas Caravanning": "Ninguna playa ITREM con nombre parecido cerca.",
+    "ES620M0161615 Calblanque": "ITREM divide Calblanque en varias playas (Larga, las Cañas...): no hay una equivalente.",
+    "ES620M0161622 Cavannas": "La playa ITREM \"Cavanna\" está a más de 1,5 km del punto del censo.",
+    "ES620M0262414 Percheles": "Mismo nombre, pero los puntos están a 2,6 km: no se puede asegurar que sean la misma playa.",
+    "ES620M0351642 Pedrucho Norte": "ITREM tiene un solo \"Pedrucho\" y el censo lo divide en norte y sur.",
+    "ES620M0351648 Pedrucho Sur": "ITREM tiene un solo \"Pedrucho\" y el censo lo divide en norte y sur.",
+    "ES620M0351645 Las Gaviotas": "Ninguna playa ITREM con nombre parecido cerca."
+  },
+  "correspondencias": [
+    {
+      "codigoCenso": "ES620M0031590",
+      "playa": "Calabardina",
+      "codigoItrem": "619",
+      "playaItrem": "Playa La Calabardina",
+      "distancia": 78,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031591",
+      "playa": "La Cola",
+      "codigoItrem": "618",
+      "playaItrem": "Playa de La Cola",
+      "distancia": 282,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031592",
+      "playa": "El Hornillo",
+      "codigoItrem": "614",
+      "playaItrem": "Playa de El Hornillo",
+      "distancia": 21,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031593",
+      "playa": "Las Delicias",
+      "codigoItrem": "660",
+      "playaItrem": "Playa Las Delicias",
+      "distancia": 96,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031594",
+      "playa": "Levante",
+      "codigoItrem": "693",
+      "playaItrem": "Playa de Levante",
+      "distancia": 56,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031595",
+      "playa": "Poniente",
+      "codigoItrem": "596",
+      "playaItrem": "Playa de Poniente",
+      "distancia": 601,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031596",
+      "playa": "Calarreona",
+      "codigoItrem": "679",
+      "playaItrem": "Playa de Calarreona",
+      "distancia": 104,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031597",
+      "playa": "La Carolina",
+      "codigoItrem": "589",
+      "playaItrem": "Playa La Carolina",
+      "distancia": 196,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031598",
+      "playa": "La Higuerica",
+      "codigoItrem": "625",
+      "playaItrem": "Playa de la Higuerica",
+      "distancia": 213,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031599",
+      "playa": "La Colonia",
+      "codigoItrem": "612",
+      "playaItrem": "Playa de La Colonia",
+      "distancia": 606,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0032076",
+      "playa": "Matalentisco",
+      "codigoItrem": "598",
+      "playaItrem": "Playa del Matalentisco",
+      "distancia": 243,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0032551",
+      "playa": "La Casica Verde",
+      "codigoItrem": "613",
+      "playaItrem": "Playa de La Casica Verde",
+      "distancia": 37,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0032552",
+      "playa": "El Charco",
+      "codigoItrem": "588",
+      "playaItrem": "Playa del Charco",
+      "distancia": 349,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161601",
+      "playa": "Los Urrutias",
+      "codigoItrem": "677",
+      "playaItrem": "Playa de Los Urrutias",
+      "distancia": 561,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161602",
+      "playa": "Cala del Pino",
+      "codigoItrem": "577",
+      "playaItrem": "Cala del Pino",
+      "distancia": 25,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161603",
+      "playa": "Galúa",
+      "codigoItrem": "591",
+      "playaItrem": "Playa Galúa",
+      "distancia": 308,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161606",
+      "playa": "Los Nietos",
+      "codigoItrem": "684",
+      "playaItrem": "Playa Los Nietos",
+      "distancia": 959,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161608",
+      "playa": "Entremares",
+      "codigoItrem": "686",
+      "playaItrem": "Playa del Barco Perdido (Playa Entremares)",
+      "distancia": 1000,
+      "revision": "manual"
+    },
+    {
+      "codigoCenso": "ES620M0161609",
+      "playa": "Puerto Bello",
+      "codigoItrem": "669",
+      "playaItrem": "Playa Puerto Bello",
+      "distancia": 120,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161611",
+      "playa": "Mar de Cristal",
+      "codigoItrem": "676",
+      "playaItrem": "Playa de Mar de Cristal",
+      "distancia": 23,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161613",
+      "playa": "Playa Honda",
+      "codigoItrem": "688",
+      "playaItrem": "Playa Honda",
+      "distancia": 215,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161614",
+      "playa": "Levante (Cabo de Palos)",
+      "codigoItrem": "525",
+      "playaItrem": "Playa de Levante",
+      "distancia": 83,
+      "revision": "manual"
+    },
+    {
+      "codigoCenso": "ES620M0161616",
+      "playa": "El Barco",
+      "codigoItrem": "556",
+      "playaItrem": "Cala del Barco",
+      "distancia": 47,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161617",
+      "playa": "Cala Cortina",
+      "codigoItrem": "512",
+      "playaItrem": "Cala Cortina",
+      "distancia": 57,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161618",
+      "playa": "El Portús",
+      "codigoItrem": "606",
+      "playaItrem": "Playa El Portús",
+      "distancia": 133,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161619",
+      "playa": "La Azohía-El Cuartel",
+      "codigoItrem": "582",
+      "playaItrem": "Playa de la Azohía - El Cuartel",
+      "distancia": 672,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161620",
+      "playa": "San Ginés",
+      "codigoItrem": "685",
+      "playaItrem": "Playa San Ginés",
+      "distancia": 539,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161621",
+      "playa": "Isla Plana",
+      "codigoItrem": "657",
+      "playaItrem": "Playa Isla Plana",
+      "distancia": 69,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161623",
+      "playa": "Punta Brava",
+      "codigoItrem": "531",
+      "playaItrem": "Playa Punta Brava",
+      "distancia": 96,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161624",
+      "playa": "Estrella de Mar",
+      "codigoItrem": "570",
+      "playaItrem": "Playa Perla de Levante (Estrella de Mar)",
+      "distancia": 105,
+      "revision": "manual"
+    },
+    {
+      "codigoCenso": "ES620M0161625",
+      "playa": "Las Sirenas",
+      "codigoItrem": "670",
+      "playaItrem": "Playa del Barco Perdido (Playa Las Sirenas)",
+      "distancia": 935,
+      "revision": "manual"
+    },
+    {
+      "codigoCenso": "ES620M0161626",
+      "playa": "El Vivero",
+      "codigoItrem": "527",
+      "playaItrem": "Playa del Vivero",
+      "distancia": 432,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161627",
+      "playa": "Las Amoladeras",
+      "codigoItrem": "563",
+      "playaItrem": "Playa Las Amoladeras",
+      "distancia": 606,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161628",
+      "playa": "Cala Flores",
+      "codigoItrem": "520",
+      "playaItrem": "Playa Cala Flores",
+      "distancia": 156,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0162365",
+      "playa": "Paraíso",
+      "codigoItrem": "529",
+      "playaItrem": "Playa Paraiso",
+      "distancia": 93,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0162410",
+      "playa": "Levante-Islas Menores",
+      "codigoItrem": "530",
+      "playaItrem": "Playa de Islas Menores",
+      "distancia": 573,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0162411",
+      "playa": "Poniente-Islas Menores",
+      "codigoItrem": "530",
+      "playaItrem": "Playa de Islas Menores",
+      "distancia": 183,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0162412",
+      "playa": "La Chapineta",
+      "codigoItrem": "580",
+      "playaItrem": "Playa de La Chapineta",
+      "distancia": 460,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0162683",
+      "playa": "Cala Reona",
+      "codigoItrem": "518",
+      "playaItrem": "Cala Reona",
+      "distancia": 54,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0241629",
+      "playa": "Punta de Calnegre",
+      "codigoItrem": "694",
+      "playaItrem": "Playa Puntas de Calnegre",
+      "distancia": 291,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0241630",
+      "playa": "Calnegre",
+      "codigoItrem": "663",
+      "playaItrem": "Cala de Calnegre",
+      "distancia": 46,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261631",
+      "playa": "Riguete",
+      "codigoItrem": "581",
+      "playaItrem": "Playa de El Rihuete (Playa del Rigüete)",
+      "distancia": 111,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261632",
+      "playa": "El Puerto",
+      "codigoItrem": "650",
+      "playaItrem": "Playa del Puerto de Mazarrón",
+      "distancia": 189,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261633",
+      "playa": "La Isla",
+      "codigoItrem": "680",
+      "playaItrem": "Playa de La Isla",
+      "distancia": 36,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261634",
+      "playa": "Bahía",
+      "codigoItrem": "662",
+      "playaItrem": "Playa de Bahía",
+      "distancia": 239,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261635",
+      "playa": "Playa Grande-Castellar",
+      "codigoItrem": "675",
+      "playaItrem": "Playa de El Castellar",
+      "distancia": 147,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261636",
+      "playa": "Bolnuevo",
+      "codigoItrem": "646",
+      "playaItrem": "Playa de Bolnuevo",
+      "distancia": 652,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261637",
+      "playa": "Nares",
+      "codigoItrem": "683",
+      "playaItrem": "Playa de Nares",
+      "distancia": 12,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261638",
+      "playa": "El Alamillo",
+      "codigoItrem": "651",
+      "playaItrem": "Playa de El Alamillo",
+      "distancia": 33,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0262413",
+      "playa": "El Mojón",
+      "codigoItrem": "654",
+      "playaItrem": "Playa de El Mojón",
+      "distancia": 119,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351639",
+      "playa": "El Castillico",
+      "codigoItrem": "604",
+      "playaItrem": "Playa El Castillico",
+      "distancia": 84,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351640",
+      "playa": "Veneciola",
+      "codigoItrem": "673",
+      "playaItrem": "Playa La Veneziola (Veneciola)",
+      "distancia": 75,
+      "revision": "manual"
+    },
+    {
+      "codigoCenso": "ES620M0351643",
+      "playa": "Mistral",
+      "codigoItrem": "696",
+      "playaItrem": "Playa Mistral",
+      "distancia": 191,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351644",
+      "playa": "El Tabal",
+      "codigoItrem": "671",
+      "playaItrem": "Playa Banco del Tabal",
+      "distancia": 147,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351646",
+      "playa": "Antillas",
+      "codigoItrem": "541",
+      "playaItrem": "Playa Las Antillas",
+      "distancia": 55,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351647",
+      "playa": "El Galán",
+      "codigoItrem": "540",
+      "playaItrem": "Playa El Galán",
+      "distancia": 513,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351649",
+      "playa": "Paseo Colón",
+      "codigoItrem": "668",
+      "playaItrem": "Playa de Colón",
+      "distancia": 48,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351650",
+      "playa": "Barnuevo",
+      "codigoItrem": "667",
+      "playaItrem": "Playa Barnuevo",
+      "distancia": 163,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351651",
+      "playa": "El Pedruchillo",
+      "codigoItrem": "674",
+      "playaItrem": "Playa El Pedruchillo",
+      "distancia": 331,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351652",
+      "playa": "Los Alisios",
+      "codigoItrem": "538",
+      "playaItrem": "Playa Alíseos",
+      "distancia": 252,
+      "revision": "manual"
+    },
+    {
+      "codigoCenso": "ES620M0352077",
+      "playa": "La Ensenada del Esparto",
+      "codigoItrem": "562",
+      "playaItrem": "Playa Ensenada del Esparto",
+      "distancia": 62,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0352796",
+      "playa": "El Estacio",
+      "codigoItrem": "536",
+      "playaItrem": "Playa del Estacio",
+      "distancia": 314,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0361653",
+      "playa": "El Mojón-Derecha",
+      "codigoItrem": "666",
+      "playaItrem": "Playa El Mojón",
+      "distancia": 132,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0361654",
+      "playa": "La Llana-Las Salinas",
+      "codigoItrem": "665",
+      "playaItrem": "Playa de La Llana (Playa de Las Salinas)",
+      "distancia": 31,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0361655",
+      "playa": "Villananitos",
+      "codigoItrem": "681",
+      "playaItrem": "Playa de Villananitos",
+      "distancia": 71,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0361656",
+      "playa": "La Puntica",
+      "codigoItrem": "664",
+      "playaItrem": "Playa de La Puntica",
+      "distancia": 320,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0361657",
+      "playa": "Torre Derribada",
+      "codigoItrem": "546",
+      "playaItrem": "Playa de La Torre Derribada",
+      "distancia": 286,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0361658",
+      "playa": "La Mota",
+      "codigoItrem": "682",
+      "playaItrem": "Playa de La Mota",
+      "distancia": 110,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0411659",
+      "playa": "Portmán-El Lastre",
+      "codigoItrem": "695",
+      "playaItrem": "Playa del Lastre",
+      "distancia": 36,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M9021660",
+      "playa": "Los Narejos",
+      "codigoItrem": "661",
+      "playaItrem": "Playa de Los Narejos",
+      "distancia": 147,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M9021661",
+      "playa": "Las Palmeras",
+      "codigoItrem": "534",
+      "playaItrem": "Playa de Las Palmeras",
+      "distancia": 400,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M9021662",
+      "playa": "Paseo del Espejo",
+      "codigoItrem": "690",
+      "playaItrem": "Playa del Espejo",
+      "distancia": 380,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M9021663",
+      "playa": "Paseo de Manzanares",
+      "codigoItrem": "691",
+      "playaItrem": "Playa Manzanares",
+      "distancia": 126,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M9021664",
+      "playa": "Paseo de la Concha",
+      "codigoItrem": "533",
+      "playaItrem": "Playa de La Concha",
+      "distancia": 63,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M9021665",
+      "playa": "Paseo Carrión",
+      "codigoItrem": "692",
+      "playaItrem": "Playa Carrión",
+      "distancia": 13,
+      "revision": "automática"
+    }
+  ]
+}

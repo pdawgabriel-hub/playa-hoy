@@ -50,7 +50,10 @@ erDiagram
         bool accesible
         bool aseos
         bool duchas
-        text fuente "osm | manual"
+        bool nudista
+        text suelo "arena_fina ... roca"
+        text ocupacion "baja | media | alta"
+        text_array fuentes "itrem, osm, manual"
         timestamptz actualizado_en
     }
 
@@ -121,18 +124,18 @@ erDiagram
 
 ## Tablas
 
-| Tabla             | Qué guarda                                                             | Origen de los datos                    | Fase |
-| ----------------- | ---------------------------------------------------------------------- | -------------------------------------- | ---- |
-| `municipios`      | División administrativa                                                | INE                                    | 3    |
-| `zonas`           | División que entiende la gente (Mar Menor, La Manga…)                  | Definidas a mano                       | 3    |
-| `playas`          | Catálogo: ubicación, orientación, abrigo, laguna                       | Censo de aguas de baño y OpenStreetMap | 3    |
-| `playa_servicios` | Socorrista, perros, accesible, aseos, duchas                           | OpenStreetMap                          | 3    |
-| `calidad_agua`    | Calificación oficial por temporada                                     | Agencia Europea de Medio Ambiente      | 3    |
-| `puntos_consulta` | Coordenadas que se piden a las APIs de previsión                       | Agrupando playas cercanas              | 4    |
-| `previsiones`     | Previsión por horas de cada punto, con **todas** las emisiones         | Open-Meteo                             | 4    |
-| `notas`           | Nota vigente de cada playa por plan y hora, con sus razones            | Motor de puntuación (`packages/core`)  | 5    |
-| `estaciones`      | Estaciones y boyas que miden                                           | AEMET y Puertos del Estado             | 4    |
-| `observaciones`   | Datos medidos por hora, comparables columna a columna con la previsión | AEMET y Puertos del Estado             | 4    |
+| Tabla             | Qué guarda                                                              | Origen de los datos                    | Fase |
+| ----------------- | ----------------------------------------------------------------------- | -------------------------------------- | ---- |
+| `municipios`      | División administrativa                                                 | INE                                    | 3    |
+| `zonas`           | División que entiende la gente (Mar Menor, La Manga…)                   | Definidas a mano                       | 3    |
+| `playas`          | Catálogo: ubicación, orientación, abrigo, laguna                        | Censo de aguas de baño y OpenStreetMap | 3    |
+| `playa_servicios` | Accesible, suelo, ocupación, nudista, socorrista, perros, aseos, duchas | ITREM y OpenStreetMap                  | 3    |
+| `calidad_agua`    | Calificación oficial por temporada                                      | Agencia Europea de Medio Ambiente      | 3    |
+| `puntos_consulta` | Coordenadas que se piden a las APIs de previsión                        | Agrupando playas cercanas              | 4    |
+| `previsiones`     | Previsión por horas de cada punto, con **todas** las emisiones          | Open-Meteo                             | 4    |
+| `notas`           | Nota vigente de cada playa por plan y hora, con sus razones             | Motor de puntuación (`packages/core`)  | 5    |
+| `estaciones`      | Estaciones y boyas que miden                                            | AEMET y Puertos del Estado             | 4    |
+| `observaciones`   | Datos medidos por hora, comparables columna a columna con la previsión  | AEMET y Puertos del Estado             | 4    |
 
 El detalle de cada fuente está en [fuentes.md](fuentes.md).
 
@@ -156,7 +159,7 @@ Las reglas importantes están en la propia base de datos, no solo en el código:
 | `municipios`                   | El id es un código INE de 5 dígitos; slug en formato URL                                         |
 | `zonas`, `playas`              | Slug único en formato URL                                                                        |
 | `playas`                       | `mira` entre 0 y menos de 360; `abrigo` entre 0 y 1; código del censo u OSM obligatorio          |
-| `playa_servicios`              | Fuente `osm` o `manual`                                                                          |
+| `playa_servicios`              | Fuentes entre `itrem`, `osm` y `manual`; suelo y ocupación de su lista de valores                |
 | `calidad_agua`                 | Calificación de la escala actual; temporada desde 2011                                           |
 | `notas`                        | Perfil conocido; nota entre 0 y 100                                                              |
 | `previsiones`, `observaciones` | Direcciones entre 0 y 360; velocidades, alturas y periodos no negativos; nubosidad entre 0 y 100 |

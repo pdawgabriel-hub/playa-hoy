@@ -154,7 +154,8 @@ El CI ejecuta `pnpm lint`, `pnpm typecheck` y `pnpm test` en cada push, con su p
 - **[Open-Meteo](https://open-meteo.com/)** (Marine, Forecast e históricos): oleaje, viento, temperatura del agua y del aire, y nubosidad por horas. Datos con licencia CC BY 4.0.
 - **[AEMET OpenData](https://opendata.aemet.es/)**: temperatura del agua del Mar Menor y viento medido en las estaciones de la costa. © AEMET.
 - **Censo de zonas de aguas de baño** (Ministerio de Sanidad, publicado por MITECO): catálogo oficial de playas.
-- **[OpenStreetMap](https://www.openstreetmap.org/copyright)**: línea de costa para calcular la orientación de cada playa, y servicios. © colaboradores de OpenStreetMap, ODbL.
+- **[Turismo de la Región de Murcia (ITREM)](https://www.murciaturistica.es/)**: accesibilidad, tipo de suelo, ocupación y playas nudistas.
+- **[OpenStreetMap](https://www.openstreetmap.org/copyright)**: línea de costa para calcular la orientación de cada playa, y socorrista, perros, aseos y duchas. © colaboradores de OpenStreetMap, ODbL.
 
 El detalle de cada fuente (qué da, cómo se accede, licencia, límites y huecos) está en [docs/fuentes.md](docs/fuentes.md).
 
