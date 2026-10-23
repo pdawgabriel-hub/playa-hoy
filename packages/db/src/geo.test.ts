@@ -1,7 +1,7 @@
 import { PgDialect, getTableConfig, pgTable } from "drizzle-orm/pg-core";
 import { describe, expect, it } from "vitest";
 
-import { distanciaMetros, leerPuntoEwkb, puntoWgs84 } from "./geo.ts";
+import { distanciaMetros, leerLineaEwkb, leerPuntoEwkb, lineaWgs84, puntoWgs84 } from "./geo.ts";
 
 const playas = pgTable("playas", { ubicacion: puntoWgs84("ubicacion") });
 const [ubicacion] = getTableConfig(playas).columns;
@@ -47,5 +47,36 @@ describe("distanciaMetros", () => {
       'ST_Distance("playas"."ubicacion"::geography, ST_SetSRID(ST_MakePoint($1, $2), $3)::geography)',
     );
     expect(params).toEqual([-0.692, 37.633, 4326]);
+  });
+});
+
+const tramos = pgTable("tramos", { linea: lineaWgs84("linea") });
+const [linea] = getTableConfig(tramos).columns;
+const TRES_PUNTOS = [
+  { x: -0.7, y: 37.6 },
+  { x: -0.69, y: 37.61 },
+  { x: -0.68, y: 37.6 },
+];
+// Valor real devuelto por PostGIS 3.6 para SRID=4326;LINESTRING(-0.7 37.6,-0.69 37.61,-0.68 37.6)
+const EWKB_TRES_PUNTOS =
+  "0102000020E610000003000000666666666666E6BFCDCCCCCCCCCC424014AE47E17A14E6BFAE47E17A14CE4240C3F5285C8FC2E5BFCDCCCCCCCCCC4240";
+
+describe("lineaWgs84", () => {
+  it("crea una columna geometry de tipo línea con SRID 4326", () => {
+    expect(linea?.getSQLType()).toBe("geometry(LineString,4326)");
+  });
+
+  it("escribe la línea en EWKT, en el mismo orden", () => {
+    expect(linea?.mapToDriverValue(TRES_PUNTOS)).toBe(
+      "SRID=4326;LINESTRING(-0.7 37.6,-0.69 37.61,-0.68 37.6)",
+    );
+  });
+
+  it("lee el EWKB de PostgreSQL conservando el orden de los puntos", () => {
+    expect(linea?.mapFromDriverValue(EWKB_TRES_PUNTOS)).toEqual(TRES_PUNTOS);
+  });
+
+  it("rechaza geometrías que no son líneas", () => {
+    expect(() => leerLineaEwkb(EWKB_CON_SRID)).toThrow(/línea/);
   });
 });

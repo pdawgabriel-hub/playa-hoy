@@ -1,5 +1,6 @@
 // Tablas de la base de datos. Cada tabla va en su propio fichero y se reexporta aquí.
 export * from "./calidad-agua.ts";
+export * from "./costa.ts";
 export * from "./estaciones.ts";
 export * from "./municipios.ts";
 export * from "./notas.ts";

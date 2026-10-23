@@ -4,7 +4,7 @@ Esquema de PostgreSQL con PostGIS. Se define en TypeScript con Drizzle (`package
 
 ## Diagrama entidad-relación
 
-Las tablas forman dos grupos independientes. En la fase 4 cada playa quedará enlazada con su punto de consulta y los dos diagramas se unirán.
+Las tablas forman dos grupos independientes, más la costa, que se usa para calcular la orientación y el abrigo de las playas. En la fase 4 cada playa quedará enlazada con su punto de consulta y los dos diagramas se unirán.
 
 ### Catálogo de playas y notas
 
@@ -73,7 +73,7 @@ erDiagram
     }
 ```
 
-### Previsiones y observaciones
+### Previsiones, observaciones y costa
 
 ```mermaid
 erDiagram
@@ -120,22 +120,29 @@ erDiagram
         real ola_periodo "s"
         real temperatura_agua "°C"
     }
+
+    costa {
+        text id PK "tramo de OSM (way/123)"
+        geometry linea "LineString, SRID 4326; mar a la derecha"
+        timestamptz descargada_en
+    }
 ```
 
 ## Tablas
 
-| Tabla             | Qué guarda                                                              | Origen de los datos                    | Fase |
-| ----------------- | ----------------------------------------------------------------------- | -------------------------------------- | ---- |
-| `municipios`      | División administrativa                                                 | INE                                    | 3    |
-| `zonas`           | División que entiende la gente (Mar Menor, La Manga…)                   | Definidas a mano                       | 3    |
-| `playas`          | Catálogo: ubicación, orientación, abrigo, laguna                        | Censo de aguas de baño y OpenStreetMap | 3    |
-| `playa_servicios` | Accesible, suelo, ocupación, nudista, socorrista, perros, aseos, duchas | ITREM y OpenStreetMap                  | 3    |
-| `calidad_agua`    | Calificación oficial por temporada                                      | Agencia Europea de Medio Ambiente      | 3    |
-| `puntos_consulta` | Coordenadas que se piden a las APIs de previsión                        | Agrupando playas cercanas              | 4    |
-| `previsiones`     | Previsión por horas de cada punto, con **todas** las emisiones          | Open-Meteo                             | 4    |
-| `notas`           | Nota vigente de cada playa por plan y hora, con sus razones             | Motor de puntuación (`packages/core`)  | 5    |
-| `estaciones`      | Estaciones y boyas que miden                                            | AEMET y Puertos del Estado             | 4    |
-| `observaciones`   | Datos medidos por hora, comparables columna a columna con la previsión  | AEMET y Puertos del Estado             | 4    |
+| Tabla             | Qué guarda                                                                 | Origen de los datos                    | Fase |
+| ----------------- | -------------------------------------------------------------------------- | -------------------------------------- | ---- |
+| `municipios`      | División administrativa                                                    | INE                                    | 3    |
+| `zonas`           | División que entiende la gente (Mar Menor, La Manga…)                      | Definidas a mano                       | 3    |
+| `playas`          | Catálogo: ubicación, orientación, abrigo, laguna                           | Censo de aguas de baño y OpenStreetMap | 3    |
+| `playa_servicios` | Accesible, suelo, ocupación, nudista, socorrista, perros, aseos, duchas    | ITREM y OpenStreetMap                  | 3    |
+| `calidad_agua`    | Calificación oficial por temporada                                         | Agencia Europea de Medio Ambiente      | 3    |
+| `puntos_consulta` | Coordenadas que se piden a las APIs de previsión                           | Agrupando playas cercanas              | 4    |
+| `previsiones`     | Previsión por horas de cada punto, con **todas** las emisiones             | Open-Meteo                             | 4    |
+| `notas`           | Nota vigente de cada playa por plan y hora, con sus razones                | Motor de puntuación (`packages/core`)  | 5    |
+| `estaciones`      | Estaciones y boyas que miden                                               | AEMET y Puertos del Estado             | 4    |
+| `observaciones`   | Datos medidos por hora, comparables columna a columna con la previsión     | AEMET y Puertos del Estado             | 4    |
+| `costa`           | Línea de costa por tramos, con el mar a la derecha del sentido de la línea | OpenStreetMap                          | 3    |
 
 El detalle de cada fuente está en [fuentes.md](fuentes.md).
 
@@ -178,6 +185,7 @@ Además de los de las claves primarias y únicas:
 | `playas_municipio_idx`, `playas_zona_idx` | B-tree | Páginas de municipio y de zona             |
 | `puntos_consulta_ubicacion_idx`           | GiST   | Punto más cercano a cada playa             |
 | `estaciones_ubicacion_idx`                | GiST   | Estación más cercana a cada zona           |
+| `costa_linea_idx`                         | GiST   | Tramos de costa cercanos a cada playa      |
 | `notas_ranking_idx`                       | B-tree | Ranking por plan y hora, ordenado por nota |
 | `previsiones_hora_idx`                    | B-tree | Previsto frente a medido a una hora        |
 | `previsiones_emitida_en_idx`              | B-tree | Última emisión y retención                 |
