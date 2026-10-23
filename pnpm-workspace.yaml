@@ -2,3 +2,8 @@ packages:
   - "apps/*"
   - "packages/*"
   - "jobs"
+
+# Dependencias autorizadas a ejecutar scripts de instalación (pnpm las bloquea por defecto).
+allowBuilds:
+  # Deja instalado su binario nativo; lo usa drizzle-kit.
+  esbuild: true

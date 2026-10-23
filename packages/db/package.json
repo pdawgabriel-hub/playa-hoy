@@ -8,6 +8,16 @@
     ".": "./src/index.ts"
   },
   "scripts": {
+    "drizzle-kit": "node --env-file-if-exists=../../.env node_modules/drizzle-kit/bin.cjs",
     "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@playa-hoy/shared": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "postgres": "3.4.9"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "drizzle-kit": "0.31.11"
   }
 }
