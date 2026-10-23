@@ -5,6 +5,17 @@
   "description": "Ingesta de datos, cálculo de notas y estadísticas (scripts para GitHub Actions)",
   "type": "module",
   "scripts": {
+    "importar:municipios": "node --env-file-if-exists=../.env src/importar-municipios.ts",
     "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@playa-hoy/core": "workspace:*",
+    "@playa-hoy/db": "workspace:*",
+    "@playa-hoy/shared": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2"
   }
 }

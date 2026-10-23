@@ -1,38 +1,24 @@
-import { randomUUID } from "node:crypto";
-import { fileURLToPath } from "node:url";
-
 import { sql } from "drizzle-orm";
 import { getTableConfig } from "drizzle-orm/pg-core";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
-import postgres from "postgres";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { crearDb } from "./cliente.ts";
 import * as esquema from "./esquema/index.ts";
+import { carpetaMigraciones, crearBaseDatosPrueba } from "./pruebas.ts";
 
 const url = process.env.DATABASE_URL ?? "";
-const carpetaMigraciones = fileURLToPath(new URL("../migraciones", import.meta.url));
 
 // Contra PostgreSQL real: el Docker local (pnpm db:up) o el servicio del CI.
 // Cada ejecución crea su propia base de datos vacía y la borra al terminar.
 describe.skipIf(!url)("migraciones contra PostgreSQL real", () => {
-  const nombre = `playahoy_test_${randomUUID().slice(0, 8)}`;
-  const admin = postgres(url, { max: 1, onnotice: () => {} });
-  let conexion: ReturnType<typeof crearDb>;
+  let conexion: Awaited<ReturnType<typeof crearBaseDatosPrueba>>;
 
   beforeAll(async () => {
-    // template0: sin PostGIS, como una base de datos recién creada en Neon
-    await admin.unsafe(`CREATE DATABASE "${nombre}" TEMPLATE template0`);
-    const destino = new URL(url);
-    destino.pathname = `/${nombre}`;
-    conexion = crearDb(destino.toString());
-    await migrate(conexion.db, { migrationsFolder: carpetaMigraciones });
+    conexion = await crearBaseDatosPrueba(url);
   });
 
   afterAll(async () => {
-    await conexion?.cerrar();
-    await admin.unsafe(`DROP DATABASE IF EXISTS "${nombre}" WITH (FORCE)`);
-    await admin.end();
+    await conexion?.borrar();
   });
 
   it("activa PostGIS en una base de datos que no lo tenía", async () => {

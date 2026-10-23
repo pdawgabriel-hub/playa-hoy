@@ -1,0 +1,13 @@
+{
+  "fuente": "Códigos INE de los municipios con zonas de baño en el censo de aguas de baño 2025 (MITECO) y en el listado de playas de AEMET, que coinciden. Nombres en su forma habitual (La Unión, no Unión (La)).",
+  "municipios": [
+    { "id": "30003", "nombre": "Águilas" },
+    { "id": "30016", "nombre": "Cartagena" },
+    { "id": "30024", "nombre": "Lorca" },
+    { "id": "30026", "nombre": "Mazarrón" },
+    { "id": "30035", "nombre": "San Javier" },
+    { "id": "30036", "nombre": "San Pedro del Pinatar" },
+    { "id": "30041", "nombre": "La Unión" },
+    { "id": "30902", "nombre": "Los Alcázares" }
+  ]
+}
