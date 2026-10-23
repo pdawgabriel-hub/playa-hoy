@@ -3,8 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "description": "Recomendador de playas de la Región de Murcia según viento, oleaje, orientación y plan",
+  "license": "MIT",
+  "author": "Gabriel Iborra Vicente",
   "type": "module",
   "scripts": {
+    "dev:web": "pnpm --filter @playa-hoy/web dev",
+    "dev:api": "pnpm --filter @playa-hoy/api dev",
     "lint": "oxlint --type-aware --deny-warnings --no-error-on-unmatched-pattern && prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present typecheck",

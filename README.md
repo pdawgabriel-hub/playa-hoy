@@ -2,6 +2,9 @@
 
 > **¿A qué playa voy hoy, y a qué hora?** Recomendador de playas de la Región de Murcia según el viento, el oleaje, la orientación de cada playa y el plan que tengas.
 
+[![CI](https://github.com/pdawgabriel-hub/playa-hoy/actions/workflows/ci.yml/badge.svg)](https://github.com/pdawgabriel-hub/playa-hoy/actions/workflows/ci.yml)
+[![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
+
 **Proyecto en desarrollo.**
 
 ---
@@ -15,7 +18,7 @@ La previsión del tiempo te dice qué viento y qué oleaje habrá, pero no **có
 
 playa·hoy combina la previsión mar adentro con datos propios de cada playa (su orientación, si está abrigada por cabos o bahías y si está en la laguna del Mar Menor) para estimar **lo que de verdad llega a la orilla**. Con eso le pone a cada playa una **nota de 0 a 100** según tu plan y te explica **por qué** en lenguaje claro.
 
-Cubre **todas las playas de la Región de Murcia**: Águilas, Lorca, Mazarrón, Cartagena, Los Alcázares, San Javier y San Pedro del Pinatar. Se pueden consultar por municipio o por zona (Mar Menor, La Manga, Calblanque y Cabo de Palos, Bahía de Mazarrón, Calas de Águilas…).
+Cubre **todas las playas de la Región de Murcia**: Águilas, Lorca, Mazarrón, Cartagena, La Unión, Los Alcázares, San Javier y San Pedro del Pinatar. Se pueden consultar por municipio o por zona (Mar Menor, La Manga, Calblanque y Cabo de Palos, Bahía de Mazarrón, Calas de Águilas…).
 
 ## Qué problemas cotidianos resuelve
 
@@ -100,18 +103,60 @@ packages/
   db/         Esquema, migraciones y consultas (Drizzle + PostGIS)
   shared/     Esquemas Zod y tipos compartidos
 jobs/         Ingesta de datos, cálculo de notas y estadísticas
+docs/         Documentación técnica (fuentes de datos, decisiones)
 ```
+
+## Desarrollo local
+
+### Requisitos
+
+- [Node.js](https://nodejs.org/) 24 (la versión está en `.nvmrc`; con nvm basta `nvm use`).
+- [pnpm](https://pnpm.io/) 12. Si tienes otra versión, pnpm descarga sola la que fija `package.json`.
+- [Docker](https://docs.docker.com/engine/install/) con Compose, para la base de datos.
+
+### Puesta en marcha
+
+```bash
+git clone git@github.com:pdawgabriel-hub/playa-hoy.git
+cd playa-hoy
+pnpm install
+cp .env.example .env   # y rellena los valores (ver comentarios del fichero)
+pnpm db:up             # PostgreSQL + PostGIS en localhost:5435
+pnpm dev:web           # web en http://localhost:4321
+pnpm dev:api           # API en http://localhost:3001
+```
+
+### Comandos
+
+| Comando          | Qué hace                                                      |
+| ---------------- | ------------------------------------------------------------- |
+| `pnpm dev:web`   | Arranca la web con recarga automática                         |
+| `pnpm dev:api`   | Arranca la API con recarga automática                         |
+| `pnpm lint`      | Linter (oxlint) y comprobación de formato (Prettier)          |
+| `pnpm format`    | Formatea todo el código                                       |
+| `pnpm typecheck` | Comprueba los tipos de todos los paquetes                     |
+| `pnpm test`      | Ejecuta los tests (`pnpm test:watch` para repetir al guardar) |
+| `pnpm db:up`     | Arranca la base de datos y espera a que esté lista            |
+| `pnpm db:stop`   | Para la base de datos (los datos se conservan)                |
+| `pnpm db:psql`   | Abre una consola SQL en la base de datos local                |
+
+El CI ejecuta `pnpm lint`, `pnpm typecheck` y `pnpm test` en cada push.
 
 ## Fuentes de datos
 
-- **[Open-Meteo](https://open-meteo.com/)** (Marine, Forecast e Historical): oleaje, viento, temperatura del agua y del aire, y nubosidad por horas.
-- **[AEMET OpenData](https://opendata.aemet.es/)**: predicción específica de playas.
-- **Censo de aguas de baño (MITECO)** y **Guía de playas**, vía [datos.gob.es](https://datos.gob.es/): listado de playas, calidad del agua y servicios.
-- **[OpenStreetMap](https://www.openstreetmap.org/copyright)**: línea de costa para calcular la orientación de cada playa (© colaboradores de OpenStreetMap, ODbL).
-- **Puertos del Estado y AEMET**: boyas y estaciones para medir la fiabilidad de la previsión.
+- **[Open-Meteo](https://open-meteo.com/)** (Marine, Forecast e históricos): oleaje, viento, temperatura del agua y del aire, y nubosidad por horas. Datos con licencia CC BY 4.0.
+- **[AEMET OpenData](https://opendata.aemet.es/)**: temperatura del agua del Mar Menor y viento medido en las estaciones de la costa. © AEMET.
+- **Censo de zonas de aguas de baño** (Ministerio de Sanidad, publicado por MITECO): catálogo oficial de playas.
+- **[OpenStreetMap](https://www.openstreetmap.org/copyright)**: línea de costa para calcular la orientación de cada playa, y servicios. © colaboradores de OpenStreetMap, ODbL.
+
+El detalle de cada fuente (qué da, cómo se accede, licencia, límites y huecos) está en [docs/fuentes.md](docs/fuentes.md).
 
 > La nota y la bandera son **estimaciones orientativas**. Consulta siempre la bandera oficial y las indicaciones del socorrista.
 
+## Licencia
+
+El código está bajo licencia [MIT](LICENSE). Los datos pertenecen a sus fuentes y se usan según sus propias licencias (ver [Fuentes de datos](#fuentes-de-datos)).
+
 ## Autor
 
-**Gabriel**: proyecto personal de portfolio, 2º de Desarrollo de Aplicaciones Web (DAW).
+**Gabriel Iborra Vicente** ([@pdawgabriel-hub](https://github.com/pdawgabriel-hub)): proyecto personal de portfolio, 2º de Desarrollo de Aplicaciones Web (DAW).
