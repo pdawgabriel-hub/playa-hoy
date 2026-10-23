@@ -158,7 +158,9 @@ El detalle de cada fuente está en [fuentes.md](fuentes.md).
 ## Decisiones de diseño
 
 - **Previsiones por punto de consulta, no por playa.** Las playas que caen en las mismas tres celdas del modelo de Open-Meteo (oleaje, viento y temperatura) reciben exactamente la misma previsión mar adentro, así que se guarda una vez por grupo: 30 puntos para 83 playas. Lo que distingue a cada playa (laguna, orientación, abrigo) lo aplica el motor de `core` al calcular la nota.
-- **Todas las emisiones.** La clave de `previsiones` incluye `emitida_en`, así que la misma hora aparece una vez por cada emisión que la predijo. Así se mide cómo cambia la previsión con la antelación. La política de retención está pendiente (ver [fuentes.md](fuentes.md#decisiones-pendientes)).
+- **Todas las emisiones.** La clave de `previsiones` incluye `emitida_en`, así que la misma hora aparece una vez por cada emisión que la predijo. Así se mide cómo cambia la previsión con la antelación.
+- **Una emisión por hora de descarga.** `emitida_en` es la hora de la descarga redondeada hacia abajo, y se guardan solo las horas desde ahí en adelante (restricción `previsiones_hora_tras_emision`). Repetir la ingesta dentro de la misma hora sobrescribe esa emisión en lugar de duplicarla, y cada emisión entra entera o no entra (transacción). La hace `ingerir:previsiones` (`jobs/src/previsiones.ts`).
+- **Retención: 14 días completos y después la última previsión.** Guardarlo todo ocuparía unos 1,7 GB al año con 4 descargas diarias (medido: 168 bytes por fila con índices), y Neon gratis da 0,5 GB. Durante 14 días se conservan todas las emisiones; pasado ese plazo, de cada hora solo queda la última que se hizo antes de que llegara, unos 44 MB al año. Para medir el error según la antelación en la fase 12 se usará `previous-runs` de Open-Meteo, que guarda las previsiones por antelación desde 2024.
 - **Solo la nota vigente.** `notas` no guarda una nota por emisión: cada ingesta sustituye las anteriores.
 - **Nulo significa desconocido.** `mira`, `abrigo` y los servicios son nulos mientras no se conocen, nunca 0 ni `false` por defecto. Así los filtros no presentan como dato lo que no lo es.
 - **No se inventan playas.** Toda playa necesita un código del censo o de OpenStreetMap (restricción `playas_origen`).
@@ -179,6 +181,7 @@ Las reglas importantes están en la propia base de datos, no solo en el código:
 | `calidad_agua`                 | Calificación de la escala actual; temporada desde 2011                                           |
 | `notas`                        | Perfil conocido; nota entre 0 y 100                                                              |
 | `previsiones`, `observaciones` | Direcciones entre 0 y 360; velocidades, alturas y periodos no negativos; nubosidad entre 0 y 100 |
+| `previsiones`                  | La hora prevista no es anterior a la emisión                                                     |
 | `estaciones`                   | Fuente `aemet` o `puertos_estado`                                                                |
 
 Borrar una playa, un punto de consulta o una estación borra en cascada sus datos dependientes. Borrar un municipio o una zona con playas no está permitido.

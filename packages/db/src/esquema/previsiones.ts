@@ -45,6 +45,9 @@ export const previsiones = pgTable(
     check("previsiones_viento_direccion", sql`${t.vientoDireccion} BETWEEN 0 AND 360`),
     check("previsiones_ola_direccion", sql`${t.olaDireccion} BETWEEN 0 AND 360`),
     check("previsiones_nubosidad", sql`${t.nubosidad} BETWEEN 0 AND 100`),
+    // Solo se guardan horas futuras a la emisión: la retención se queda con la última
+    // emisión de cada hora, que así es siempre una previsión y no algo ya pasado
+    check("previsiones_hora_tras_emision", sql`${t.hora} >= ${t.emitidaEn}`),
     check(
       "previsiones_no_negativos",
       sql`${t.vientoVelocidad} >= 0 AND ${t.vientoRacha} >= 0 AND ${t.olaAltura} >= 0 AND ${t.olaPeriodo} >= 0`,

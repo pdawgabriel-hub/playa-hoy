@@ -15,6 +15,7 @@
     "importar:zonas": "node --env-file-if-exists=../.env src/importar-zonas.ts",
     "calcular:geografia": "node --env-file-if-exists=../.env src/calcular-geografia.ts",
     "calcular:puntos": "node --env-file-if-exists=../.env src/calcular-puntos.ts",
+    "ingerir:previsiones": "node --env-file-if-exists=../.env src/ingerir-previsiones.ts",
     "typecheck": "tsc -p ."
   },
   "dependencies": {

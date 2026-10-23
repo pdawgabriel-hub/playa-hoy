@@ -1,0 +1,1 @@
+ALTER TABLE "previsiones" ADD CONSTRAINT "previsiones_hora_tras_emision" CHECK ("previsiones"."hora" >= "previsiones"."emitida_en");
