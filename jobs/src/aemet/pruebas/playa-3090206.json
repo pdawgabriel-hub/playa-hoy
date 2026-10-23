@@ -1,0 +1,181 @@
+[
+  {
+    "origen": {
+      "productor": "Agencia Estatal de Meteorolog�a - AEMET. Gobierno de Espa�a",
+      "web": "http://www.aemet.es",
+      "language": "es",
+      "copyright": "� AEMET. Autorizado el uso de la informaci�n y su reproducci�n citando a AEMET como autora de la misma.",
+      "notaLegal": "http://www.aemet.es/es/nota_legal"
+    },
+    "elaborado": "2026-10-23T08:51:16",
+    "nombre": "Manzanares",
+    "localidad": 30902,
+    "prediccion": {
+      "dia": [
+        {
+          "estadoCielo": {
+            "value": "",
+            "f1": 110,
+            "descripcion1": "nuboso",
+            "f2": 110,
+            "descripcion2": "nuboso"
+          },
+          "viento": {
+            "value": "",
+            "f1": 210,
+            "descripcion1": "flojo",
+            "f2": 210,
+            "descripcion2": "flojo"
+          },
+          "oleaje": {
+            "value": "",
+            "f1": 310,
+            "descripcion1": "d�bil",
+            "f2": 310,
+            "descripcion2": "d�bil"
+          },
+          "tMaxima": {
+            "value": "",
+            "valor1": 23
+          },
+          "sTermica": {
+            "value": "",
+            "valor1": 450,
+            "descripcion1": "suave"
+          },
+          "tAgua": {
+            "value": "",
+            "valor1": 20
+          },
+          "uvMax": {
+            "value": "",
+            "valor1": 4
+          },
+          "fecha": 20261023,
+          "tmaxima": {
+            "value": "",
+            "valor1": 23
+          },
+          "stermica": {
+            "value": "",
+            "valor1": 450,
+            "descripcion1": "suave"
+          },
+          "tagua": {
+            "value": "",
+            "valor1": 20
+          }
+        },
+        {
+          "estadoCielo": {
+            "value": "",
+            "f1": 110,
+            "descripcion1": "nuboso",
+            "f2": 110,
+            "descripcion2": "nuboso"
+          },
+          "viento": {
+            "value": "",
+            "f1": 210,
+            "descripcion1": "flojo",
+            "f2": 210,
+            "descripcion2": "flojo"
+          },
+          "oleaje": {
+            "value": "",
+            "f1": 310,
+            "descripcion1": "d�bil",
+            "f2": 310,
+            "descripcion2": "d�bil"
+          },
+          "tMaxima": {
+            "value": "",
+            "valor1": 22
+          },
+          "sTermica": {
+            "value": "",
+            "valor1": 450,
+            "descripcion1": "suave"
+          },
+          "tAgua": {
+            "value": "",
+            "valor1": 20
+          },
+          "uvMax": {
+            "value": "",
+            "valor1": 3
+          },
+          "fecha": 20261024,
+          "tmaxima": {
+            "value": "",
+            "valor1": 22
+          },
+          "stermica": {
+            "value": "",
+            "valor1": 450,
+            "descripcion1": "suave"
+          },
+          "tagua": {
+            "value": "",
+            "valor1": 20
+          }
+        },
+        {
+          "estadoCielo": {
+            "value": "",
+            "f1": 110,
+            "descripcion1": "nuboso",
+            "f2": 110,
+            "descripcion2": "nuboso"
+          },
+          "viento": {
+            "value": "",
+            "f1": 210,
+            "descripcion1": "flojo",
+            "f2": 220,
+            "descripcion2": "moderado"
+          },
+          "oleaje": {
+            "value": "",
+            "f1": 310,
+            "descripcion1": "d�bil",
+            "f2": 310,
+            "descripcion2": "d�bil"
+          },
+          "tMaxima": {
+            "value": "",
+            "valor1": 22
+          },
+          "sTermica": {
+            "value": "",
+            "valor1": 450,
+            "descripcion1": "suave"
+          },
+          "tAgua": {
+            "value": "",
+            "valor1": 20
+          },
+          "uvMax": {
+            "value": "",
+            "valor1": 3
+          },
+          "fecha": 20261025,
+          "tmaxima": {
+            "value": "",
+            "valor1": 22
+          },
+          "stermica": {
+            "value": "",
+            "valor1": 450,
+            "descripcion1": "suave"
+          },
+          "tagua": {
+            "value": "",
+            "valor1": 20
+          }
+        }
+      ]
+    },
+    "id": 3090206
+  }
+]
