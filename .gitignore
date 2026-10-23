@@ -12,6 +12,3 @@ coverage/
 
 # Variables de entorno (claves)
 .env
-
-# Respuestas descargadas en el spike de la fase 0
-spike/datos/

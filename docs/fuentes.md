@@ -1,6 +1,6 @@
 # Fuentes de datos
 
-Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condiciones se puede usar y qué riesgos o huecos tiene. Todo se comprobó con peticiones reales el 22 de octubre de 2026. Los scripts de prueba y las notas de trabajo están en `spike/`.
+Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condiciones se puede usar y qué riesgos o huecos tiene. Todo se comprobó con peticiones reales el 22 de octubre de 2026. Los scripts de prueba y las notas de trabajo se conservan en el historial de git (carpeta `spike/`, eliminada al empezar la fase 2).
 
 ## Resumen
 
@@ -142,7 +142,7 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 
 Las webs de MITECO y del Ministerio de Agricultura usan certificados de la FNMT, cuyas raíces no vienen en el almacén de Ubuntu ni en el de Node. Además, alguna no envía el certificado intermedio. Sin solución, `curl` y `fetch` fallan con un error de certificado.
 
-`spike/fnmt-ca.pem` reúne tres certificados descargados de la sede de la FNMT, con la huella SHA-1 comprobada contra la que publica:
+Hacen falta estos tres certificados, que se descargan de la [sede de la FNMT](https://www.sede.fnmt.gob.es/descargas/certificados-raiz-de-la-fnmt). Antes de usarlos hay que comprobar su huella SHA-1 (`openssl x509 -in fichero -noout -fingerprint -sha1`) contra esta tabla, que coincide con la publicada:
 
 | Certificado                              | SHA-1                                                         | Caduca |
 | ---------------------------------------- | ------------------------------------------------------------- | ------ |
@@ -150,7 +150,7 @@ Las webs de MITECO y del Ministerio de Agricultura usan certificados de la FNMT,
 | AC RAIZ FNMT-RCM                         | `EC:50:35:07:B2:15:C4:95:62:19:E2:A8:9A:5B:42:99:2C:4C:2C:20` | 2030   |
 | AC Componentes Informáticos (intermedio) | `C7:72:B4:8D:23:85:E5:02:E8:47:37:DB:E7:87:B6:43:11:91:12:47` | 2028   |
 
-Uso: `curl --cacert fnmt-ca.pem` o, en Node, `NODE_EXTRA_CA_CERTS=fnmt-ca.pem`. Nunca se desactiva la verificación. Cuando exista el monorepo, el fichero se moverá a una ubicación definitiva.
+Uso, con los tres en un solo fichero PEM: `curl --cacert fnmt-ca.pem` o, en Node, `NODE_EXTRA_CA_CERTS=fnmt-ca.pem`. Nunca se desactiva la verificación. Ahora mismo ninguna ingesta automática los necesita, porque el censo se descarga a mano; si alguna llega a necesitarlos, el fichero irá en `jobs/`.
 
 ## Cambios respecto al RoadMap
 
