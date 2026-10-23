@@ -14,6 +14,7 @@
     "importar:costa": "node --env-file-if-exists=../.env src/importar-costa.ts",
     "importar:zonas": "node --env-file-if-exists=../.env src/importar-zonas.ts",
     "calcular:geografia": "node --env-file-if-exists=../.env src/calcular-geografia.ts",
+    "calcular:puntos": "node --env-file-if-exists=../.env src/calcular-puntos.ts",
     "typecheck": "tsc -p ."
   },
   "dependencies": {

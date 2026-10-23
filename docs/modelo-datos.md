@@ -4,7 +4,7 @@ Esquema de PostgreSQL con PostGIS. Se define en TypeScript con Drizzle (`package
 
 ## Diagrama entidad-relación
 
-Las tablas forman dos grupos independientes, más la costa, que se usa para calcular la orientación y el abrigo de las playas. En la fase 4 cada playa quedará enlazada con su punto de consulta y los dos diagramas se unirán.
+Se muestran en dos diagramas para que se lean bien. Los une `puntos_consulta`: cada playa usa la previsión de su punto de consulta, que aparece en los dos. La costa se usa para calcular la orientación y el abrigo de las playas.
 
 ### Catálogo de playas y notas
 
@@ -15,6 +15,7 @@ erDiagram
     playas ||--o| playa_servicios : "tiene"
     playas ||--o{ calidad_agua : "calificada por temporada"
     playas ||--o{ notas : "puntuada"
+    puntos_consulta |o--o{ playas : "da la previsión a"
 
     municipios {
         text id PK "código INE (30003)"
@@ -42,6 +43,7 @@ erDiagram
         text codigo_censo UK "ES620M..."
         text codigo_aemet UK
         text osm_id UK
+        int punto_consulta_id FK
     }
 
     playa_servicios {
@@ -72,6 +74,11 @@ erDiagram
         text_array razones
         timestamptz emitida_en
     }
+
+    puntos_consulta {
+        int id PK
+        text celdas UK "las tres celdas del modelo"
+    }
 ```
 
 ### Previsiones, observaciones y costa
@@ -84,6 +91,7 @@ erDiagram
     puntos_consulta {
         int id PK
         geometry ubicacion UK "Point, SRID 4326"
+        text celdas UK "celdas de oleaje, viento y tiempo"
     }
 
     previsiones {
@@ -131,25 +139,25 @@ erDiagram
 
 ## Tablas
 
-| Tabla             | Qué guarda                                                                                | Origen de los datos                                                                 | Fase |
-| ----------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---- |
-| `municipios`      | División administrativa                                                                   | INE                                                                                 | 3    |
-| `zonas`           | División que entiende la gente (Mar Menor, La Manga…), con una descripción para su página | `jobs/datos/zonas.json`, definidas a mano                                           | 3    |
-| `playas`          | Catálogo: ubicación, orientación, abrigo, laguna                                          | Censo de aguas de baño; orientación, abrigo y laguna calculados con la costa de OSM | 3    |
-| `playa_servicios` | Accesible, suelo, ocupación, nudista, socorrista, perros, aseos, duchas                   | ITREM y OpenStreetMap                                                               | 3    |
-| `calidad_agua`    | Calificación oficial por temporada                                                        | Agencia Europea de Medio Ambiente                                                   | 3    |
-| `puntos_consulta` | Coordenadas que se piden a las APIs de previsión                                          | Agrupando playas cercanas                                                           | 4    |
-| `previsiones`     | Previsión por horas de cada punto, con **todas** las emisiones                            | Open-Meteo                                                                          | 4    |
-| `notas`           | Nota vigente de cada playa por plan y hora, con sus razones                               | Motor de puntuación (`packages/core`)                                               | 5    |
-| `estaciones`      | Estaciones y boyas que miden                                                              | AEMET y Puertos del Estado                                                          | 4    |
-| `observaciones`   | Datos medidos por hora, comparables columna a columna con la previsión                    | AEMET y Puertos del Estado                                                          | 4    |
-| `costa`           | Línea de costa por tramos, con el mar a la derecha del sentido de la línea                | OpenStreetMap                                                                       | 3    |
+| Tabla             | Qué guarda                                                                                                         | Origen de los datos                                                                 | Fase |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ---- |
+| `municipios`      | División administrativa                                                                                            | INE                                                                                 | 3    |
+| `zonas`           | División que entiende la gente (Mar Menor, La Manga…), con una descripción para su página                          | `jobs/datos/zonas.json`, definidas a mano                                           | 3    |
+| `playas`          | Catálogo: ubicación, orientación, abrigo, laguna                                                                   | Censo de aguas de baño; orientación, abrigo y laguna calculados con la costa de OSM | 3    |
+| `playa_servicios` | Accesible, suelo, ocupación, nudista, socorrista, perros, aseos, duchas                                            | ITREM y OpenStreetMap                                                               | 3    |
+| `calidad_agua`    | Calificación oficial por temporada                                                                                 | Agencia Europea de Medio Ambiente                                                   | 3    |
+| `puntos_consulta` | Coordenadas que se piden a las APIs de previsión: una por grupo de playas que caen en las mismas celdas del modelo | Open-Meteo (`calcular:puntos`)                                                      | 4    |
+| `previsiones`     | Previsión por horas de cada punto, con **todas** las emisiones                                                     | Open-Meteo                                                                          | 4    |
+| `notas`           | Nota vigente de cada playa por plan y hora, con sus razones                                                        | Motor de puntuación (`packages/core`)                                               | 5    |
+| `estaciones`      | Estaciones y boyas que miden                                                                                       | AEMET y Puertos del Estado                                                          | 4    |
+| `observaciones`   | Datos medidos por hora, comparables columna a columna con la previsión                                             | AEMET y Puertos del Estado                                                          | 4    |
+| `costa`           | Línea de costa por tramos, con el mar a la derecha del sentido de la línea                                         | OpenStreetMap                                                                       | 3    |
 
 El detalle de cada fuente está en [fuentes.md](fuentes.md).
 
 ## Decisiones de diseño
 
-- **Previsiones por punto de consulta, no por playa.** Varias playas comparten la misma celda del modelo de Open-Meteo, así que guardar la previsión por playa la repetiría. En la fase 4 cada playa quedará enlazada con su punto de consulta (columna nueva en `playas`), y entonces se añadirá esa relación al diagrama.
+- **Previsiones por punto de consulta, no por playa.** Las playas que caen en las mismas tres celdas del modelo de Open-Meteo (oleaje, viento y temperatura) reciben exactamente la misma previsión mar adentro, así que se guarda una vez por grupo: 30 puntos para 83 playas. Lo que distingue a cada playa (laguna, orientación, abrigo) lo aplica el motor de `core` al calcular la nota.
 - **Todas las emisiones.** La clave de `previsiones` incluye `emitida_en`, así que la misma hora aparece una vez por cada emisión que la predijo. Así se mide cómo cambia la previsión con la antelación. La política de retención está pendiente (ver [fuentes.md](fuentes.md#decisiones-pendientes)).
 - **Solo la nota vigente.** `notas` no guarda una nota por emisión: cada ingesta sustituye las anteriores.
 - **Nulo significa desconocido.** `mira`, `abrigo` y los servicios son nulos mientras no se conocen, nunca 0 ni `false` por defecto. Así los filtros no presentan como dato lo que no lo es.

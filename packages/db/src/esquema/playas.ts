@@ -4,6 +4,7 @@ import { boolean, check, index, integer, pgTable, real, text } from "drizzle-orm
 import { puntoWgs84 } from "../geo.ts";
 import { condicionSlug } from "./comun.ts";
 import { municipios } from "./municipios.ts";
+import { puntosConsulta } from "./puntos-consulta.ts";
 import { zonas } from "./zonas.ts";
 
 export const playas = pgTable(
@@ -29,6 +30,8 @@ export const playas = pgTable(
     codigoCenso: text().unique("playas_codigo_censo_unique"),
     codigoAemet: text().unique("playas_codigo_aemet_unique"),
     osmId: text().unique("playas_osm_id_unique"),
+    // Punto de consulta cuya previsión usa la playa
+    puntoConsultaId: integer().references(() => puntosConsulta.id, { onDelete: "set null" }),
   },
   (t) => [
     check("playas_slug", condicionSlug(t.slug)),
@@ -43,5 +46,6 @@ export const playas = pgTable(
     // Páginas de municipio y de zona (PostgreSQL no indexa las claves foráneas)
     index("playas_municipio_idx").on(t.municipioId),
     index("playas_zona_idx").on(t.zonaId),
+    index("playas_punto_consulta_idx").on(t.puntoConsultaId),
   ],
 );

@@ -92,6 +92,13 @@
       "when": 1792778019100,
       "tag": "0012_zonas_descripcion",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792780125128,
+      "tag": "0013_puntos_consulta_playas",
+      "breakpoints": true
     }
   ]
 }
