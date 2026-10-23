@@ -22,6 +22,13 @@
       "when": 1792771462551,
       "tag": "0002_playas",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792772061160,
+      "tag": "0003_playa_servicios",
+      "breakpoints": true
     }
   ]
 }
