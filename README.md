@@ -86,7 +86,7 @@ Todo el proyecto está escrito en **TypeScript**, organizado como monorepo con *
 | **Límite de peticiones** | [Upstash Redis](https://upstash.com/)                                                                                                                          |
 | **Tests**                | [Vitest](https://vitest.dev/), [MSW](https://mswjs.io/) para simular APIs externas, PostgreSQL real en Docker y [Playwright](https://playwright.dev/) para E2E |
 | **Calidad**              | TypeScript estricto, oxlint y Prettier                                                                                                                         |
-| **CI/CD y despliegue**   | GitHub Actions, [Vercel](https://vercel.com/), Lighthouse CI, Dependabot y avisos con ntfy                                                                     |
+| **CI/CD y despliegue**   | GitHub Actions, [Vercel](https://vercel.com/), Lighthouse CI y Dependabot                                                                                      |
 | **Desarrollo local**     | Docker Compose con PostgreSQL + PostGIS                                                                                                                        |
 
 ### Estructura del monorepo
