@@ -20,8 +20,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    # PostgreSQL con PostGIS para los tests de base de datos (misma imagen que compose.yaml)
+    services:
+      postgres:
+        image: postgis/postgis:18-3.6
+        env:
+          POSTGRES_USER: playa
+          POSTGRES_PASSWORD: playa
+          POSTGRES_DB: playahoy
+        ports:
+          - 5435:5432
+        options: >-
+          --health-cmd "pg_isready -U playa -d playahoy"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 15
+
     env:
       ASTRO_TELEMETRY_DISABLED: "1"
+      DATABASE_URL: postgresql://playa:playa@localhost:5435/playahoy
 
     steps:
       - uses: actions/checkout@v7
@@ -42,6 +59,16 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      # Si el esquema cambió y falta su migración, drizzle-kit generaría un fichero nuevo
+      - name: Migraciones al día con el esquema
+        run: |
+          pnpm --filter @playa-hoy/db drizzle-kit generate
+          if [ -n "$(git status --porcelain packages/db/migraciones)" ]; then
+            echo "::error::El esquema ha cambiado y falta generar su migración (pnpm --filter @playa-hoy/db drizzle-kit generate)"
+            git status --porcelain packages/db/migraciones
+            exit 1
+          fi
 
       - name: Tests
         run: pnpm test

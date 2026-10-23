@@ -145,7 +145,9 @@ pnpm dev:api           # API en http://localhost:3001
 | `pnpm db:seed`    | Carga datos de ejemplo (solo en la base de datos local)       |
 | `pnpm db:studio`  | Abre Drizzle Studio para ver las tablas en el navegador       |
 
-El CI ejecuta `pnpm lint`, `pnpm typecheck` y `pnpm test` en cada push.
+Los tests de base de datos crean su propia base de datos temporal en el PostgreSQL local, así que necesitan `pnpm db:up`. Si `DATABASE_URL` no está definida, se saltan.
+
+El CI ejecuta `pnpm lint`, `pnpm typecheck` y `pnpm test` en cada push, con su propio PostgreSQL + PostGIS, y comprueba que no falte ninguna migración por generar.
 
 ## Fuentes de datos
 
