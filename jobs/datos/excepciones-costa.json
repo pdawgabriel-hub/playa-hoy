@@ -1,0 +1,11 @@
+{
+  "descripcion": "Correcciones a mano de lo que se calcula con la costa (laguna, orientación), cada una con su motivo.",
+  "laguna": [
+    {
+      "codigo": "ES620M0161609",
+      "playa": "Puerto Bello",
+      "laguna": true,
+      "motivo": "Queda a 196 m del polígono del Mar Menor de OSM (relación 2902374), que no sigue del todo la orilla en esa zona de La Manga. ITREM la sitúa en el Mar Menor, mira al noroeste (315°) y todos sus rayos hacia el mar chocan con tierra a menos de 15 km, como en el resto de la laguna."
+    }
+  ]
+}

@@ -13,6 +13,7 @@
     "importar:osm": "node --env-file-if-exists=../.env src/importar-osm.ts",
     "importar:costa": "node --env-file-if-exists=../.env src/importar-costa.ts",
     "importar:zonas": "node --env-file-if-exists=../.env src/importar-zonas.ts",
+    "calcular:geografia": "node --env-file-if-exists=../.env src/calcular-geografia.ts",
     "typecheck": "tsc -p ."
   },
   "dependencies": {

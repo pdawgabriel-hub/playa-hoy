@@ -131,19 +131,19 @@ erDiagram
 
 ## Tablas
 
-| Tabla             | Qué guarda                                                                                | Origen de los datos                       | Fase |
-| ----------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------- | ---- |
-| `municipios`      | División administrativa                                                                   | INE                                       | 3    |
-| `zonas`           | División que entiende la gente (Mar Menor, La Manga…), con una descripción para su página | `jobs/datos/zonas.json`, definidas a mano | 3    |
-| `playas`          | Catálogo: ubicación, orientación, abrigo, laguna                                          | Censo de aguas de baño y OpenStreetMap    | 3    |
-| `playa_servicios` | Accesible, suelo, ocupación, nudista, socorrista, perros, aseos, duchas                   | ITREM y OpenStreetMap                     | 3    |
-| `calidad_agua`    | Calificación oficial por temporada                                                        | Agencia Europea de Medio Ambiente         | 3    |
-| `puntos_consulta` | Coordenadas que se piden a las APIs de previsión                                          | Agrupando playas cercanas                 | 4    |
-| `previsiones`     | Previsión por horas de cada punto, con **todas** las emisiones                            | Open-Meteo                                | 4    |
-| `notas`           | Nota vigente de cada playa por plan y hora, con sus razones                               | Motor de puntuación (`packages/core`)     | 5    |
-| `estaciones`      | Estaciones y boyas que miden                                                              | AEMET y Puertos del Estado                | 4    |
-| `observaciones`   | Datos medidos por hora, comparables columna a columna con la previsión                    | AEMET y Puertos del Estado                | 4    |
-| `costa`           | Línea de costa por tramos, con el mar a la derecha del sentido de la línea                | OpenStreetMap                             | 3    |
+| Tabla             | Qué guarda                                                                                | Origen de los datos                                                                 | Fase |
+| ----------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---- |
+| `municipios`      | División administrativa                                                                   | INE                                                                                 | 3    |
+| `zonas`           | División que entiende la gente (Mar Menor, La Manga…), con una descripción para su página | `jobs/datos/zonas.json`, definidas a mano                                           | 3    |
+| `playas`          | Catálogo: ubicación, orientación, abrigo, laguna                                          | Censo de aguas de baño; orientación, abrigo y laguna calculados con la costa de OSM | 3    |
+| `playa_servicios` | Accesible, suelo, ocupación, nudista, socorrista, perros, aseos, duchas                   | ITREM y OpenStreetMap                                                               | 3    |
+| `calidad_agua`    | Calificación oficial por temporada                                                        | Agencia Europea de Medio Ambiente                                                   | 3    |
+| `puntos_consulta` | Coordenadas que se piden a las APIs de previsión                                          | Agrupando playas cercanas                                                           | 4    |
+| `previsiones`     | Previsión por horas de cada punto, con **todas** las emisiones                            | Open-Meteo                                                                          | 4    |
+| `notas`           | Nota vigente de cada playa por plan y hora, con sus razones                               | Motor de puntuación (`packages/core`)                                               | 5    |
+| `estaciones`      | Estaciones y boyas que miden                                                              | AEMET y Puertos del Estado                                                          | 4    |
+| `observaciones`   | Datos medidos por hora, comparables columna a columna con la previsión                    | AEMET y Puertos del Estado                                                          | 4    |
+| `costa`           | Línea de costa por tramos, con el mar a la derecha del sentido de la línea                | OpenStreetMap                                                                       | 3    |
 
 El detalle de cada fuente está en [fuentes.md](fuentes.md).
 
