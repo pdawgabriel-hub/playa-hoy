@@ -1,0 +1,385 @@
+{
+  "descripcion": "Zonas de playas: la división que entiende la gente. Una zona puede abarcar varios municipios. Las playas se identifican por su código del censo; el nombre es solo para leer el fichero.",
+  "zonas": [
+    {
+      "nombre": "Mar Menor",
+      "descripcion": "Orilla interior de la laguna, de San Pedro del Pinatar a Playa Honda: aguas tranquilas y someras, sin oleaje del Mediterráneo.",
+      "playas": [
+        {
+          "codigo": "ES620M0161601",
+          "nombre": "Los Urrutias"
+        },
+        {
+          "codigo": "ES620M0161606",
+          "nombre": "Los Nietos"
+        },
+        {
+          "codigo": "ES620M0161611",
+          "nombre": "Mar de Cristal"
+        },
+        {
+          "codigo": "ES620M0161612",
+          "nombre": "Villas Caravanning"
+        },
+        {
+          "codigo": "ES620M0161613",
+          "nombre": "Playa Honda"
+        },
+        {
+          "codigo": "ES620M0161623",
+          "nombre": "Punta Brava"
+        },
+        {
+          "codigo": "ES620M0161624",
+          "nombre": "Estrella de Mar"
+        },
+        {
+          "codigo": "ES620M0162365",
+          "nombre": "Paraíso"
+        },
+        {
+          "codigo": "ES620M0162410",
+          "nombre": "Levante-Islas Menores"
+        },
+        {
+          "codigo": "ES620M0162411",
+          "nombre": "Poniente-Islas Menores"
+        },
+        {
+          "codigo": "ES620M0351639",
+          "nombre": "El Castillico"
+        },
+        {
+          "codigo": "ES620M0351649",
+          "nombre": "Paseo Colón"
+        },
+        {
+          "codigo": "ES620M0351650",
+          "nombre": "Barnuevo"
+        },
+        {
+          "codigo": "ES620M0361655",
+          "nombre": "Villananitos"
+        },
+        {
+          "codigo": "ES620M0361656",
+          "nombre": "La Puntica"
+        },
+        {
+          "codigo": "ES620M0361658",
+          "nombre": "La Mota"
+        },
+        {
+          "codigo": "ES620M9021660",
+          "nombre": "Los Narejos"
+        },
+        {
+          "codigo": "ES620M9021661",
+          "nombre": "Las Palmeras"
+        },
+        {
+          "codigo": "ES620M9021662",
+          "nombre": "Paseo del Espejo"
+        },
+        {
+          "codigo": "ES620M9021663",
+          "nombre": "Paseo de Manzanares"
+        },
+        {
+          "codigo": "ES620M9021664",
+          "nombre": "Paseo de la Concha"
+        },
+        {
+          "codigo": "ES620M9021665",
+          "nombre": "Paseo Carrión"
+        }
+      ]
+    },
+    {
+      "nombre": "La Manga",
+      "descripcion": "La franja de arena entre el Mediterráneo y el Mar Menor, con playas en las dos orillas: abiertas al levante las de fuera y en la laguna las de dentro.",
+      "playas": [
+        {
+          "codigo": "ES620M0161602",
+          "nombre": "Cala del Pino"
+        },
+        {
+          "codigo": "ES620M0161603",
+          "nombre": "Galúa"
+        },
+        {
+          "codigo": "ES620M0161605",
+          "nombre": "La Gola"
+        },
+        {
+          "codigo": "ES620M0161608",
+          "nombre": "Entremares"
+        },
+        {
+          "codigo": "ES620M0161609",
+          "nombre": "Puerto Bello"
+        },
+        {
+          "codigo": "ES620M0161622",
+          "nombre": "Cavannas"
+        },
+        {
+          "codigo": "ES620M0161625",
+          "nombre": "Las Sirenas"
+        },
+        {
+          "codigo": "ES620M0161626",
+          "nombre": "El Vivero"
+        },
+        {
+          "codigo": "ES620M0351640",
+          "nombre": "Veneciola"
+        },
+        {
+          "codigo": "ES620M0351642",
+          "nombre": "Pedrucho Norte"
+        },
+        {
+          "codigo": "ES620M0351643",
+          "nombre": "Mistral"
+        },
+        {
+          "codigo": "ES620M0351644",
+          "nombre": "El Tabal"
+        },
+        {
+          "codigo": "ES620M0351645",
+          "nombre": "Las Gaviotas"
+        },
+        {
+          "codigo": "ES620M0351646",
+          "nombre": "Antillas"
+        },
+        {
+          "codigo": "ES620M0351647",
+          "nombre": "El Galán"
+        },
+        {
+          "codigo": "ES620M0351648",
+          "nombre": "Pedrucho Sur"
+        },
+        {
+          "codigo": "ES620M0351651",
+          "nombre": "El Pedruchillo"
+        },
+        {
+          "codigo": "ES620M0351652",
+          "nombre": "Los Alisios"
+        },
+        {
+          "codigo": "ES620M0352077",
+          "nombre": "La Ensenada del Esparto"
+        },
+        {
+          "codigo": "ES620M0352796",
+          "nombre": "El Estacio"
+        }
+      ]
+    },
+    {
+      "nombre": "Calblanque y Cabo de Palos",
+      "descripcion": "Del faro de Cabo de Palos a las calas del parque regional de Calblanque: costa abierta, con playas naturales sin urbanizar.",
+      "playas": [
+        {
+          "codigo": "ES620M0161614",
+          "nombre": "Levante (Cabo de Palos)"
+        },
+        {
+          "codigo": "ES620M0161615",
+          "nombre": "Calblanque"
+        },
+        {
+          "codigo": "ES620M0161616",
+          "nombre": "El Barco"
+        },
+        {
+          "codigo": "ES620M0161627",
+          "nombre": "Las Amoladeras"
+        },
+        {
+          "codigo": "ES620M0161628",
+          "nombre": "Cala Flores"
+        },
+        {
+          "codigo": "ES620M0162683",
+          "nombre": "Cala Reona"
+        }
+      ]
+    },
+    {
+      "nombre": "Salinas de San Pedro",
+      "descripcion": "Costa mediterránea del parque regional de las Salinas y Arenales de San Pedro del Pinatar: playas largas de arena y dunas.",
+      "playas": [
+        {
+          "codigo": "ES620M0361653",
+          "nombre": "El Mojón-Derecha"
+        },
+        {
+          "codigo": "ES620M0361654",
+          "nombre": "La Llana-Las Salinas"
+        },
+        {
+          "codigo": "ES620M0361657",
+          "nombre": "Torre Derribada"
+        }
+      ]
+    },
+    {
+      "nombre": "Costa de Cartagena",
+      "descripcion": "De Portmán a Isla Plana: calas y playas al pie de la sierra, abiertas al sur.",
+      "playas": [
+        {
+          "codigo": "ES620M0161617",
+          "nombre": "Cala Cortina"
+        },
+        {
+          "codigo": "ES620M0161618",
+          "nombre": "El Portús"
+        },
+        {
+          "codigo": "ES620M0161619",
+          "nombre": "La Azohía-El Cuartel"
+        },
+        {
+          "codigo": "ES620M0161620",
+          "nombre": "San Ginés"
+        },
+        {
+          "codigo": "ES620M0161621",
+          "nombre": "Isla Plana"
+        },
+        {
+          "codigo": "ES620M0162412",
+          "nombre": "La Chapineta"
+        },
+        {
+          "codigo": "ES620M0411659",
+          "nombre": "Portmán-El Lastre"
+        }
+      ]
+    },
+    {
+      "nombre": "Bahía de Mazarrón",
+      "descripcion": "La bahía de Mazarrón, de El Mojón a Bolnuevo: playas urbanas y familiares, resguardadas del levante.",
+      "playas": [
+        {
+          "codigo": "ES620M0261631",
+          "nombre": "Riguete"
+        },
+        {
+          "codigo": "ES620M0261632",
+          "nombre": "El Puerto"
+        },
+        {
+          "codigo": "ES620M0261633",
+          "nombre": "La Isla"
+        },
+        {
+          "codigo": "ES620M0261634",
+          "nombre": "Bahía"
+        },
+        {
+          "codigo": "ES620M0261635",
+          "nombre": "Playa Grande-Castellar"
+        },
+        {
+          "codigo": "ES620M0261636",
+          "nombre": "Bolnuevo"
+        },
+        {
+          "codigo": "ES620M0261637",
+          "nombre": "Nares"
+        },
+        {
+          "codigo": "ES620M0261638",
+          "nombre": "El Alamillo"
+        },
+        {
+          "codigo": "ES620M0262413",
+          "nombre": "El Mojón"
+        }
+      ]
+    },
+    {
+      "nombre": "Costa de Lorca",
+      "descripcion": "Calnegre y Percheles, entre Mazarrón y Lorca: calas tranquilas y poco urbanizadas. Percheles es de Mazarrón, pero está pegada a Calnegre y fuera de la bahía.",
+      "playas": [
+        {
+          "codigo": "ES620M0241629",
+          "nombre": "Punta de Calnegre"
+        },
+        {
+          "codigo": "ES620M0241630",
+          "nombre": "Calnegre"
+        },
+        {
+          "codigo": "ES620M0262414",
+          "nombre": "Percheles"
+        }
+      ]
+    },
+    {
+      "nombre": "Águilas",
+      "descripcion": "Las playas y calas de Águilas, de El Charco a La Carolina, en la costa más al sur de la Región.",
+      "playas": [
+        {
+          "codigo": "ES620M0031590",
+          "nombre": "Calabardina"
+        },
+        {
+          "codigo": "ES620M0031591",
+          "nombre": "La Cola"
+        },
+        {
+          "codigo": "ES620M0031592",
+          "nombre": "El Hornillo"
+        },
+        {
+          "codigo": "ES620M0031593",
+          "nombre": "Las Delicias"
+        },
+        {
+          "codigo": "ES620M0031594",
+          "nombre": "Levante"
+        },
+        {
+          "codigo": "ES620M0031595",
+          "nombre": "Poniente"
+        },
+        {
+          "codigo": "ES620M0031596",
+          "nombre": "Calarreona"
+        },
+        {
+          "codigo": "ES620M0031597",
+          "nombre": "La Carolina"
+        },
+        {
+          "codigo": "ES620M0031598",
+          "nombre": "La Higuerica"
+        },
+        {
+          "codigo": "ES620M0031599",
+          "nombre": "La Colonia"
+        },
+        {
+          "codigo": "ES620M0032076",
+          "nombre": "Matalentisco"
+        },
+        {
+          "codigo": "ES620M0032551",
+          "nombre": "La Casica Verde"
+        },
+        {
+          "codigo": "ES620M0032552",
+          "nombre": "El Charco"
+        }
+      ]
+    }
+  ]
+}

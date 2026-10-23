@@ -10,6 +10,8 @@ export const zonas = pgTable(
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     nombre: text().notNull(),
     slug: text().notNull().unique(),
+    // Texto breve para la página de la zona
+    descripcion: text(),
   },
   (t) => [check("zonas_slug", condicionSlug(t.slug))],
 );

@@ -1,0 +1,1 @@
+ALTER TABLE "zonas" ADD COLUMN "descripcion" text;
