@@ -5,12 +5,13 @@
   "description": "API pública de playa·hoy (Hono)",
   "type": "module",
   "scripts": {
-    "dev": "node --watch src/server.ts",
-    "start": "node src/server.ts",
+    "dev": "node --env-file-if-exists=../../.env --watch src/server.ts",
+    "start": "node --env-file-if-exists=../../.env src/server.ts",
     "typecheck": "tsc -p ."
   },
   "dependencies": {
     "@hono/node-server": "2.1.5",
+    "@playa-hoy/shared": "workspace:*",
     "hono": "4.13.13"
   },
   "devDependencies": {

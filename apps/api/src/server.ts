@@ -1,9 +1,10 @@
 import { serve } from "@hono/node-server";
+import { esquemaServidor, leerEntorno } from "@playa-hoy/shared";
 
 import { app } from "./app.ts";
 
-const port = Number(process.env.PORT ?? 3001);
+const { PORT } = leerEntorno(esquemaServidor, process.env);
 
-serve({ fetch: app.fetch, port }, (info) => {
+serve({ fetch: app.fetch, port: PORT }, (info) => {
   console.log(`API escuchando en http://localhost:${info.port}`);
 });
