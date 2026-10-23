@@ -82,7 +82,12 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 - **Licencia:** uso y reproducción autorizados citando a AEMET como autora.
 - **Clave:** gratuita, se pide en opendata.aemet.es. Variable `AEMET_API_KEY`.
 
-**Uso en playa·hoy:** no sirve para calcular la nota, porque no da dirección ni cifras. Sí sirve para la **temperatura del agua del Mar Menor**, que distingue de la del Mediterráneo (20 °C frente a 23-25 °C el 22 de octubre de 2026). El valor fue idéntico en todas las playas de la laguna y en los 3 días, así que hay que vigilar si es un dato real o climatológico.
+**Uso en playa·hoy:** no sirve para calcular la nota, porque no da dirección ni cifras. Sí sirve para la **temperatura del agua del Mar Menor**, que distingue de la del Mediterráneo, y para el **índice UV**.
+
+- **Emparejamiento:** 27 de las 30 playas tienen pareja en el censo, en `jobs/datos/correspondencias-aemet.json` (19 automáticas por nombre y distancia, 8 revisadas a mano con su motivo). Quedan fuera La Reya, El Arenal y Punta Calera: ninguna playa del censo se llama así y ITREM confirma que son distintas de sus vecinas. `importar:aemet` pone el código en `playas.codigo_aemet`.
+- **Comprobación independiente:** las playas de AEMET con agua del Mar Menor son exactamente las que el catálogo marca como laguna (`laguna`), y las demás tienen agua del Mediterráneo. Así se confirmó Mistral, cuyo punto está a 2,4 km del del censo.
+- **Ingesta:** `ingerir:aemet` guarda en `previsiones_aemet` la última predicción de cada día (54 peticiones, unos 2 minutos). Solo sustituye un día por una predicción elaborada después, así que repetirla no cambia nada.
+- **Aviso: el agua del Mar Menor parece climatológica.** El 22 y el 23 de octubre de 2026 dio 20 °C en las 6 playas de la laguna y en los 3 días de cada predicción, mientras que en el Mediterráneo varió entre 23 y 25 °C de una playa y un día a otro. Se guarda tal cual; el motor (fase 5) decide cómo usarla, y conviene revisar si cambia con las semanas.
 
 ## AEMET observación
 

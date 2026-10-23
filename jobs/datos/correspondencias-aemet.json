@@ -1,0 +1,226 @@
+{
+  "descripcion": "Correspondencia entre las playas del censo y las de la predicción de playas de AEMET (listado público Playas_codigos.csv, 30 playas en Murcia), revisada a mano. Automática cuando el nombre coincide (o uno contiene al otro) y es la playa del censo más cercana; el resto, revisión manual con su motivo. Comprobación independiente: las playas de AEMET con agua del Mar Menor (20 °C) son exactamente las que el catálogo marca como laguna.",
+  "sinCorrespondencia": {
+    "3002623 La Reya": "Ninguna playa del censo se llama así. La más cercana es Bahía, a 92 m, pero ITREM las trata como playas distintas (Playa de La Reya y Playa de Bahía).",
+    "3003526 El Arenal": "Ninguna playa del censo se llama así. La más cercana es El Galán, a 507 m, pero da al Mar Menor y El Arenal al Mediterráneo (ITREM y la temperatura del agua de AEMET).",
+    "3090202 Punta Calera": "Ninguna playa del censo se llama así. La más cercana es Los Narejos, a 111 m, pero no hay ninguna fuente que diga que son la misma playa."
+  },
+  "correspondencias": [
+    {
+      "codigoCenso": "ES620M0031590",
+      "playa": "Calabardina",
+      "codigoAemet": "3000327",
+      "playaAemet": "Calabardina",
+      "distancia": 274,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031593",
+      "playa": "Las Delicias",
+      "codigoAemet": "3000315",
+      "playaAemet": "Las Delicias",
+      "distancia": 105,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031594",
+      "playa": "Levante",
+      "codigoAemet": "3000314",
+      "playaAemet": "Levante",
+      "distancia": 48,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031595",
+      "playa": "Poniente",
+      "codigoAemet": "3000313",
+      "playaAemet": "Poniente",
+      "distancia": 523,
+      "revision": "Por nombre. El punto de AEMET está más cerca de La Colonia: misma discrepancia que La Colonia."
+    },
+    {
+      "codigoCenso": "ES620M0031597",
+      "playa": "La Carolina",
+      "codigoAemet": "3000301",
+      "playaAemet": "La Carolina",
+      "distancia": 34,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0031599",
+      "playa": "La Colonia",
+      "codigoAemet": "3000312",
+      "playaAemet": "La Colonia",
+      "distancia": 508,
+      "revision": "Por nombre. El punto de AEMET está más cerca de Poniente: es la discrepancia conocida de Águilas (AEMET e ITREM ponen La Colonia al oeste, el censo y OSM al este). Se mantiene el censo."
+    },
+    {
+      "codigoCenso": "ES620M0161601",
+      "playa": "Los Urrutias",
+      "codigoAemet": "3001676",
+      "playaAemet": "Los Urrutias",
+      "distancia": 519,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161603",
+      "playa": "Galúa",
+      "codigoAemet": "3001655",
+      "playaAemet": "Barco Perdido, Galúa",
+      "distancia": 486,
+      "revision": "Por nombre (Galúa). La más cercana es Cavannas, a 429 m, pero el nombre de AEMET incluye Galúa."
+    },
+    {
+      "codigoCenso": "ES620M0161615",
+      "playa": "Calblanque",
+      "codigoAemet": "3001634",
+      "playaAemet": "De Calblanque",
+      "distancia": 2282,
+      "revision": "Por nombre. Calblanque es una costa de varios kilómetros y cada fuente pone el punto en un sitio distinto; las dos dan al Mediterráneo."
+    },
+    {
+      "codigoCenso": "ES620M0161617",
+      "playa": "Cala Cortina",
+      "codigoAemet": "3001624",
+      "playaAemet": "Cala Cortina",
+      "distancia": 23,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161618",
+      "playa": "El Portús",
+      "codigoAemet": "3001619",
+      "playaAemet": "El Portús",
+      "distancia": 41,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161619",
+      "playa": "La Azohía-El Cuartel",
+      "codigoAemet": "3001610",
+      "playaAemet": "La Azohía",
+      "distancia": 190,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0161627",
+      "playa": "Las Amoladeras",
+      "codigoAemet": "3001653",
+      "playaAemet": "Las Amoladeras",
+      "distancia": 1267,
+      "revision": "Por nombre. Las dos en el Mediterráneo al inicio de La Manga; AEMET da agua del Mediterráneo (23-25 °C)."
+    },
+    {
+      "codigoCenso": "ES620M0241629",
+      "playa": "Punta de Calnegre",
+      "codigoAemet": "3002414",
+      "playaAemet": "Puntas de Calnegre",
+      "distancia": 163,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261633",
+      "playa": "La Isla",
+      "codigoAemet": "3002626",
+      "playaAemet": "La Isla",
+      "distancia": 212,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261636",
+      "playa": "Bolnuevo",
+      "codigoAemet": "3002618",
+      "playaAemet": "Bolnuevo",
+      "distancia": 236,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0261638",
+      "playa": "El Alamillo",
+      "codigoAemet": "3002630",
+      "playaAemet": "El Alamillo",
+      "distancia": 205,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0262413",
+      "playa": "El Mojón",
+      "codigoAemet": "3002633",
+      "playaAemet": "Del Mojón",
+      "distancia": 96,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351643",
+      "playa": "Mistral",
+      "codigoAemet": "3003509",
+      "playaAemet": "Mistral",
+      "distancia": 2374,
+      "revision": "Por nombre. La más cercana es Veneciola, a 1,4 km. AEMET da agua del Mar Menor (20 °C) y Mistral es de laguna, igual que en ITREM."
+    },
+    {
+      "codigoCenso": "ES620M0351644",
+      "playa": "El Tabal",
+      "codigoAemet": "3003531",
+      "playaAemet": "Banco del Tabal",
+      "distancia": 0,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0351649",
+      "playa": "Paseo Colón",
+      "codigoAemet": "3003503",
+      "playaAemet": "De Colón",
+      "distancia": 74,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0361654",
+      "playa": "La Llana-Las Salinas",
+      "codigoAemet": "3003606",
+      "playaAemet": "Las Salinas",
+      "distancia": 128,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0361655",
+      "playa": "Villananitos",
+      "codigoAemet": "3003602",
+      "playaAemet": "Villananitos",
+      "distancia": 426,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M0361657",
+      "playa": "Torre Derribada",
+      "codigoAemet": "3003605",
+      "playaAemet": "La Torre Derribada",
+      "distancia": 1322,
+      "revision": "Por nombre. La más cercana es El Mojón-Derecha, a 861 m."
+    },
+    {
+      "codigoCenso": "ES620M0411659",
+      "playa": "Portmán-El Lastre",
+      "codigoAemet": "3004102",
+      "playaAemet": "Del Lastre",
+      "distancia": 36,
+      "revision": "automática"
+    },
+    {
+      "codigoCenso": "ES620M9021662",
+      "playa": "Paseo del Espejo",
+      "codigoAemet": "3090205",
+      "playaAemet": "El Espejo",
+      "distancia": 426,
+      "revision": "Por nombre. La más cercana es Paseo de Manzanares, a 316 m, que corresponde a la playa Manzanares de AEMET."
+    },
+    {
+      "codigoCenso": "ES620M9021663",
+      "playa": "Paseo de Manzanares",
+      "codigoAemet": "3090206",
+      "playaAemet": "Manzanares",
+      "distancia": 111,
+      "revision": "automática"
+    }
+  ]
+}

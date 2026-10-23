@@ -88,6 +88,7 @@ El job comprueba antes de calcular nada que todas las excepciones apuntan a play
 flowchart LR
     municipios[importar:municipios] --> playas[importar:playas]
     playas --> itrem[importar:itrem]
+    playas --> aemet[importar:aemet]
     playas --> osm[importar:osm]
     playas --> zonas[importar:zonas]
     costa[importar:costa] --> geografia[calcular:geografia]
@@ -100,10 +101,11 @@ flowchart LR
 | 1     | `importar:municipios` | Los 8 municipios costeros                                     | `jobs/datos/municipios.json`                      |
 | 2     | `importar:playas`     | Las 83 playas del censo de aguas de baño                      | `jobs/datos/censo-2025-murcia.json`               |
 | 3     | `importar:itrem`      | Accesible, suelo, ocupación, nudista                          | `jobs/datos/itrem-playas.json`                    |
-| 4     | `importar:osm`        | Socorrista, perros, aseos, duchas                             | Overpass (red)                                    |
-| 5     | `importar:zonas`      | Las 8 zonas y la zona de cada playa                           | `jobs/datos/zonas.json`                           |
-| 6     | `importar:costa`      | La línea de costa                                             | Overpass (red)                                    |
-| 7     | `calcular:geografia`  | Orientación, abrigo y laguna                                  | Tabla `costa` y Overpass (polígono del Mar Menor) |
-| 8     | `calcular:puntos`     | Agrupa las playas por celdas del modelo en puntos de consulta | Open-Meteo (red)                                  |
+| 4     | `importar:aemet`      | El código de AEMET de cada playa                              | `jobs/datos/correspondencias-aemet.json`          |
+| 5     | `importar:osm`        | Socorrista, perros, aseos, duchas                             | Overpass (red)                                    |
+| 6     | `importar:zonas`      | Las 8 zonas y la zona de cada playa                           | `jobs/datos/zonas.json`                           |
+| 7     | `importar:costa`      | La línea de costa                                             | Overpass (red)                                    |
+| 8     | `calcular:geografia`  | Orientación, abrigo y laguna                                  | Tabla `costa` y Overpass (polígono del Mar Menor) |
+| 9     | `calcular:puntos`     | Agrupa las playas por celdas del modelo en puntos de consulta | Open-Meteo (red)                                  |
 
 Todos se pueden repetir sin duplicar datos. Los que leen ficheros de `jobs/datos/` no necesitan red; los de OpenStreetMap reintentan con varios servidores si Overpass no responde.

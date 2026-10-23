@@ -10,12 +10,14 @@
     "importar:municipios": "node --env-file-if-exists=../.env src/importar-municipios.ts",
     "importar:playas": "node --env-file-if-exists=../.env src/importar-playas.ts",
     "importar:itrem": "node --env-file-if-exists=../.env src/importar-itrem.ts",
+    "importar:aemet": "node --env-file-if-exists=../.env src/importar-aemet.ts",
     "importar:osm": "node --env-file-if-exists=../.env src/importar-osm.ts",
     "importar:costa": "node --env-file-if-exists=../.env src/importar-costa.ts",
     "importar:zonas": "node --env-file-if-exists=../.env src/importar-zonas.ts",
     "calcular:geografia": "node --env-file-if-exists=../.env src/calcular-geografia.ts",
     "calcular:puntos": "node --env-file-if-exists=../.env src/calcular-puntos.ts",
     "ingerir:previsiones": "node --env-file-if-exists=../.env src/ingerir-previsiones.ts",
+    "ingerir:aemet": "node --env-file-if-exists=../.env src/ingerir-aemet.ts",
     "typecheck": "tsc -p ."
   },
   "dependencies": {

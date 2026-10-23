@@ -7,6 +7,7 @@ export * from "./notas.ts";
 export * from "./observaciones.ts";
 export * from "./playa-servicios.ts";
 export * from "./playas.ts";
+export * from "./previsiones-aemet.ts";
 export * from "./previsiones.ts";
 export * from "./puntos-consulta.ts";
 export * from "./zonas.ts";
