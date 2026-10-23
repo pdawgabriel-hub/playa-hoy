@@ -38,7 +38,8 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 - **Variables útiles (por hora):** `wind_speed_10m`, `wind_direction_10m`, `wind_gusts_10m`, `temperature_2m`, `cloud_cover`. Con `wind_speed_unit=kmh` el viento llega en km/h.
 - **Horizonte:** 16 días sin huecos.
 - **Elección de celda:** por defecto se usa la celda de tierra más cercana. Con `cell_selection=sea` se usa la de mar, y en la costa la diferencia es grande. En Cabo de Palos, a la misma hora: 5,1 km/h y 19 °C en tierra, frente a 12,2 km/h y 22 °C en el mar.
-  - **Propuesta:** viento con `cell_selection=sea`, que es el que llega a la playa. Qué celda usar para la temperatura del aire se decide en la fase 4.
+  - **Decisión (fase 4), medida contra las estaciones de AEMET:** el viento se pide a la celda de mar y la temperatura y las nubes a la de tierra. Comparando lo previsto para las últimas 24 h con lo medido en 4 estaciones costeras (Salinas de Cabo de Palos, San Javier, Águilas y Cartagena), la temperatura acierta más con la celda de tierra en las 4 (error de 0,5-1,2 °C frente a 1,1-1,9 °C) y el viento con la de mar en 3 de 4 (1,8-3,8 km/h frente a 2,3-4,3 km/h; en Cartagena, empate). Es una muestra de un solo día, unas 12 horas por estación; la fase 12 medirá la fiabilidad en serio. El cliente (`jobs/src/open-meteo/forecast.ts`) hace dos peticiones por grupo de puntos y las combina hora a hora.
+  - **Aviso: La Manga no tiene celdas de tierra.** Es tan estrecha que la celda de tierra más cercana cae en tierra firme, a unos 9 km.
 
 ## Open-Meteo históricos
 
@@ -201,9 +202,8 @@ Uso, con los tres en un solo fichero PEM: `curl --cacert fnmt-ca.pem` o, en Node
 
 ## Decisiones pendientes
 
-| Decisión                                         | Opciones                                                                                                                                                                                                                          | Cuándo  |
-| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| Tendencia de la temperatura del agua             | (a) Solo media por mes, sin tendencia. (b) Añadir Copernicus Marine (desde 1982, con cuenta gratuita).                                                                                                                            | Fase 11 |
-| Fiabilidad del oleaje y del agua                 | Usar la boya de Cabo de Palos a través de Copernicus Marine, o limitar la fase 12 al viento.                                                                                                                                      | Fase 12 |
-| Celda de Open-Meteo para la temperatura del aire | Tierra o mar                                                                                                                                                                                                                      | Fase 4  |
-| Retención de la tabla `previsiones`              | Guardar todas las emisiones ocupa unos 1,3 GB al año (Neon gratis: 0,5 GB). Opción propuesta: emisiones completas durante unas semanas y después una al día; para medir el error a más antelación, `previous-runs` de Open-Meteo. | Fase 4  |
+| Decisión                             | Opciones                                                                                                                                                                                                                          | Cuándo  |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Tendencia de la temperatura del agua | (a) Solo media por mes, sin tendencia. (b) Añadir Copernicus Marine (desde 1982, con cuenta gratuita).                                                                                                                            | Fase 11 |
+| Fiabilidad del oleaje y del agua     | Usar la boya de Cabo de Palos a través de Copernicus Marine, o limitar la fase 12 al viento.                                                                                                                                      | Fase 12 |
+| Retención de la tabla `previsiones`  | Guardar todas las emisiones ocupa unos 1,3 GB al año (Neon gratis: 0,5 GB). Opción propuesta: emisiones completas durante unas semanas y después una al día; para medir el error a más antelación, `previous-runs` de Open-Meteo. | Fase 4  |
