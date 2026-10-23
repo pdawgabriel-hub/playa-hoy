@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { check, pgTable, real, text } from "drizzle-orm/pg-core";
+import { check, index, pgTable, real, text } from "drizzle-orm/pg-core";
 
 import { puntoWgs84 } from "../geo.ts";
 
@@ -15,5 +15,9 @@ export const estaciones = pgTable(
     altitud: real(),
     fuente: text().notNull(),
   },
-  (t) => [check("estaciones_fuente", sql`${t.fuente} IN ('aemet', 'puertos_estado')`)],
+  (t) => [
+    check("estaciones_fuente", sql`${t.fuente} IN ('aemet', 'puertos_estado')`),
+    // Estación más cercana a cada zona
+    index("estaciones_ubicacion_idx").using("gist", t.ubicacion),
+  ],
 );

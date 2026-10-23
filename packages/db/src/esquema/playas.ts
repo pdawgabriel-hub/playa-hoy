@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { boolean, check, integer, pgTable, real, text } from "drizzle-orm/pg-core";
+import { boolean, check, index, integer, pgTable, real, text } from "drizzle-orm/pg-core";
 
 import { puntoWgs84 } from "../geo.ts";
 import { condicionSlug } from "./comun.ts";
@@ -36,5 +36,12 @@ export const playas = pgTable(
     check("playas_abrigo", sql`${t.abrigo} BETWEEN 0 AND 1`),
     // Toda playa sale del censo o de OpenStreetMap: no se inventan playas
     check("playas_origen", sql`${t.codigoCenso} IS NOT NULL OR ${t.osmId} IS NOT NULL`),
+    // Mapa: playas dentro de un recuadro
+    index("playas_ubicacion_idx").using("gist", t.ubicacion),
+    // Cercanía en metros: "las 10 playas más cercanas" sin calcular la distancia a todas
+    index("playas_ubicacion_geography_idx").using("gist", sql`(${t.ubicacion}::geography)`),
+    // Páginas de municipio y de zona (PostgreSQL no indexa las claves foráneas)
+    index("playas_municipio_idx").on(t.municipioId),
+    index("playas_zona_idx").on(t.zonaId),
   ],
 );

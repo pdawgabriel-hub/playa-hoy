@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { check, integer, pgTable, primaryKey, real, timestamp } from "drizzle-orm/pg-core";
+import { check, index, integer, pgTable, primaryKey, real, timestamp } from "drizzle-orm/pg-core";
 
 import { puntosConsulta } from "./puntos-consulta.ts";
 
@@ -38,6 +38,10 @@ export const previsiones = pgTable(
   },
   (t) => [
     primaryKey({ columns: [t.puntoId, t.emitidaEn, t.hora] }),
+    // Comparar previsto y medido a una hora
+    index("previsiones_hora_idx").on(t.hora),
+    // Última emisión y borrado de emisiones antiguas
+    index("previsiones_emitida_en_idx").on(t.emitidaEn),
     check("previsiones_viento_direccion", sql`${t.vientoDireccion} BETWEEN 0 AND 360`),
     check("previsiones_ola_direccion", sql`${t.olaDireccion} BETWEEN 0 AND 360`),
     check("previsiones_nubosidad", sql`${t.nubosidad} BETWEEN 0 AND 100`),

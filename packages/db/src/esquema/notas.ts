@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   check,
+  index,
   integer,
   pgTable,
   primaryKey,
@@ -34,6 +35,8 @@ export const notas = pgTable(
   },
   (t) => [
     primaryKey({ columns: [t.playaId, t.perfil, t.hora] }),
+    // Ranking: mejores playas para un plan a una hora, ya ordenadas por nota
+    index("notas_ranking_idx").on(t.perfil, t.hora, t.nota.desc()),
     check("notas_perfil", sql`${t.perfil} IN ('familia', 'snorkel', 'sol', 'surf')`),
     check("notas_nota", sql`${t.nota} BETWEEN 0 AND 100`),
   ],

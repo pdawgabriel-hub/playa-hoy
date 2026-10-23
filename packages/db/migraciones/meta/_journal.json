@@ -57,6 +57,13 @@
       "when": 1792772851168,
       "tag": "0007_notas",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792773334121,
+      "tag": "0008_indices",
+      "breakpoints": true
     }
   ]
 }
