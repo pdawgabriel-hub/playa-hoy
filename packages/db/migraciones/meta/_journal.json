@@ -29,6 +29,13 @@
       "when": 1792772061160,
       "tag": "0003_playa_servicios",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792772259998,
+      "tag": "0004_calidad_agua",
+      "breakpoints": true
     }
   ]
 }

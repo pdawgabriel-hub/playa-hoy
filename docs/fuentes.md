@@ -4,17 +4,18 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 
 ## Resumen
 
-| Fuente                                                     | Uso en playa·hoy                                      | Acceso                         | Licencia                    | Riesgo principal                                 |
-| ---------------------------------------------------------- | ----------------------------------------------------- | ------------------------------ | --------------------------- | ------------------------------------------------ |
-| [Open-Meteo Marine](#open-meteo-marine)                    | Oleaje y temperatura del agua (previsión e histórico) | API sin clave                  | CC BY 4.0, uso no comercial | Malla de ~9 km; no ve el Mar Menor               |
-| [Open-Meteo Forecast](#open-meteo-forecast)                | Viento, aire y nubes (previsión)                      | API sin clave                  | CC BY 4.0, uso no comercial | El resultado cambia mucho según la celda elegida |
-| [Open-Meteo históricos](#open-meteo-históricos)            | Estadísticas y fiabilidad                             | API sin clave                  | CC BY 4.0, uso no comercial | Oleaje solo desde 2021 y agua desde 2023         |
-| [AEMET predicción de playas](#aemet-predicción-de-playas)  | Temperatura del agua del Mar Menor                    | API con clave                  | Citar a AEMET               | Solo 30 playas, datos por categorías             |
-| [AEMET observación](#aemet-observación)                    | Viento medido en la costa                             | API con clave                  | Citar a AEMET               | Solo guarda 24 horas                             |
-| [Censo de aguas de baño](#censo-de-zonas-de-aguas-de-baño) | Catálogo base de playas                               | Descarga manual anual          | Citar al Ministerio         | Captcha; faltan playas no vigiladas              |
-| [Boya de Cabo de Palos](#boya-de-cabo-de-palos)            | Oleaje y agua medidos                                 | Copernicus Marine (con cuenta) | Por confirmar               | Sin probar; a 33 km de la costa                  |
-| [OpenStreetMap](#openstreetmap)                            | Línea de costa y servicios                            | Overpass API                   | ODbL                        | Sin probar en esta fase                          |
-| [Guía de playas](#guía-de-playas)                          | (Servicios)                                           | **No disponible**              | -                           | Descartada                                       |
+| Fuente                                                     | Uso en playa·hoy                                      | Acceso                         | Licencia                       | Riesgo principal                                 |
+| ---------------------------------------------------------- | ----------------------------------------------------- | ------------------------------ | ------------------------------ | ------------------------------------------------ |
+| [Open-Meteo Marine](#open-meteo-marine)                    | Oleaje y temperatura del agua (previsión e histórico) | API sin clave                  | CC BY 4.0, uso no comercial    | Malla de ~9 km; no ve el Mar Menor               |
+| [Open-Meteo Forecast](#open-meteo-forecast)                | Viento, aire y nubes (previsión)                      | API sin clave                  | CC BY 4.0, uso no comercial    | El resultado cambia mucho según la celda elegida |
+| [Open-Meteo históricos](#open-meteo-históricos)            | Estadísticas y fiabilidad                             | API sin clave                  | CC BY 4.0, uso no comercial    | Oleaje solo desde 2021 y agua desde 2023         |
+| [AEMET predicción de playas](#aemet-predicción-de-playas)  | Temperatura del agua del Mar Menor                    | API con clave                  | Citar a AEMET                  | Solo 30 playas, datos por categorías             |
+| [AEMET observación](#aemet-observación)                    | Viento medido en la costa                             | API con clave                  | Citar a AEMET                  | Solo guarda 24 horas                             |
+| [Censo de aguas de baño](#censo-de-zonas-de-aguas-de-baño) | Catálogo base de playas                               | Descarga manual anual          | Citar al Ministerio            | Captcha; faltan playas no vigiladas              |
+| [Boya de Cabo de Palos](#boya-de-cabo-de-palos)            | Oleaje y agua medidos                                 | Copernicus Marine (con cuenta) | Por confirmar                  | Sin probar; a 33 km de la costa                  |
+| [OpenStreetMap](#openstreetmap)                            | Línea de costa y servicios                            | Overpass API                   | ODbL                           | Sin probar en esta fase                          |
+| [Calidad del agua (EEA)](#calidad-del-agua-eea)            | Calificación oficial por temporada                    | API sin clave                  | Reutilización citando a la EEA | Publica con un año de retraso                    |
+| [Guía de playas](#guía-de-playas)                          | (Servicios)                                           | **No disponible**              | -                              | Descartada                                       |
 
 ## Open-Meteo Marine
 
@@ -117,9 +118,21 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 **Limitaciones**
 
 - Cada zona es un **punto de muestreo**, no exactamente una playa. Los Nietos y Los Urrutias tienen dos.
-- **No incluye la calidad del agua.** Solo enlaza a la ficha de Náyade.
+- **No incluye la calidad del agua.** Solo enlaza a la ficha de Náyade. La calidad sale de la [EEA](#calidad-del-agua-eea).
 - **Solo recoge zonas vigiladas oficialmente.** Faltan calas y playas conocidas, como Calblanque.
 - Cruzarlo con AEMET por la zona más cercana da errores (en Águilas salen cruzadas La Colonia y Poniente). Hace falta emparejar por nombre y distancia, con una tabla revisada a mano.
+
+## Calidad del agua (EEA)
+
+Añadida al diseñar la tabla `calidad_agua` (fase 2), el 23 de octubre de 2026.
+
+- **Origen:** Agencia Europea de Medio Ambiente. España le comunica cada año la calificación de cada zona de baño por la Directiva 2006/7/CE.
+- **Acceso:** API SQL pública y sin clave, `https://discodata.eea.europa.eu/sql?query=…`. Tabla `[WISE_BWD].[latest].[assessment_BathingWaterStatus]`.
+- **Cruce:** `bathingWaterIdentifier` es el mismo código que el `localId` del censo (`ES620M0031597`), que se guarda en `playas.codigo_censo`.
+- **Campos útiles:** `season` (temporada) y `quality`, con los valores `1 - Excellent`, `2 - Good`, `3 - Sufficient`, `4 - Poor`, `0 - Not classified` (pocas muestras) y `0 - Missing data`.
+- **Cobertura en Murcia:** 84 zonas en 2024 (82 excelentes y 2 buenas). Datos desde 1990.
+- **Escalas:** en España, la clasificación actual se aplica desde la temporada 2011. Entre 1990 y 2010 se usaba otra escala, con un valor `3 - Good or Sufficient` que junta dos clases y no encaja en la actual. La tabla solo admite temporadas desde 2011.
+- **Retraso:** la última temporada publicada en octubre de 2026 es la de 2024.
 
 ## Boya de Cabo de Palos
 
@@ -157,7 +170,7 @@ Uso, con los tres en un solo fichero PEM: `curl --cacert fnmt-ca.pem` o, en Node
 1. **Falta un municipio: La Unión** (Portmán). Tiene una zona de baño en el censo y una playa en AEMET.
 2. **El Mar Menor no siempre está "más templado".** Al ser poco profundo, en verano está más caliente que el Mediterráneo y en otoño o invierno más frío (20 °C frente a 23-25 °C a finales de octubre). La lógica del perfil familiar no debe premiar la laguna por el agua en todas las épocas.
 3. **La guía de playas no existe como fuente.** Los servicios salen de OpenStreetMap.
-4. **La calidad del agua necesita otra fuente**, porque el censo no la trae: Náyade o los informes de la EEA.
+4. **La calidad del agua sale de la EEA**, porque el censo no la trae. Se cruza por el código del censo.
 5. **El catálogo de playas necesita dos fuentes:** el censo para las zonas oficiales y OpenStreetMap para calas y playas no vigiladas.
 6. **Las observaciones de AEMET deben descargarse desde la fase 4**, no en la 12, porque solo se guardan 24 horas.
 7. **La fiabilidad de la previsión no requiere esperar meses**, porque Open-Meteo guarda las previsiones por antelación desde 2024.
