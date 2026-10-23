@@ -147,6 +147,8 @@ pnpm dev:api           # API en http://localhost:3001
 
 Los tests de base de datos crean su propia base de datos temporal en el PostgreSQL local, así que necesitan `pnpm db:up`. Si `DATABASE_URL` no está definida, se saltan.
 
+Los tests no salen nunca a internet. Las APIs externas (Open-Meteo, AEMET y Overpass) se simulan con MSW y responden con respuestas reales guardadas en `jobs/src/**/pruebas/`, y cualquier petición sin simular hace fallar el test (`jobs/src/pruebas/red.ts`). Así se prueban las ingestas completas, incluidos los fallos de cada fuente, sin red ni claves.
+
 El CI ejecuta `pnpm lint`, `pnpm typecheck` y `pnpm test` en cada push, con su propio PostgreSQL + PostGIS, y comprueba que no falte ninguna migración por generar.
 
 ## Fuentes de datos

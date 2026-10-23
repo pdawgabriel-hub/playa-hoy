@@ -1,8 +1,9 @@
 import { type Db, esquema } from "@playa-hoy/db";
-import { eq, inArray, isNotNull, sql } from "drizzle-orm";
+import { asc, eq, inArray, isNotNull, sql } from "drizzle-orm";
 import { z } from "zod";
 
-import type { PrediccionPlayaAemet } from "./aemet/playas.ts";
+import { type PrediccionPlayaAemet, consultarPlayasAemet } from "./aemet/playas.ts";
+import type { ResultadoTarea } from "./ingestas.ts";
 
 const esquemaCorrespondencias = z.object({
   correspondencias: z.array(
@@ -94,4 +95,37 @@ export async function guardarPrevisionesAemet(db: Db, filas: FilaPrevisionAemet[
     })
     .returning({ playaId: t.playaId });
   return guardadas.length;
+}
+
+// La ingesta completa de AEMET: descarga la predicción de las playas con código de AEMET y
+// guarda la de cada día. Si falla una playa se sigue con las demás; si no se ha podido
+// descargar ninguna, lanza un error.
+export async function ingerirAemet(
+  db: Db,
+  clave: string,
+  opciones: Parameters<typeof consultarPlayasAemet>[2] = {},
+): Promise<ResultadoTarea> {
+  const t = esquema.playas;
+  const playas = await db
+    .select({ id: t.id, codigoAemet: t.codigoAemet })
+    .from(t)
+    .where(isNotNull(t.codigoAemet))
+    .orderBy(asc(t.codigoAemet));
+  if (playas.length === 0) {
+    throw new Error("Ninguna playa tiene código de AEMET: ejecuta importar:aemet");
+  }
+
+  const { predicciones, errores } = await consultarPlayasAemet(
+    playas.map((p) => p.codigoAemet ?? ""),
+    clave,
+    opciones,
+  );
+  if (predicciones.size === 0) throw new AggregateError(errores.map((e) => new Error(e)));
+
+  const filas = playas.flatMap((playa) => {
+    const prediccion = predicciones.get(playa.codigoAemet ?? "");
+    return prediccion ? filasPrevisionAemet(playa.id, prediccion) : [];
+  });
+  // Solo cuenta los días nuevos o con una predicción más reciente
+  return { filas: await guardarPrevisionesAemet(db, filas), errores };
 }

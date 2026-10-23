@@ -1,69 +1,57 @@
-import { createServer, type Server } from "node:http";
+import { HttpResponse, http } from "msw";
+import { describe, expect, it } from "vitest";
 
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { redSimulada } from "../pruebas/red.ts";
+import { SERVIDORES, consultarOverpass } from "./overpass.ts";
 
-import { consultarOverpass } from "./overpass.ts";
+const ELEMENTOS = [{ type: "node", id: 1, lat: 37.6, lon: -0.7, tags: { amenity: "toilets" } }];
 
-// Dos servidores locales: uno caído (502) y otro que responde. Sin red.
-let caido: Server;
-let sano: Server;
-let urlCaido = "";
-let urlSano = "";
-const agentes: string[] = [];
+type Peticion = { servidor: string; agente: string; consulta: string | null };
 
-const escuchar = (servidor: Server) =>
-  new Promise<string>((resolver) =>
-    servidor.listen(0, "127.0.0.1", () => {
-      const direccion = servidor.address();
-      resolver(
-        typeof direccion === "object" && direccion ? `http://127.0.0.1:${direccion.port}/` : "",
-      );
-    }),
-  );
-
-beforeAll(async () => {
-  caido = createServer((_, res) => res.writeHead(502).end("Bad Gateway"));
-  sano = createServer((req, res) => {
-    agentes.push(req.headers["user-agent"] ?? "");
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        elements: [{ type: "node", id: 1, lat: 37.6, lon: -0.7, tags: { amenity: "toilets" } }],
+// Cada servidor espejo responde con su código: 200 devuelve ELEMENTOS
+function simularServidores(estados: number[]) {
+  const peticiones: Peticion[] = [];
+  redSimulada.use(
+    ...SERVIDORES.map((servidor, i) =>
+      http.post(servidor, async ({ request }) => {
+        const cuerpo = new URLSearchParams(await request.text());
+        peticiones.push({
+          servidor,
+          agente: request.headers.get("user-agent") ?? "",
+          consulta: cuerpo.get("data"),
+        });
+        const estado = estados[i] ?? 502;
+        return estado === 200
+          ? HttpResponse.json({ elements: ELEMENTOS })
+          : new HttpResponse("Bad Gateway", { status: estado });
       }),
-    );
-  });
-  urlCaido = await escuchar(caido);
-  urlSano = await escuchar(sano);
-});
-
-afterAll(() => {
-  caido.close();
-  sano.close();
-});
+    ),
+  );
+  return peticiones;
+}
 
 describe("consultarOverpass", () => {
-  it("si un servidor falla, prueba el siguiente", async () => {
-    const elementos = await consultarOverpass("consulta", {
-      servidores: [urlCaido, urlSano],
-      esperaMs: 0,
-    });
+  it("si un servidor falla, prueba el siguiente y no sigue cuando uno responde", async () => {
+    const peticiones = simularServidores([502, 200, 200]);
 
-    expect(elementos).toEqual([
-      { type: "node", id: 1, lat: 37.6, lon: -0.7, tags: { amenity: "toilets" } },
-    ]);
+    expect(await consultarOverpass("consulta", { esperaMs: 0 })).toEqual(ELEMENTOS);
+    expect(peticiones.map((p) => p.servidor)).toEqual(SERVIDORES.slice(0, 2));
   });
 
-  it("se identifica con User-Agent, que Overpass exige", () => {
-    expect(agentes[0]).toMatch(/playa-hoy/);
+  it("manda la consulta en el cuerpo y se identifica con User-Agent, que Overpass exige", async () => {
+    const peticiones = simularServidores([200]);
+    await consultarOverpass("[out:json];node(1);out;", { esperaMs: 0 });
+    const [peticion] = peticiones;
+
+    expect(peticion?.consulta).toBe("[out:json];node(1);out;");
+    expect(peticion?.agente).toMatch(/playa-hoy/);
   });
 
   it("si fallan todos los intentos, lo dice con el detalle de cada uno", async () => {
-    const consulta = consultarOverpass("consulta", {
-      servidores: [urlCaido],
-      intentos: 2,
-      esperaMs: 0,
-    });
+    simularServidores([502, 502, 502]);
 
-    await expect(consulta).rejects.toThrow(/intento 1\): HTTP 502[\s\S]*intento 2\): HTTP 502/);
+    await expect(consultarOverpass("consulta", { intentos: 2, esperaMs: 0 })).rejects.toThrow(
+      /overpass-api\.de.*\(intento 1\): HTTP 502[\s\S]*kumi.*\(intento 2\): HTTP 502/,
+    );
   });
 });

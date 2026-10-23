@@ -1,14 +1,11 @@
-import { readFileSync } from "node:fs";
-import { createServer, type Server } from "node:http";
+import { describe, expect, it } from "vitest";
 
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
-
+import { PREDICCION_MANZANARES, simularAemet } from "../pruebas/aemet.ts";
 import { consultarPlayasAemet, leerPrediccionPlaya } from "./playas.ts";
 
 // Respuesta real de AEMET (23/10/2026) para Paseo de Manzanares (3090206), en ISO-8859-15,
 // tal como llega
-const BRUTO = readFileSync(new URL("./pruebas/playa-3090206.json", import.meta.url));
-const DATOS: unknown = JSON.parse(new TextDecoder("iso-8859-15").decode(BRUTO));
+const DATOS: unknown = JSON.parse(new TextDecoder("iso-8859-15").decode(PREDICCION_MANZANARES));
 
 describe("leerPrediccionPlaya", () => {
   const prediccion = leerPrediccionPlaya(DATOS);
@@ -40,47 +37,13 @@ describe("leerPrediccionPlaya", () => {
   });
 });
 
-// AEMET en local: el "sobre" apunta a una URL temporal con los datos, en ISO-8859-15
-let servidor: Server;
-let base = "";
-const claves: (string | undefined)[] = [];
-const urls: string[] = [];
-
-beforeAll(async () => {
-  servidor = createServer((req, res) => {
-    urls.push(req.url ?? "");
-    if (req.headers.api_key === "clave-caducada") {
-      res.writeHead(401).end();
-    } else if (req.url?.startsWith("/prediccion/especifica/playa/")) {
-      claves.push(req.headers.api_key?.toString());
-      const estado = req.url.endsWith("/0000000") ? 404 : 200;
-      res.writeHead(200, { "Content-Type": "application/json;charset=ISO-8859-15" });
-      res.end(
-        JSON.stringify({
-          descripcion: estado === 200 ? "exito" : "No hay datos",
-          estado,
-          datos: `${base}/sh/temporal`,
-        }),
-      );
-    } else if (req.url === "/sh/temporal") {
-      res.writeHead(200, { "Content-Type": "text/plain;charset=ISO-8859-15" }).end(BRUTO);
-    }
-  });
-  await new Promise<void>((resolver) => servidor.listen(0, "127.0.0.1", resolver));
-  const direccion = servidor.address();
-  base = typeof direccion === "object" && direccion ? `http://127.0.0.1:${direccion.port}` : "";
-});
-
-afterAll(() => {
-  servidor.close();
-});
-
 describe("consultarPlayasAemet", () => {
   it("sigue los dos pasos y devuelve la predicción de cada playa", async () => {
+    simularAemet();
     const { predicciones, errores } = await consultarPlayasAemet(
       ["3090206", "3001676"],
       "clave-secreta",
-      { base, pausaMs: 1 },
+      { pausaMs: 1 },
     );
 
     expect([...predicciones.keys()]).toEqual(["3090206", "3001676"]);
@@ -88,23 +51,26 @@ describe("consultarPlayasAemet", () => {
     expect(errores).toEqual([]);
   });
 
-  it("manda la clave en la cabecera y nunca en la URL", () => {
-    expect(claves.every((c) => c === "clave-secreta")).toBe(true);
-    expect(urls.some((u) => u.includes("clave"))).toBe(false);
+  it("manda la clave en la cabecera y nunca en la URL", async () => {
+    const peticiones = simularAemet();
+    await consultarPlayasAemet(["3090206"], "clave-secreta", { pausaMs: 1 });
+
+    expect(peticiones.map((p) => p.clave)).toEqual(["clave-secreta"]);
+    expect(peticiones.some((p) => p.url.includes("clave"))).toBe(false);
   });
 
   it("si la clave no vale, para en la primera playa en lugar de probar todas", async () => {
-    const antes = urls.length;
+    const peticiones = simularAemet({ clave: "clave-buena" });
 
     await expect(
-      consultarPlayasAemet(["3090206", "3001676"], "clave-caducada", { base, pausaMs: 1 }),
+      consultarPlayasAemet(["3090206", "3001676"], "clave-caducada", { pausaMs: 1 }),
     ).rejects.toMatchObject({ estado: 401 });
-    expect(urls.length - antes).toBe(1);
+    expect(peticiones).toHaveLength(1);
   });
 
   it("si AEMET no tiene datos de una playa, lo apunta y sigue con las demás", async () => {
+    simularAemet({ sinDatos: ["0000000"] });
     const { predicciones, errores } = await consultarPlayasAemet(["0000000", "3090206"], "clave", {
-      base,
       intentos: 1,
       pausaMs: 1,
     });

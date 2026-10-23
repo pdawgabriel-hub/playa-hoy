@@ -1,9 +1,11 @@
 import { type Db, esquema } from "@playa-hoy/db";
-import { and, eq, exists, gt, lt, sql } from "drizzle-orm";
+import { and, asc, eq, exists, gt, lt, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
-import type { PrevisionTiempo } from "./open-meteo/forecast.ts";
-import type { PrevisionMarina } from "./open-meteo/marine.ts";
+import type { ResultadoTarea } from "./ingestas.ts";
+import { type PrevisionTiempo, consultarForecast } from "./open-meteo/forecast.ts";
+import { type PrevisionMarina, consultarMarine } from "./open-meteo/marine.ts";
+import type { OpcionesRed } from "./red.ts";
 
 // Durante estos días se guardan todas las emisiones. Después, de cada hora solo queda la
 // última previsión que se hizo antes de que llegara (ver docs/fuentes.md).
@@ -111,4 +113,43 @@ export async function aplicarRetencion(db: Db, ahora: Date, dias = DIAS_RETENCIO
     )
     .returning({ hora: t.hora });
   return borradas.length;
+}
+
+// La ingesta completa de Open-Meteo: descarga la previsión de cada punto de consulta, la
+// guarda como una emisión nueva y aplica la retención. Una emisión sin oleaje o sin viento
+// no se guarda (la anterior sigue siendo válida): si falla alguna petición, lanza un error.
+export async function ingerirPrevisiones(
+  db: Db,
+  { ahora = new Date(), red = {} }: { ahora?: Date; red?: OpcionesRed } = {},
+): Promise<ResultadoTarea> {
+  const { puntosConsulta: tPuntos, playas: tPlayas } = esquema;
+  // Los puntos que se quedaron sin playas se conservan por su histórico, pero no se piden
+  const puntos = await db
+    .select({ id: tPuntos.id, ubicacion: tPuntos.ubicacion })
+    .from(tPuntos)
+    .where(exists(db.select().from(tPlayas).where(eq(tPlayas.puntoConsultaId, tPuntos.id))))
+    .orderBy(asc(tPuntos.id));
+  if (puntos.length === 0) throw new Error("No hay puntos de consulta: ejecuta calcular:puntos");
+
+  const emitidaEn = truncarHora(ahora);
+  const coordenadas = puntos.map((p) => ({ lat: p.ubicacion.y, lon: p.ubicacion.x }));
+  const [marina, tiempo] = await Promise.allSettled([
+    consultarMarine(coordenadas, red),
+    consultarForecast(coordenadas, red),
+  ]);
+  if (marina.status === "rejected" || tiempo.status === "rejected") {
+    throw new AggregateError(
+      [marina, tiempo].flatMap((r) => (r.status === "rejected" ? [r.reason] : [])),
+    );
+  }
+
+  const filas = puntos.flatMap((punto, i) => {
+    const m = marina.value[i];
+    const t = tiempo.value[i];
+    if (!m || !t) throw new Error(`Falta la previsión del punto ${punto.id.toString()}`);
+    return combinarPrevisiones(punto.id, emitidaEn, m, t);
+  });
+  const guardadas = await guardarPrevisiones(db, filas);
+  await aplicarRetencion(db, ahora);
+  return { filas: guardadas, errores: [] };
 }

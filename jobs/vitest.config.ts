@@ -9,6 +9,8 @@ if (existsSync(env)) process.loadEnvFile(env);
 export default defineProject({
   test: {
     name: "@playa-hoy/jobs",
+    // Red simulada con MSW en todos los tests
+    setupFiles: ["./src/pruebas/red.ts"],
     // Crear la base de datos de prueba y migrarla tarda unos segundos
     hookTimeout: 60_000,
   },

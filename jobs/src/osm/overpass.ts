@@ -3,14 +3,13 @@
 // reintenta con espera creciente.
 import { z } from "zod";
 
-const SERVIDORES = [
+import { USER_AGENT } from "../red.ts";
+
+export const SERVIDORES = [
   "https://overpass-api.de/api/interpreter",
   "https://overpass.private.coffee/api/interpreter",
   "https://overpass.kumi.systems/api/interpreter",
 ];
-
-// Overpass exige identificarse; sin User-Agent responde 406
-const USER_AGENT = "playa-hoy (https://github.com/pdawgabriel-hub/playa-hoy)";
 
 const esquemaRespuesta = z.object({
   elements: z.array(
@@ -38,22 +37,22 @@ const esquemaRespuesta = z.object({
 export type ElementoOsm = z.infer<typeof esquemaRespuesta>["elements"][number];
 
 type Opciones = {
-  servidores?: string[];
   intentos?: number;
   esperaMs?: number;
   timeoutMs?: number;
 };
 
 export async function consultarOverpass(consulta: string, opciones: Opciones = {}) {
-  const { servidores = SERVIDORES, intentos = 3, esperaMs = 5000, timeoutMs = 180_000 } = opciones;
+  const { intentos = 3, esperaMs = 5000, timeoutMs = 180_000 } = opciones;
   const errores: string[] = [];
 
   for (let intento = 1; intento <= intentos; intento++) {
-    for (const servidor of servidores) {
+    for (const servidor of SERVIDORES) {
       try {
         const respuesta = await fetch(servidor, {
           method: "POST",
           headers: {
+            // Overpass exige identificarse; sin User-Agent responde 406
             "User-Agent": USER_AGENT,
             "Content-Type": "application/x-www-form-urlencoded",
           },

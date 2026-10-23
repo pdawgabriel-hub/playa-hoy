@@ -12,8 +12,6 @@ const API_AEMET = "https://opendata.aemet.es/opendata/api";
 const CODIFICACION = "iso-8859-15";
 
 type OpcionesAemet = OpcionesRed & {
-  // Para los tests: la API de AEMET en otro sitio
-  base?: string;
   // Pausa entre playas, para no acercarse al límite de unas 40 peticiones por minuto
   pausaMs?: number;
 };
@@ -26,10 +24,9 @@ const esquemaSobre = z.object({
 });
 
 // La clave va en la cabecera, nunca en la URL, para que no acabe en ningún registro
-async function pedirAemet(ruta: string, clave: string, opciones: OpcionesAemet): Promise<unknown> {
-  const { base = API_AEMET, ...red } = opciones;
+async function pedirAemet(ruta: string, clave: string, red: OpcionesRed): Promise<unknown> {
   const sobre = esquemaSobre.parse(
-    await pedirJson(`${base}${ruta}`, {
+    await pedirJson(`${API_AEMET}${ruta}`, {
       ...red,
       cabeceras: { api_key: clave },
       codificacion: CODIFICACION,
