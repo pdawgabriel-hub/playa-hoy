@@ -26,6 +26,19 @@ export function geometriaMarMenor(elementos: ElementoOsm[]) {
 
 const esquemaExcepciones = z.object({
   laguna: z.array(z.object({ codigo: z.string(), laguna: z.boolean(), motivo: z.string().min(1) })),
+  // Orientaciones corregidas a mano, con su motivo y la fuente que las respalda
+  orientaciones: z.array(
+    z.object({
+      codigo: z.string(),
+      mira: z.number().min(0).lt(360),
+      motivo: z.string().min(1),
+      fuente: z.string().min(1),
+    }),
+  ),
+  // Orientaciones dudosas que se revisaron y se mantienen: solo documentan la revisión
+  revisadas: z.array(
+    z.object({ codigo: z.string(), playa: z.string(), motivo: z.string().min(1) }),
+  ),
 });
 
 export function leerExcepciones(datos: unknown) {
@@ -38,6 +51,22 @@ type Excepciones = ReturnType<typeof leerExcepciones>;
 export async function calcularGeografiaPlayas(db: Db, marMenor: object, excepciones: Excepciones) {
   const { playas: tPlayas, costa: tCosta } = esquema;
   const lagunaForzada = new Map(excepciones.laguna.map((e) => [e.codigo, e.laguna]));
+  const miraForzada = new Map(excepciones.orientaciones.map((e) => [e.codigo, e.mira]));
+
+  const playas = await db.select().from(tPlayas);
+
+  // Antes de calcular nada: una excepción con un código mal copiado no debe pasar en silencio
+  const codigos = new Set(playas.map((p) => p.codigoCenso));
+  const desconocidas = [
+    ...excepciones.laguna,
+    ...excepciones.orientaciones,
+    ...excepciones.revisadas,
+  ]
+    .map((e) => e.codigo)
+    .filter((codigo) => !codigos.has(codigo));
+  if (desconocidas.length > 0) {
+    throw new Error(`Excepciones de playas que no existen: ${desconocidas.join(", ")}`);
+  }
 
   // Distancia de cada playa al polígono del Mar Menor
   const distancias = await db.execute<{ id: number; distancia: number }>(sql`
@@ -47,7 +76,6 @@ export async function calcularGeografiaPlayas(db: Db, marMenor: object, excepcio
   `);
   const distanciaMarMenor = new Map(distancias.map((d) => [d.id, d.distancia]));
 
-  const playas = await db.select().from(tPlayas);
   const resultados: {
     id: number;
     nombre: string;
@@ -63,15 +91,17 @@ export async function calcularGeografiaPlayas(db: Db, marMenor: object, excepcio
       .select({ linea: tCosta.linea })
       .from(tCosta)
       .where(sql`ST_DWithin(${tCosta.linea}::geography, ${punto}::geography, 3000)`);
-    const orientacion = calcularOrientacion(
+    const calculada = calcularOrientacion(
       { lon, lat },
       tramos.map((t) => t.linea.map(({ x, y }) => ({ lon: x, lat: y }))),
     );
+    // La corrección a mano manda, y el abrigo se calcula con ella
+    const mira = miraForzada.get(playa.codigoCenso ?? "") ?? calculada?.mira ?? null;
 
     let abrigo: number | null = null;
-    if (orientacion) {
+    if (mira !== null) {
       // Alcance de cada rayo: distancia al primer corte con la costa más allá de la orilla
-      const azimuts = abanicoDeRayos(orientacion.mira);
+      const azimuts = abanicoDeRayos(mira);
       const cortes = await db.execute<{ azimut: number; distancia: number }>(sql`
         SELECT azimut, min(distancia) AS distancia FROM (
           SELECT azimut,
@@ -87,7 +117,7 @@ export async function calcularGeografiaPlayas(db: Db, marMenor: object, excepcio
       `);
       const alcance = new Map(cortes.map((c) => [c.azimut, c.distancia]));
       abrigo = calcularAbrigo(
-        orientacion.mira,
+        mira,
         azimuts.map((azimut) => ({ azimut, distanciaM: alcance.get(azimut) ?? LARGO_RAYO_M })),
       );
     }
@@ -99,7 +129,7 @@ export async function calcularGeografiaPlayas(db: Db, marMenor: object, excepcio
     resultados.push({
       id: playa.id,
       nombre: playa.nombre,
-      mira: orientacion?.mira ?? null,
+      mira,
       abrigo,
       laguna,
     });

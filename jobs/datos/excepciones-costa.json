@@ -1,11 +1,79 @@
 {
-  "descripcion": "Correcciones a mano de lo que se calcula con la costa (laguna, orientación), cada una con su motivo.",
+  "descripcion": "Correcciones a mano de lo que se calcula con la costa (laguna, orientación), cada una con su motivo y su fuente. \"revisadas\" deja constancia de las orientaciones dudosas que se revisaron y se mantienen.",
   "laguna": [
     {
       "codigo": "ES620M0161609",
       "playa": "Puerto Bello",
       "laguna": true,
       "motivo": "Queda a 196 m del polígono del Mar Menor de OSM (relación 2902374), que no sigue del todo la orilla en esa zona de La Manga. ITREM la sitúa en el Mar Menor, mira al noroeste (315°) y todos sus rayos hacia el mar chocan con tierra a menos de 15 km, como en el resto de la laguna."
+    }
+  ],
+  "orientaciones": [],
+  "revisadas": [
+    {
+      "codigo": "ES620M9021660",
+      "playa": "Los Narejos",
+      "motivo": "Calculada 200°. Parecía errónea porque sus vecinas de Los Alcázares miran al este, pero la costa de OSM junto a su punto avanza a 94-107° (Punta Calera, el nombre que le da AEMET): la orilla gira y mira al sur-suroeste. Se mantiene."
+    },
+    {
+      "codigo": "ES620M0161617",
+      "playa": "Cala Cortina",
+      "motivo": "Calculada 225° con confianza 0,45. Es una cala: la orilla gira. Desde el polígono de la playa en OSM sale 207°, en el mismo cuadrante. Se mantiene."
+    },
+    {
+      "codigo": "ES620M0162683",
+      "playa": "Cala Reona",
+      "motivo": "Calculada 197° con confianza 0,49. Cala; desde el polígono de OSM sale 180°. Se mantiene."
+    },
+    {
+      "codigo": "ES620M0161602",
+      "playa": "Cala del Pino",
+      "motivo": "Calculada 276° con confianza 0,47. No hay polígono en OSM. Mira al Mar Menor, coherente con que está a 7 m del polígono de la laguna. Se mantiene."
+    },
+    {
+      "codigo": "ES620M0161616",
+      "playa": "El Barco",
+      "motivo": "Calculada 187° con confianza 0,63. Cala; desde el polígono de OSM sale 186°. Se mantiene."
+    },
+    {
+      "codigo": "ES620M0032552",
+      "playa": "El Charco",
+      "motivo": "Calculada 113° con confianza 0,67. Desde el polígono de OSM sale 113°. Se mantiene."
+    },
+    {
+      "codigo": "ES620M0032551",
+      "playa": "La Casica Verde",
+      "motivo": "Calculada 196° con confianza 0,66. Desde el polígono de OSM sale 171°, en el mismo cuadrante. Se mantiene."
+    },
+    {
+      "codigo": "ES620M0261633",
+      "playa": "La Isla",
+      "motivo": "Calculada 209° con confianza 0,48. Playa en curva frente a la isla; desde el polígono de OSM sale 236°. Se mantiene."
+    },
+    {
+      "codigo": "ES620M0262414",
+      "playa": "Percheles",
+      "motivo": "Calculada 163° con confianza 0,68. Desde el polígono de OSM sale 165°. Se mantiene."
+    },
+    {
+      "codigo": "ES620M0411659",
+      "playa": "Portmán-El Lastre",
+      "motivo": "Calculada 283° con confianza 0,49; desde el polígono de OSM sale 257°. La bahía de Portmán está rellena de estériles mineros y su orilla está muy alterada; no hay una fuente independiente que indique otra orientación. Se mantiene."
+    },
+    {
+      "codigo": "ES620M9021665",
+      "playa": "Paseo Carrión",
+      "motivo": "Calculada 113° con confianza 0,5. El polígono de OSM es una franja de 3,7 km para todo Los Alcázares y no sirve como segunda medida; 113° es coherente con la orilla oeste de la laguna. Se mantiene."
+    },
+    {
+      "codigo": "ES620M9021663",
+      "playa": "Paseo de Manzanares",
+      "motivo": "Calculada 74° con confianza 0,75. Mismo caso que Paseo Carrión. Se mantiene."
+    },
+    {
+      "codigo": "ES620M9021662",
+      "playa": "Paseo del Espejo",
+      "motivo": "Calculada 109° con confianza 1. Mismo caso que Paseo Carrión. Se mantiene."
     }
   ]
 }

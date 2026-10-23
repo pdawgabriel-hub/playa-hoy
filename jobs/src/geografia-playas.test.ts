@@ -80,6 +80,10 @@ describe.skipIf(!url)("calcularGeografiaPlayas contra PostgreSQL real", () => {
     ]);
     const excepciones = {
       laguna: [{ codigo: PLAYAS.excepcion.codigo, laguna: true, motivo: "prueba" }],
+      orientaciones: [
+        { codigo: PLAYAS.excepcion.codigo, mira: 45, motivo: "prueba", fuente: "prueba" },
+      ],
+      revisadas: [],
     };
     resultado = await calcularGeografiaPlayas(db, marMenor, excepciones);
   });
@@ -100,8 +104,23 @@ describe.skipIf(!url)("calcularGeografiaPlayas contra PostgreSQL real", () => {
     expect(laguna?.abrigo).toBeGreaterThan(0.8);
   });
 
-  it("aplica las excepciones del fichero", async () => {
-    expect((await leer(PLAYAS.excepcion.codigo))?.laguna).toBe(true);
+  it("aplica las excepciones de laguna y de orientación, y calcula el abrigo con la corregida", async () => {
+    const playa = await leer(PLAYAS.excepcion.codigo);
+
+    expect(playa).toMatchObject({ laguna: true, mira: 45 });
+    expect(playa?.abrigo).not.toBeNull();
+  });
+
+  it("falla si una excepción apunta a una playa que no existe", async () => {
+    const conErrata = {
+      laguna: [],
+      orientaciones: [{ codigo: "ES620M9999999", mira: 90, motivo: "errata", fuente: "prueba" }],
+      revisadas: [],
+    };
+
+    await expect(calcularGeografiaPlayas(conexion.db, {}, conErrata)).rejects.toThrow(
+      /ES620M9999999/,
+    );
   });
 
   it("sin costa cerca no inventa orientación ni abrigo", async () => {
@@ -121,9 +140,24 @@ describe("geometriaMarMenor", () => {
 });
 
 describe("leerExcepciones con el fichero real", () => {
-  it("cada excepción tiene su motivo", () => {
-    expect(leerExcepciones(excepcionesReales).laguna).toEqual([
+  it("tiene la excepción de laguna de Puerto Bello y deja constancia de la revisión", () => {
+    const excepciones = leerExcepciones(excepcionesReales);
+
+    expect(excepciones.laguna).toEqual([
       expect.objectContaining({ codigo: "ES620M0161609", laguna: true }),
     ]);
+    // La revisión de las orientaciones dudosas no encontró ninguna errónea
+    expect(excepciones.orientaciones).toEqual([]);
+    expect(excepciones.revisadas).toHaveLength(13);
+  });
+
+  it("rechaza una orientación fuera de [0, 360)", () => {
+    const fuera = {
+      laguna: [],
+      orientaciones: [{ codigo: "x", mira: 360, motivo: "m", fuente: "f" }],
+      revisadas: [],
+    };
+
+    expect(() => leerExcepciones(fuera)).toThrow();
   });
 });
