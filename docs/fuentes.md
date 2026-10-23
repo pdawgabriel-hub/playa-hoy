@@ -162,6 +162,7 @@ Añadida en la fase 3 al buscar los servicios de cada playa, el 23 de octubre de
 
 - Uso previsto: línea de costa para calcular la orientación (fase 3) y socorrista, perros, aseos y duchas, que ITREM no trae.
 - **Pocos servicios mapeados** (octubre de 2026): de 249 playas (`natural=beach`) en Murcia, 20 tienen `supervised`, 2 `dog`, 1 `wheelchair` y ninguna `toilets` ni `shower`. A menos de 150 m de alguna playa hay 22 aseos, 8 duchas y 8 puestos de socorrista.
+- **Resultado del import** (`pnpm --filter @playa-hoy/jobs importar:osm`, 23 de octubre de 2026): 36 de las 83 playas reciben algún dato. Socorrista en 17 (15 sí, 2 no), aseos en 22, duchas en 12 y perros en ninguna. Se cruza en PostGIS: un polígono de OSM corresponde a una playa si está a menos de 100 m de su punto, y un servicio cuenta si está a menos de 150 m del polígono. La etiqueta de la playa manda; si no hay, basta un servicio cercano para el sí. La ausencia nunca se interpreta como un no.
 - Acceso por Overpass API. Exige un `User-Agent` identificado (sin él responde `406`). El servidor principal da `502` a menudo: hace falta reintentar y usar servidores espejo (`overpass.private.coffee` respondió cuando el principal fallaba). Nominatim sirve para buscar una playa concreta.
 - **Licencia:** ODbL. Hay que atribuirla ("© colaboradores de OpenStreetMap").
 

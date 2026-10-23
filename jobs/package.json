@@ -10,6 +10,7 @@
     "importar:municipios": "node --env-file-if-exists=../.env src/importar-municipios.ts",
     "importar:playas": "node --env-file-if-exists=../.env src/importar-playas.ts",
     "importar:itrem": "node --env-file-if-exists=../.env src/importar-itrem.ts",
+    "importar:osm": "node --env-file-if-exists=../.env src/importar-osm.ts",
     "typecheck": "tsc -p ."
   },
   "dependencies": {
