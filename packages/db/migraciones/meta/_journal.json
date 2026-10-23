@@ -43,6 +43,13 @@
       "when": 1792772445472,
       "tag": "0005_previsiones",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792772673587,
+      "tag": "0006_observaciones",
+      "breakpoints": true
     }
   ]
 }
