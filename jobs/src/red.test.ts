@@ -17,6 +17,7 @@ const rutas: Record<string, (n: number, res: ServerResponse) => void> = {
     n === 1 ? res.writeHead(500).end() : res.writeHead(200).end('{"ok":2}'),
   "/limite": (n, res) => (n === 1 ? res.writeHead(429).end() : res.writeHead(200).end('{"ok":3}')),
   "/caido": (_, res) => res.writeHead(503).end(),
+  "/no-existe": (_, res) => res.writeHead(404).end(),
   // "Meteorología" en ISO-8859-15, como responde AEMET
   "/latin": (_, res) => res.writeHead(200).end(Buffer.from('{"t":"Meteorología"}', "latin1")),
 };
@@ -65,9 +66,17 @@ describe("pedirJson", () => {
     });
   });
 
+  it("no repite una petición que falla por un error suyo (4xx)", async () => {
+    await expect(pedirJson(`${base}/no-existe`, rapido)).rejects.toThrow(
+      /falló \(intento 1: HTTP 404\)$/,
+    );
+    expect(llamadas.get("/no-existe")).toBe(1);
+    await expect(pedirJson(`${base}/no-existe`, rapido)).rejects.toMatchObject({ estado: 404 });
+  });
+
   it("si falla en todos los intentos, lo dice con el detalle de cada uno", async () => {
     await expect(pedirJson(`${base}/caido`, { ...rapido, intentos: 2 })).rejects.toThrow(
-      /no respondió \(intento 1: HTTP 503; intento 2: HTTP 503\)/,
+      /falló \(intento 1: HTTP 503; intento 2: HTTP 503\)/,
     );
   });
 });

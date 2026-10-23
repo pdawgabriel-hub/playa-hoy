@@ -6,7 +6,7 @@
 import { horaEspanaAUtc } from "@playa-hoy/shared";
 import { z } from "zod";
 
-import { type OpcionesRed, pedirJson } from "../red.ts";
+import { ErrorRed, type OpcionesRed, pedirJson } from "../red.ts";
 
 const API_AEMET = "https://opendata.aemet.es/opendata/api";
 const CODIFICACION = "iso-8859-15";
@@ -131,17 +131,25 @@ export async function consultarPlayaAemet(
   );
 }
 
-// Una playa detrás de otra, con una pausa: cada playa son dos peticiones
+// Una playa detrás de otra, con una pausa: cada playa son dos peticiones. Si una falla
+// (después de sus reintentos), se apunta el error y se sigue con las demás. Salvo si la
+// clave no vale (401 o 403): fallarían todas, así que se para en la primera.
 export async function consultarPlayasAemet(
   codigos: string[],
   clave: string,
   opciones: OpcionesAemet = {},
 ) {
   const { pausaMs = 1500 } = opciones;
-  const resultado = new Map<string, PrediccionPlayaAemet>();
+  const predicciones = new Map<string, PrediccionPlayaAemet>();
+  const errores: string[] = [];
   for (const [i, codigo] of codigos.entries()) {
     if (i > 0) await new Promise((resolver) => setTimeout(resolver, pausaMs));
-    resultado.set(codigo, await consultarPlayaAemet(codigo, clave, opciones));
+    try {
+      predicciones.set(codigo, await consultarPlayaAemet(codigo, clave, opciones));
+    } catch (error) {
+      if (error instanceof ErrorRed && (error.estado === 401 || error.estado === 403)) throw error;
+      errores.push(`playa ${codigo}: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
-  return resultado;
+  return { predicciones, errores };
 }

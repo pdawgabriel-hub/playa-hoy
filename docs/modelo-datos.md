@@ -91,7 +91,7 @@ erDiagram
     }
 ```
 
-### Previsiones, observaciones y costa
+### Previsiones, observaciones, ingestas y costa
 
 ```mermaid
 erDiagram
@@ -140,6 +140,16 @@ erDiagram
         real temperatura_agua "°C"
     }
 
+    ingestas {
+        int id PK
+        text fuente "open_meteo | aemet"
+        timestamptz empezada_en
+        timestamptz terminada_en
+        text estado "ok | parcial | error"
+        int filas
+        text_array errores
+    }
+
     costa {
         text id PK "tramo de OSM (way/123)"
         geometry linea "LineString, SRID 4326; mar a la derecha"
@@ -162,6 +172,7 @@ erDiagram
 | `notas`             | Nota vigente de cada playa por plan y hora, con sus razones                                                        | Motor de puntuación (`packages/core`)                                               | 5    |
 | `estaciones`        | Estaciones y boyas que miden                                                                                       | AEMET y Puertos del Estado                                                          | 4    |
 | `observaciones`     | Datos medidos por hora, comparables columna a columna con la previsión                                             | AEMET y Puertos del Estado                                                          | 4    |
+| `ingestas`          | Una fila por ejecución de la ingesta y fuente: estado, filas guardadas y errores                                   | Los jobs de ingesta                                                                 | 4    |
 | `costa`             | Línea de costa por tramos, con el mar a la derecha del sentido de la línea                                         | OpenStreetMap                                                                       | 3    |
 
 El detalle de cada fuente está en [fuentes.md](fuentes.md).
@@ -173,6 +184,8 @@ El detalle de cada fuente está en [fuentes.md](fuentes.md).
 - **Una emisión por hora de descarga.** `emitida_en` es la hora de la descarga redondeada hacia abajo, y se guardan solo las horas desde ahí en adelante (restricción `previsiones_hora_tras_emision`). Repetir la ingesta dentro de la misma hora sobrescribe esa emisión en lugar de duplicarla, y cada emisión entra entera o no entra (transacción). La hace `ingerir:previsiones` (`jobs/src/previsiones.ts`).
 - **Retención: 14 días completos y después la última previsión.** Guardarlo todo ocuparía unos 1,7 GB al año con 4 descargas diarias (medido: 168 bytes por fila con índices), y Neon gratis da 0,5 GB. Durante 14 días se conservan todas las emisiones; pasado ese plazo, de cada hora solo queda la última que se hizo antes de que llegara, unos 44 MB al año. Para medir el error según la antelación en la fase 12 se usará `previous-runs` de Open-Meteo, que guarda las previsiones por antelación desde 2024.
 - **Solo la nota vigente.** `notas` no guarda una nota por emisión: cada ingesta sustituye las anteriores.
+- **Una fuente caída no tumba la ingesta.** Cada ejecución queda en `ingestas`: `ok`; `parcial` si se guardó algo pero hubo fallos (una playa de AEMET que no respondió), y `error` si no se guardó nada. Si es `error`, el proceso termina con código 1 para que GitHub Actions lo marque. Open-Meteo es todo o nada: una emisión sin oleaje o sin viento no se guarda y sigue valiendo la anterior.
+- **Reintentar solo lo que puede arreglarse.** `jobs/src/red.ts` reintenta tres veces con espera creciente los fallos de red, los 5xx, el 408 y el 429 (este con una espera de un minuto). Un 4xx es un error de la petición y no se repite; con un 401 o 403 de AEMET (la clave no vale) se para en la primera playa.
 - **Nulo significa desconocido.** `mira`, `abrigo` y los servicios son nulos mientras no se conocen, nunca 0 ni `false` por defecto. Así los filtros no presentan como dato lo que no lo es.
 - **No se inventan playas.** Toda playa necesita un código del censo o de OpenStreetMap (restricción `playas_origen`).
 - **Mismas unidades en previsión y observación.** Viento en km/h, direcciones en grados de los que viene, alturas en metros, temperaturas en °C.
@@ -196,6 +209,7 @@ Las reglas importantes están en la propia base de datos, no solo en el código:
 | `previsiones`                  | La hora prevista no es anterior a la emisión                                                     |
 | `previsiones_aemet`            | UV no negativo                                                                                   |
 | `estaciones`                   | Fuente `aemet` o `puertos_estado`                                                                |
+| `ingestas`                     | Fuente `open_meteo` o `aemet`; estado `ok`, `parcial` o `error`; filas no negativas              |
 
 Borrar una playa, un punto de consulta o una estación borra en cascada sus datos dependientes. Borrar un municipio o una zona con playas no está permitido.
 
@@ -214,5 +228,6 @@ Además de los de las claves primarias y únicas:
 | `notas_ranking_idx`                       | B-tree | Ranking por plan y hora, ordenado por nota |
 | `previsiones_hora_idx`                    | B-tree | Previsto frente a medido a una hora        |
 | `previsiones_emitida_en_idx`              | B-tree | Última emisión y retención                 |
+| `ingestas_fuente_empezada_en_idx`         | B-tree | Última ingesta de cada fuente              |
 
 Para ordenar por cercanía y que se use el índice, la consulta tiene que ordenar con el operador `<->` (`ORDER BY ubicacion::geography <-> punto`), no con `ST_Distance`.

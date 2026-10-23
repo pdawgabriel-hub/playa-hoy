@@ -2,6 +2,7 @@
 export * from "./calidad-agua.ts";
 export * from "./costa.ts";
 export * from "./estaciones.ts";
+export * from "./ingestas.ts";
 export * from "./municipios.ts";
 export * from "./notas.ts";
 export * from "./observaciones.ts";

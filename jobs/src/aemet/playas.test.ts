@@ -49,7 +49,9 @@ const urls: string[] = [];
 beforeAll(async () => {
   servidor = createServer((req, res) => {
     urls.push(req.url ?? "");
-    if (req.url?.startsWith("/prediccion/especifica/playa/")) {
+    if (req.headers.api_key === "clave-caducada") {
+      res.writeHead(401).end();
+    } else if (req.url?.startsWith("/prediccion/especifica/playa/")) {
       claves.push(req.headers.api_key?.toString());
       const estado = req.url.endsWith("/0000000") ? 404 : 200;
       res.writeHead(200, { "Content-Type": "application/json;charset=ISO-8859-15" });
@@ -75,13 +77,15 @@ afterAll(() => {
 
 describe("consultarPlayasAemet", () => {
   it("sigue los dos pasos y devuelve la predicción de cada playa", async () => {
-    const resultado = await consultarPlayasAemet(["3090206", "3001676"], "clave-secreta", {
-      base,
-      pausaMs: 1,
-    });
+    const { predicciones, errores } = await consultarPlayasAemet(
+      ["3090206", "3001676"],
+      "clave-secreta",
+      { base, pausaMs: 1 },
+    );
 
-    expect([...resultado.keys()]).toEqual(["3090206", "3001676"]);
-    expect(resultado.get("3090206")?.dias).toHaveLength(3);
+    expect([...predicciones.keys()]).toEqual(["3090206", "3001676"]);
+    expect(predicciones.get("3090206")?.dias).toHaveLength(3);
+    expect(errores).toEqual([]);
   });
 
   it("manda la clave en la cabecera y nunca en la URL", () => {
@@ -89,9 +93,23 @@ describe("consultarPlayasAemet", () => {
     expect(urls.some((u) => u.includes("clave"))).toBe(false);
   });
 
-  it("si AEMET no tiene datos de una playa, lo dice", async () => {
-    await expect(consultarPlayasAemet(["0000000"], "clave", { base, intentos: 1 })).rejects.toThrow(
-      /404 No hay datos/,
-    );
+  it("si la clave no vale, para en la primera playa en lugar de probar todas", async () => {
+    const antes = urls.length;
+
+    await expect(
+      consultarPlayasAemet(["3090206", "3001676"], "clave-caducada", { base, pausaMs: 1 }),
+    ).rejects.toMatchObject({ estado: 401 });
+    expect(urls.length - antes).toBe(1);
+  });
+
+  it("si AEMET no tiene datos de una playa, lo apunta y sigue con las demás", async () => {
+    const { predicciones, errores } = await consultarPlayasAemet(["0000000", "3090206"], "clave", {
+      base,
+      intentos: 1,
+      pausaMs: 1,
+    });
+
+    expect([...predicciones.keys()]).toEqual(["3090206"]);
+    expect(errores).toEqual([expect.stringMatching(/^playa 0000000: .*404 No hay datos/)]);
   });
 });
