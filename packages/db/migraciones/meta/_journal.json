@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792771022952,
+      "tag": "0000_postgis",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792771030725,
+      "tag": "0001_municipios_zonas",
+      "breakpoints": true
+    }
+  ]
+}

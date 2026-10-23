@@ -1,2 +1,4 @@
 pnpm-lock.yaml
 RoadMap.md
+# Generadas por drizzle-kit
+packages/db/migraciones/
