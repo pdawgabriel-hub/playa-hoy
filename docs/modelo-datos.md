@@ -176,7 +176,8 @@ El detalle de cada fuente está en [fuentes.md](fuentes.md).
 - **Nulo significa desconocido.** `mira`, `abrigo` y los servicios son nulos mientras no se conocen, nunca 0 ni `false` por defecto. Así los filtros no presentan como dato lo que no lo es.
 - **No se inventan playas.** Toda playa necesita un código del censo o de OpenStreetMap (restricción `playas_origen`).
 - **Mismas unidades en previsión y observación.** Viento en km/h, direcciones en grados de los que viene, alturas en metros, temperaturas en °C.
-- **Todo en UTC.** Las fechas son `timestamptz`; se convierten a `Europe/Madrid` solo al mostrarlas.
+- **Todo en UTC.** Las horas son `timestamptz` y la sesión de PostgreSQL se abre en UTC (`packages/db/src/cliente.ts`), así que `now()::date` o `date_trunc` no dependen de cómo esté configurado el servidor. La hora de España (`Europe/Madrid`) solo aparece en dos sitios, con las funciones de `packages/shared/src/horas.ts`: al leer fuentes que la dan sin zona horaria (`horaEspanaAUtc`, para AEMET) y al mostrar los datos (`enHoraEspana`). La excepción es `previsiones_aemet.fecha`, que es un día del calendario de España y no un instante.
+- **Nada depende de la zona horaria de la máquina.** Los tests corren en `Pacific/Kiritimati` (UTC+14, fijado en `vitest.config.ts`): si algún código usara la hora local, cambiaría de día y fallaría. Así se cubren a la vez el portátil (España) y GitHub Actions (UTC).
 - **Puntos con SRID 4326.** `packages/db/src/geo.ts` define un tipo propio porque la columna `geometry` de Drizzle 0.45 ignora el SRID.
 
 ## Restricciones

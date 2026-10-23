@@ -3,6 +3,7 @@
 //
 // De esta predicción solo interesa de verdad la temperatura del agua (sobre todo la del Mar
 // Menor, que Open-Meteo no da): el viento y el oleaje vienen por categorías y sin dirección.
+import { horaEspanaAUtc } from "@playa-hoy/shared";
 import { z } from "zod";
 
 import { type OpcionesRed, pedirJson } from "../red.ts";
@@ -88,29 +89,6 @@ export type PrediccionPlayaAemet = {
   elaborado: Date;
   dias: DiaPlayaAemet[];
 };
-
-// Desfase de la hora de España respecto a UTC en un instante, en milisegundos
-function desfaseEspana(instante: number) {
-  const zona = new Intl.DateTimeFormat("en", {
-    timeZone: "Europe/Madrid",
-    timeZoneName: "longOffset",
-  })
-    .formatToParts(instante)
-    .find((p) => p.type === "timeZoneName")?.value;
-  const partes = /GMT([+-])(\d{2}):(\d{2})/.exec(zona ?? "");
-  if (!partes) return 0;
-  const minutos = Number(partes[2]) * 60 + Number(partes[3]);
-  return (partes[1] === "-" ? -minutos : minutos) * 60_000;
-}
-
-// "2026-10-23T08:51:16" en hora de España, sin zona horaria, pasado a UTC. El desfase
-// depende del propio instante (horario de verano o de invierno), así que se ajusta dos veces.
-export function horaEspanaAUtc(texto: string): Date {
-  const comoSiFueraUtc = new Date(`${texto}Z`).getTime();
-  if (Number.isNaN(comoSiFueraUtc)) throw new Error(`Fecha de AEMET no válida: ${texto}`);
-  const aproximada = comoSiFueraUtc - desfaseEspana(comoSiFueraUtc);
-  return new Date(comoSiFueraUtc - desfaseEspana(aproximada));
-}
 
 const mananaYTarde = ({
   descripcion1,

@@ -29,6 +29,15 @@ describe.skipIf(!url)("migraciones contra PostgreSQL real", () => {
     expect(filas).toHaveLength(1);
   });
 
+  it("la sesión trabaja en UTC, sea cual sea la zona del servidor", async () => {
+    const [fila] = await conexion.db.execute<{ zona: string; dia: string }>(
+      sql`SELECT current_setting('TimeZone') AS zona,
+                 ('2026-10-23T23:30:00Z'::timestamptz)::date::text AS dia`,
+    );
+
+    expect(fila).toEqual({ zona: "UTC", dia: "2026-10-23" });
+  });
+
   it("crea todas las tablas del esquema", async () => {
     const esperadas = Object.values(esquema)
       .map((tabla) => getTableConfig(tabla).name)

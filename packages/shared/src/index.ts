@@ -5,3 +5,4 @@ import { z } from "zod";
 z.config(z.locales.es());
 
 export * from "./entorno.ts";
+export * from "./horas.ts";

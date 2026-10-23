@@ -3,7 +3,7 @@ import { createServer, type Server } from "node:http";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { consultarPlayasAemet, horaEspanaAUtc, leerPrediccionPlaya } from "./playas.ts";
+import { consultarPlayasAemet, leerPrediccionPlaya } from "./playas.ts";
 
 // Respuesta real de AEMET (23/10/2026) para Paseo de Manzanares (3090206), en ISO-8859-15,
 // tal como llega
@@ -37,24 +37,6 @@ describe("leerPrediccionPlaya", () => {
   it("rechaza una respuesta con otra forma", () => {
     expect(() => leerPrediccionPlaya([{ nombre: "X" }])).toThrow();
     expect(() => leerPrediccionPlaya([])).toThrow();
-  });
-});
-
-describe("horaEspanaAUtc", () => {
-  it("en verano resta dos horas y en invierno una", () => {
-    expect(horaEspanaAUtc("2026-07-15T12:00:00")).toEqual(new Date("2026-07-15T10:00:00Z"));
-    expect(horaEspanaAUtc("2026-12-15T12:00:00")).toEqual(new Date("2026-12-15T11:00:00Z"));
-  });
-
-  it("acierta justo después del cambio de hora", () => {
-    // El 25/10/2026 a las 3:00 de verano se vuelve a las 2:00 de invierno
-    expect(horaEspanaAUtc("2026-10-25T04:00:00")).toEqual(new Date("2026-10-25T03:00:00Z"));
-    // El 29/03/2026 a las 2:00 de invierno se pasa a las 3:00 de verano
-    expect(horaEspanaAUtc("2026-03-29T04:00:00")).toEqual(new Date("2026-03-29T02:00:00Z"));
-  });
-
-  it("rechaza un texto que no es una fecha", () => {
-    expect(() => horaEspanaAUtc("ayer")).toThrow(/no válida/);
   });
 });
 
