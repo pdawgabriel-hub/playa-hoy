@@ -15,6 +15,13 @@
       "when": 1792771030725,
       "tag": "0001_municipios_zonas",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792771462551,
+      "tag": "0002_playas",
+      "breakpoints": true
     }
   ]
 }

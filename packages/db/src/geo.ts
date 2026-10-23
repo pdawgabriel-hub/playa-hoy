@@ -13,7 +13,8 @@ export interface Punto {
 // geometry(point) en lugar de geometry(Point,4326).
 export const puntoWgs84 = customType<{ data: Punto; driverData: string }>({
   dataType: () => `geometry(Point,${SRID_WGS84})`,
-  // EWKT: sin el SRID, PostgreSQL rechaza el valor en una columna con SRID
+  // EWKT con el SRID explícito. PostGIS asigna el de la columna a un punto sin SRID y
+  // rechaza uno con otro SRID (por ejemplo UTM, 25830), así que nunca se mezclan sistemas.
   toDriver: ({ x, y }) => `SRID=${SRID_WGS84};POINT(${x} ${y})`,
   fromDriver: (valor) => leerPuntoEwkb(valor),
 });
