@@ -177,9 +177,10 @@ Uso, con los tres en un solo fichero PEM: `curl --cacert fnmt-ca.pem` o, en Node
 
 ## Decisiones pendientes
 
-| Decisión                                         | Opciones                                                                                               | Cuándo  |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------- |
-| Tendencia de la temperatura del agua             | (a) Solo media por mes, sin tendencia. (b) Añadir Copernicus Marine (desde 1982, con cuenta gratuita). | Fase 11 |
-| Fiabilidad del oleaje y del agua                 | Usar la boya de Cabo de Palos a través de Copernicus Marine, o limitar la fase 12 al viento.           | Fase 12 |
-| Celda de Open-Meteo para la temperatura del aire | Tierra o mar                                                                                           | Fase 4  |
-| Playas con varios puntos de muestreo             | Una playa o varias                                                                                     | Fase 3  |
+| Decisión                                         | Opciones                                                                                                                                                                                                                          | Cuándo  |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Tendencia de la temperatura del agua             | (a) Solo media por mes, sin tendencia. (b) Añadir Copernicus Marine (desde 1982, con cuenta gratuita).                                                                                                                            | Fase 11 |
+| Fiabilidad del oleaje y del agua                 | Usar la boya de Cabo de Palos a través de Copernicus Marine, o limitar la fase 12 al viento.                                                                                                                                      | Fase 12 |
+| Celda de Open-Meteo para la temperatura del aire | Tierra o mar                                                                                                                                                                                                                      | Fase 4  |
+| Playas con varios puntos de muestreo             | Una playa o varias                                                                                                                                                                                                                | Fase 3  |
+| Retención de la tabla `previsiones`              | Guardar todas las emisiones ocupa unos 1,3 GB al año (Neon gratis: 0,5 GB). Opción propuesta: emisiones completas durante unas semanas y después una al día; para medir el error a más antelación, `previous-runs` de Open-Meteo. | Fase 4  |

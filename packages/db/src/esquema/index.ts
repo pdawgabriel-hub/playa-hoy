@@ -3,4 +3,6 @@ export * from "./calidad-agua.ts";
 export * from "./municipios.ts";
 export * from "./playa-servicios.ts";
 export * from "./playas.ts";
+export * from "./previsiones.ts";
+export * from "./puntos-consulta.ts";
 export * from "./zonas.ts";
