@@ -9,6 +9,9 @@
   },
   "scripts": {
     "drizzle-kit": "node --env-file-if-exists=../../.env node_modules/drizzle-kit/bin.cjs",
+    "migrate": "node --env-file-if-exists=../../.env src/migrar.ts",
+    "seed": "node --env-file-if-exists=../../.env src/seed.ts",
+    "studio": "node --env-file-if-exists=../../.env node_modules/drizzle-kit/bin.cjs studio",
     "typecheck": "tsc -p ."
   },
   "dependencies": {

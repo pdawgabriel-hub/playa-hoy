@@ -16,7 +16,10 @@
     "test:watch": "vitest",
     "db:up": "docker compose up -d --wait db",
     "db:stop": "docker compose stop db",
-    "db:psql": "docker compose exec db psql -U playa -d playahoy"
+    "db:psql": "docker compose exec db psql -U playa -d playahoy",
+    "db:migrate": "pnpm --filter @playa-hoy/db migrate",
+    "db:seed": "pnpm --filter @playa-hoy/db seed",
+    "db:studio": "pnpm --filter @playa-hoy/db studio"
   },
   "engines": {
     "node": ">=24.22"

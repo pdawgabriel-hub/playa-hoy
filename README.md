@@ -122,23 +122,28 @@ cd playa-hoy
 pnpm install
 cp .env.example .env   # y rellena los valores (ver comentarios del fichero)
 pnpm db:up             # PostgreSQL + PostGIS en localhost:5435
+pnpm db:migrate        # crea las tablas
+pnpm db:seed           # datos de ejemplo (13 playas reales)
 pnpm dev:web           # web en http://localhost:4321
 pnpm dev:api           # API en http://localhost:3001
 ```
 
 ### Comandos
 
-| Comando          | Qué hace                                                      |
-| ---------------- | ------------------------------------------------------------- |
-| `pnpm dev:web`   | Arranca la web con recarga automática                         |
-| `pnpm dev:api`   | Arranca la API con recarga automática                         |
-| `pnpm lint`      | Linter (oxlint) y comprobación de formato (Prettier)          |
-| `pnpm format`    | Formatea todo el código                                       |
-| `pnpm typecheck` | Comprueba los tipos de todos los paquetes                     |
-| `pnpm test`      | Ejecuta los tests (`pnpm test:watch` para repetir al guardar) |
-| `pnpm db:up`     | Arranca la base de datos y espera a que esté lista            |
-| `pnpm db:stop`   | Para la base de datos (los datos se conservan)                |
-| `pnpm db:psql`   | Abre una consola SQL en la base de datos local                |
+| Comando           | Qué hace                                                      |
+| ----------------- | ------------------------------------------------------------- |
+| `pnpm dev:web`    | Arranca la web con recarga automática                         |
+| `pnpm dev:api`    | Arranca la API con recarga automática                         |
+| `pnpm lint`       | Linter (oxlint) y comprobación de formato (Prettier)          |
+| `pnpm format`     | Formatea todo el código                                       |
+| `pnpm typecheck`  | Comprueba los tipos de todos los paquetes                     |
+| `pnpm test`       | Ejecuta los tests (`pnpm test:watch` para repetir al guardar) |
+| `pnpm db:up`      | Arranca la base de datos y espera a que esté lista            |
+| `pnpm db:stop`    | Para la base de datos (los datos se conservan)                |
+| `pnpm db:psql`    | Abre una consola SQL en la base de datos local                |
+| `pnpm db:migrate` | Aplica las migraciones pendientes                             |
+| `pnpm db:seed`    | Carga datos de ejemplo (solo en la base de datos local)       |
+| `pnpm db:studio`  | Abre Drizzle Studio para ver las tablas en el navegador       |
 
 El CI ejecuta `pnpm lint`, `pnpm typecheck` y `pnpm test` en cada push.
 
