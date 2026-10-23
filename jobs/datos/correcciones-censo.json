@@ -1,0 +1,49 @@
+{
+  "descripcion": "Correcciones al censo de aguas de baño, cada una con su motivo. El censo no trae tildes y tiene algunos errores.",
+  "tildes": {
+    "azohia": "azohía",
+    "bahia": "bahía",
+    "carrion": "carrión",
+    "colon": "colón",
+    "galan": "galán",
+    "galua": "galúa",
+    "gines": "ginés",
+    "mojon": "mojón",
+    "paraiso": "paraíso",
+    "portman": "portmán",
+    "portus": "portús"
+  },
+  "nombres": [
+    {
+      "codigo": "ES620M0161614",
+      "nombre": "Levante (Cabo de Palos)",
+      "motivo": "El censo abrevia \"LEVANTE-CABO PALOS\"; así se distingue de Levante (Águilas)."
+    },
+    {
+      "codigo": "ES620M0161613",
+      "nombre": "Playa Honda",
+      "motivo": "\"Playa Honda\" es el nombre propio de la localidad: sin \"Playa\" quedaría \"Honda\"."
+    },
+    {
+      "codigo": "ES620M0261635",
+      "nombre": "Playa Grande-Castellar",
+      "motivo": "\"Playa Grande\" es el nombre propio: sin \"Playa\" quedaría \"Grande-Castellar\"."
+    }
+  ],
+  "ubicaciones": [
+    {
+      "codigo": "ES620M0351644",
+      "lat": 37.673611,
+      "lon": -0.729167,
+      "motivo": "El censo 2025 da la longitud -4.6683, en la provincia de Córdoba. La latitud (37.674) sí es correcta.",
+      "fuente": "AEMET, playa 3003531 \"Banco del Tabal\": 37º 40' 25\" N, 0º 43' 45\" O"
+    },
+    {
+      "codigo": "ES620M0351651",
+      "lat": 37.70514,
+      "lon": -0.74239,
+      "motivo": "El censo 2025 da la longitud -4.7155, en la provincia de Córdoba. La latitud (37.7051) sí es correcta.",
+      "fuente": "OpenStreetMap, way/324101961 \"Playa del Pedruchillo\""
+    }
+  ]
+}

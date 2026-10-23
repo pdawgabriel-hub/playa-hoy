@@ -1,0 +1,601 @@
+{
+  "fuente": "Censo de zonas de aguas de baño (Ministerio de Sanidad, publicado por MITECO). Uso libre citando al Ministerio.",
+  "temporada": 2025,
+  "zonas": [
+    {
+      "codigo": "ES620M0031590",
+      "nombre": "PLAYA CALABARDINA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.432,
+      "lon": -1.5032
+    },
+    {
+      "codigo": "ES620M0031591",
+      "nombre": "PLAYA LA COLA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.432,
+      "lon": -1.5099
+    },
+    {
+      "codigo": "ES620M0031592",
+      "nombre": "PLAYA EL HORNILLO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.411,
+      "lon": -1.56
+    },
+    {
+      "codigo": "ES620M0031593",
+      "nombre": "PLAYA LAS DELICIAS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.4073,
+      "lon": -1.5686
+    },
+    {
+      "codigo": "ES620M0031594",
+      "nombre": "PLAYA DE LEVANTE PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.4068,
+      "lon": -1.5765
+    },
+    {
+      "codigo": "ES620M0031595",
+      "nombre": "PLAYA DE PONIENTE PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.4011,
+      "lon": -1.5912
+    },
+    {
+      "codigo": "ES620M0031596",
+      "nombre": "PLAYA CALARREONA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.384,
+      "lon": -1.6192
+    },
+    {
+      "codigo": "ES620M0031597",
+      "nombre": "PLAYA LA CAROLINA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.3765,
+      "lon": -1.6281
+    },
+    {
+      "codigo": "ES620M0031598",
+      "nombre": "PLAYA LA HIGUERICA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.3799,
+      "lon": -1.6261
+    },
+    {
+      "codigo": "ES620M0031599",
+      "nombre": "PLAYA LA COLONIA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.4028,
+      "lon": -1.5851
+    },
+    {
+      "codigo": "ES620M0032076",
+      "nombre": "PLAYA MATALENTISCO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.3884,
+      "lon": -1.6109
+    },
+    {
+      "codigo": "ES620M0032551",
+      "nombre": "PLAYA DE LA CASICA VERDE PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.3953,
+      "lon": -1.6012
+    },
+    {
+      "codigo": "ES620M0032552",
+      "nombre": "PLAYA DE EL CHARCO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.4494,
+      "lon": -1.4818
+    },
+    {
+      "codigo": "ES620M0161601",
+      "nombre": "PLAYA LOS URRUTIAS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6803,
+      "lon": -0.8281
+    },
+    {
+      "codigo": "ES620M0161602",
+      "nombre": "PLAYA CALA DEL PINO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6669,
+      "lon": -0.7326
+    },
+    {
+      "codigo": "ES620M0161603",
+      "nombre": "PLAYA GALUA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6572,
+      "lon": -0.7195
+    },
+    {
+      "codigo": "ES620M0161605",
+      "nombre": "PLAYA DE LA GOLA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6538,
+      "lon": -0.7231
+    },
+    {
+      "codigo": "ES620M0161606",
+      "nombre": "PLAYA LOS NIETOS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6487,
+      "lon": -0.7787
+    },
+    {
+      "codigo": "ES620M0161607",
+      "nombre": "PLAYA LOS NIETOS PM2",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6538,
+      "lon": -0.7937
+    },
+    {
+      "codigo": "ES620M0161608",
+      "nombre": "PLAYA ENTREMARES PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6439,
+      "lon": -0.7114
+    },
+    {
+      "codigo": "ES620M0161609",
+      "nombre": "PLAYA PUERTO BELLO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6476,
+      "lon": -0.7199
+    },
+    {
+      "codigo": "ES620M0161611",
+      "nombre": "PLAYA MAR DE CRISTAL PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.642,
+      "lon": -0.7588
+    },
+    {
+      "codigo": "ES620M0161612",
+      "nombre": "PLAYA VILLAS CARAVANNING PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6333,
+      "lon": -0.7445
+    },
+    {
+      "codigo": "ES620M0161613",
+      "nombre": "PLAYA HONDA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6321,
+      "lon": -0.7356
+    },
+    {
+      "codigo": "ES620M0161614",
+      "nombre": "PLAYA LEVANTE-CABO PALOS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6329,
+      "lon": -0.6987
+    },
+    {
+      "codigo": "ES620M0161615",
+      "nombre": "PLAYA CALBLANQUE PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5977,
+      "lon": -0.7533
+    },
+    {
+      "codigo": "ES620M0161616",
+      "nombre": "PLAYA DEL BARCO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5875,
+      "lon": -0.7926
+    },
+    {
+      "codigo": "ES620M0161617",
+      "nombre": "PLAYA CALA CORTINA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5811,
+      "lon": -0.9747
+    },
+    {
+      "codigo": "ES620M0161618",
+      "nombre": "PLAYA EL PORTUS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5842,
+      "lon": -1.0737
+    },
+    {
+      "codigo": "ES620M0161619",
+      "nombre": "PLAYA LA AZOHIA-PLAYA EL CUARTEL PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5578,
+      "lon": -1.1688
+    },
+    {
+      "codigo": "ES620M0161620",
+      "nombre": "PLAYA SAN GINES PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5658,
+      "lon": -1.1793
+    },
+    {
+      "codigo": "ES620M0161621",
+      "nombre": "PLAYA ISLA PLANA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.574,
+      "lon": -1.2055
+    },
+    {
+      "codigo": "ES620M0161622",
+      "nombre": "PLAYA DE CAVANNAS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6599,
+      "lon": -0.7256
+    },
+    {
+      "codigo": "ES620M0161623",
+      "nombre": "PLAYA PUNTA BRAVA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6919,
+      "lon": -0.8364
+    },
+    {
+      "codigo": "ES620M0161624",
+      "nombre": "PLAYA ESTRELLA DE MAR PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6737,
+      "lon": -0.8237
+    },
+    {
+      "codigo": "ES620M0161625",
+      "nombre": "PLAYA LAS SIRENAS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6493,
+      "lon": -0.7148
+    },
+    {
+      "codigo": "ES620M0161626",
+      "nombre": "PLAYA EL VIVERO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6429,
+      "lon": -0.7225
+    },
+    {
+      "codigo": "ES620M0161627",
+      "nombre": "PLAYA LAS AMOLADERAS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6375,
+      "lon": -0.7058
+    },
+    {
+      "codigo": "ES620M0161628",
+      "nombre": "PLAYA CALA FLORES PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6253,
+      "lon": -0.7048
+    },
+    {
+      "codigo": "ES620M0162095",
+      "nombre": "PLAYA LOS URRUTIAS PM2",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6861,
+      "lon": -0.8334
+    },
+    {
+      "codigo": "ES620M0162365",
+      "nombre": "PLAYA PARAISO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6338,
+      "lon": -0.7295
+    },
+    {
+      "codigo": "ES620M0162410",
+      "nombre": "PLAYA DE LEVANTE-ISLAS MENORES PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6446,
+      "lon": -0.7649
+    },
+    {
+      "codigo": "ES620M0162411",
+      "nombre": "PLAYA DE PONIENTE-ISLAS MENORES PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6465,
+      "lon": -0.7688
+    },
+    {
+      "codigo": "ES620M0162412",
+      "nombre": "PLAYA LA CHAPINETA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5631,
+      "lon": -1.1743
+    },
+    {
+      "codigo": "ES620M0162683",
+      "nombre": "PLAYA CALA REONA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.61823,
+      "lon": -0.71381
+    },
+    {
+      "codigo": "ES620M0241629",
+      "nombre": "PLAYA PUNTA DE CALNEGRE PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5114,
+      "lon": -1.4002
+    },
+    {
+      "codigo": "ES620M0241630",
+      "nombre": "PLAYA CALNEGRE PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5065,
+      "lon": -1.4159
+    },
+    {
+      "codigo": "ES620M0261631",
+      "nombre": "PLAYA PLAYA RIGUETE PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5708,
+      "lon": -1.2531
+    },
+    {
+      "codigo": "ES620M0261632",
+      "nombre": "PLAYA DEL PUERTO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5675,
+      "lon": -1.2568
+    },
+    {
+      "codigo": "ES620M0261633",
+      "nombre": "PLAYA LA ISLA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5604,
+      "lon": -1.2668
+    },
+    {
+      "codigo": "ES620M0261634",
+      "nombre": "PLAYA BAHIA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5596,
+      "lon": -1.277
+    },
+    {
+      "codigo": "ES620M0261635",
+      "nombre": "PLAYA GRANDE-CASTELLAR PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.56,
+      "lon": -1.2902
+    },
+    {
+      "codigo": "ES620M0261636",
+      "nombre": "PLAYA BOLNUEVO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5612,
+      "lon": -1.304
+    },
+    {
+      "codigo": "ES620M0261637",
+      "nombre": "PLAYA NARES PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5591,
+      "lon": -1.283
+    },
+    {
+      "codigo": "ES620M0261638",
+      "nombre": "PLAYA EL ALAMILLO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5761,
+      "lon": -1.2461
+    },
+    {
+      "codigo": "ES620M0262413",
+      "nombre": "PLAYA DEL MOJON PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5762,
+      "lon": -1.2283
+    },
+    {
+      "codigo": "ES620M0262414",
+      "nombre": "PLAYA PERCHELES PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5298,
+      "lon": -1.3814
+    },
+    {
+      "codigo": "ES620M0351639",
+      "nombre": "PLAYA EL CASTILLICO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.8121,
+      "lon": -0.794
+    },
+    {
+      "codigo": "ES620M0351640",
+      "nombre": "PLAYA VENECIOLA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7702,
+      "lon": -0.7497
+    },
+    {
+      "codigo": "ES620M0351642",
+      "nombre": "PLAYA PEDRUCHO NORTE PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7002,
+      "lon": -0.7388
+    },
+    {
+      "codigo": "ES620M0351643",
+      "nombre": "PLAYA MISTRAL PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7372,
+      "lon": -0.7393
+    },
+    {
+      "codigo": "ES620M0351644",
+      "nombre": "PLAYA EL TABAL PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.674,
+      "lon": -4.6683
+    },
+    {
+      "codigo": "ES620M0351645",
+      "nombre": "PLAYA LAS GAVIOTAS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7172,
+      "lon": -0.7407
+    },
+    {
+      "codigo": "ES620M0351646",
+      "nombre": "PLAYA ANTILLAS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7082,
+      "lon": -0.7439
+    },
+    {
+      "codigo": "ES620M0351647",
+      "nombre": "PLAYA DEL GALAN PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6891,
+      "lon": -0.7403
+    },
+    {
+      "codigo": "ES620M0351648",
+      "nombre": "PLAYA PEDRUCHO SUR PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6829,
+      "lon": -0.733
+    },
+    {
+      "codigo": "ES620M0351649",
+      "nombre": "PLAYA PASEO COLON PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.8003,
+      "lon": -0.8019
+    },
+    {
+      "codigo": "ES620M0351650",
+      "nombre": "PLAYA BARNUEVO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7972,
+      "lon": -0.8032
+    },
+    {
+      "codigo": "ES620M0351651",
+      "nombre": "PLAYA EL PEDRUCHILLO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7051,
+      "lon": -4.7155
+    },
+    {
+      "codigo": "ES620M0351652",
+      "nombre": "PLAYAS LOS ALISIOS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.6759,
+      "lon": -0.7338
+    },
+    {
+      "codigo": "ES620M0352077",
+      "nombre": "PLAYA LA ENSENADA DEL ESPARTO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7487,
+      "lon": -0.7337
+    },
+    {
+      "codigo": "ES620M0352796",
+      "nombre": "PLAYA EL ESTACIO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7308,
+      "lon": -0.7384
+    },
+    {
+      "codigo": "ES620M0361653",
+      "nombre": "PLAYA EL MOJON-DERECHA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.8435,
+      "lon": -0.7623
+    },
+    {
+      "codigo": "ES620M0361654",
+      "nombre": "PLAYA LA LLANA-LAS SALINAS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.8172,
+      "lon": -0.7582
+    },
+    {
+      "codigo": "ES620M0361655",
+      "nombre": "PLAYA VILLANANITOS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.8195,
+      "lon": -0.7809
+    },
+    {
+      "codigo": "ES620M0361656",
+      "nombre": "PLAYA LA PUNTICA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.8139,
+      "lon": -0.7894
+    },
+    {
+      "codigo": "ES620M0361657",
+      "nombre": "PLAYA TORRE DERRIBADA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.8242,
+      "lon": -0.7576
+    },
+    {
+      "codigo": "ES620M0361658",
+      "nombre": "PLAYA LA MOTA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.8175,
+      "lon": -0.7744
+    },
+    {
+      "codigo": "ES620M0411659",
+      "nombre": "PLAYA PORTMAN-EL LASTRE PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.5803,
+      "lon": -0.8435
+    },
+    {
+      "codigo": "ES620M9021660",
+      "nombre": "PLAYA LOS NAREJOS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7544,
+      "lon": -0.8322
+    },
+    {
+      "codigo": "ES620M9021661",
+      "nombre": "PLAYA LAS PALMERAS PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7507,
+      "lon": -0.8424
+    },
+    {
+      "codigo": "ES620M9021662",
+      "nombre": "PLAYA PASEO DEL ESPEJO PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7467,
+      "lon": -0.846
+    },
+    {
+      "codigo": "ES620M9021663",
+      "nombre": "PLAYA PASEO DE MANZANARES PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7404,
+      "lon": -0.8488
+    },
+    {
+      "codigo": "ES620M9021664",
+      "nombre": "PLAYA PASEO DE LA CONCHA PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7353,
+      "lon": -0.8513
+    },
+    {
+      "codigo": "ES620M9021665",
+      "nombre": "PLAYA PASEO CARRION PM1",
+      "tipo": "coastalBathingWater",
+      "lat": 37.7372,
+      "lon": -0.85
+    }
+  ]
+}

@@ -113,11 +113,12 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 - `nameText` (nombre, en mayúsculas) y `nameTxtInt` (el mismo nombre sin tildes, porque alguna tilde llega rota en `nameText`).
 - Coordenadas, `spZoneType` (costera, de transición, de río…), `wEvolution` y `predecesId` (cambios de código respecto al año anterior) y `link` (ficha en Náyade).
 
-**Murcia: 83 zonas**, todas costeras: Cartagena 32, Águilas 13, San Javier 13, Mazarrón 10, Los Alcázares 6, San Pedro del Pinatar 6, Lorca 2 y La Unión 1.
+**Murcia: 85 zonas**, todas costeras: Cartagena 32, San Javier 15, Águilas 13, Mazarrón 10, Los Alcázares 6, San Pedro del Pinatar 6, Lorca 2 y La Unión 1. (En la fase 0 se contaron 83 porque se filtró primero por un recuadro de coordenadas y dos zonas tienen la longitud mal; ver abajo).
 
 **Limitaciones**
 
-- Cada zona es un **punto de muestreo**, no exactamente una playa. Los Nietos y Los Urrutias tienen dos.
+- Cada zona es un **punto de muestreo**, no exactamente una playa. Los Nietos y Los Urrutias tienen dos (separados 1,4 km y 800 m). **Decisión (fase 3):** cada una es una sola playa con el punto y el código del PM1; los PM2 se descartan. Resultado: 83 playas.
+- **Aviso: dos coordenadas erróneas en el censo 2025.** El Tabal (`ES620M0351644`) y El Pedruchillo (`ES620M0351651`), en San Javier, tienen la longitud en -4,6, en la provincia de Córdoba; la latitud es correcta. Se corrigen con las coordenadas de AEMET y de OpenStreetMap en `jobs/datos/correcciones-censo.json`, que guarda también las tildes que el censo no trae y los nombres corregidos, cada uno con su motivo. El import rechaza cualquier zona fuera de la costa de Murcia, así que un error parecido en otro censo se detecta.
 - **No incluye la calidad del agua.** Solo enlaza a la ficha de Náyade. La calidad sale de la [EEA](#calidad-del-agua-eea).
 - **Solo recoge zonas vigiladas oficialmente.** Faltan calas y playas conocidas, como Calblanque.
 - Cruzarlo con AEMET por la zona más cercana da errores (en Águilas salen cruzadas La Colonia y Poniente). Hace falta emparejar por nombre y distancia, con una tabla revisada a mano.
@@ -182,5 +183,4 @@ Uso, con los tres en un solo fichero PEM: `curl --cacert fnmt-ca.pem` o, en Node
 | Tendencia de la temperatura del agua             | (a) Solo media por mes, sin tendencia. (b) Añadir Copernicus Marine (desde 1982, con cuenta gratuita).                                                                                                                            | Fase 11 |
 | Fiabilidad del oleaje y del agua                 | Usar la boya de Cabo de Palos a través de Copernicus Marine, o limitar la fase 12 al viento.                                                                                                                                      | Fase 12 |
 | Celda de Open-Meteo para la temperatura del aire | Tierra o mar                                                                                                                                                                                                                      | Fase 4  |
-| Playas con varios puntos de muestreo             | Una playa o varias                                                                                                                                                                                                                | Fase 3  |
 | Retención de la tabla `previsiones`              | Guardar todas las emisiones ocupa unos 1,3 GB al año (Neon gratis: 0,5 GB). Opción propuesta: emisiones completas durante unas semanas y después una al día; para medir el error a más antelación, `previous-runs` de Open-Meteo. | Fase 4  |

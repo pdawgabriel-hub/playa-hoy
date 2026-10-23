@@ -5,7 +5,9 @@
   "description": "Ingesta de datos, cálculo de notas y estadísticas (scripts para GitHub Actions)",
   "type": "module",
   "scripts": {
+    "extraer:censo": "node src/censo/extraer.ts",
     "importar:municipios": "node --env-file-if-exists=../.env src/importar-municipios.ts",
+    "importar:playas": "node --env-file-if-exists=../.env src/importar-playas.ts",
     "typecheck": "tsc -p ."
   },
   "dependencies": {
