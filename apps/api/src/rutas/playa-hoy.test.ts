@@ -136,13 +136,22 @@ describe.skipIf(!url)("GET /v1/playas/{id}/hoy contra PostgreSQL real", () => {
     await conexion?.borrar();
   });
 
-  it("da las 24 horas del día en hora de España, ni una más", async () => {
+  it("da las horas que quedan del día en hora de España, desde la hora en curso", async () => {
+    // A las 10:00 en España: de las 10:00 a las 23:00, aunque la base de datos tenga también
+    // las horas anteriores
     const { fecha, horas } = await dia(conSocorrista);
 
     expect(fecha).toBe("2026-07-15");
-    expect(horas).toHaveLength(24);
-    expect(horas[0]).toMatchObject({ hora: "2026-07-14T22:00:00.000Z", horaLocal: "00:00" });
+    expect(horas).toHaveLength(14);
+    expect(horas[0]).toMatchObject({ hora: "2026-07-15T08:00:00.000Z", horaLocal: "10:00" });
     expect(horas.at(-1)?.horaLocal).toBe("23:00");
+  });
+
+  it("de madrugada, el día entero", async () => {
+    const { horas } = await dia(conSocorrista, new Date("2026-07-14T22:10:00Z"));
+
+    expect(horas).toHaveLength(24);
+    expect(horas[0]?.horaLocal).toBe("00:00");
   });
 
   it("pasada la medianoche en España ya es el día siguiente, aunque en UTC no", async () => {
@@ -161,7 +170,7 @@ describe.skipIf(!url)("GET /v1/playas/{id}/hoy contra PostgreSQL real", () => {
   it("da las notas de cada hora con sus razones", async () => {
     const { horas } = await dia(conSocorrista);
 
-    expect(horas[12]?.notas).toMatchObject({
+    expect(horas.find((h) => h.horaLocal === "12:00")?.notas).toMatchObject({
       familia: { nota: 90, razones: [{ tipo: "a_favor", texto: "Mar en calma" }] },
       surf: { nota: 0, razones: [] },
       snorkel: null,

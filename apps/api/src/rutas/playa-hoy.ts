@@ -3,7 +3,13 @@ import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import type { Db } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
 
-import { cargarHoras, cargarPlaya, completarDia, limitesDelDia } from "../consultas/dia.ts";
+import {
+  cargarHoras,
+  cargarPlaya,
+  completarDia,
+  desdeAhora,
+  limitesDelDia,
+} from "../consultas/dia.ts";
 import {
   EsquemaFranja,
   EsquemaHora,
@@ -75,9 +81,10 @@ export function rutasPlayaHoy(db: Db, { reloj = () => new Date() } = {}) {
     const playa = await cargarPlaya(db, id);
     if (!playa) return c.json({ error: `No existe la playa ${id.toString()}` }, 404);
 
-    const fecha = enHoraEspana(reloj()).fecha;
+    const ahora = reloj();
+    const fecha = enHoraEspana(ahora).fecha;
     const { inicio, fin } = limitesDelDia(fecha);
-    const horas = await cargarHoras(db, playa, inicio, fin);
+    const horas = await cargarHoras(db, playa, desdeAhora(inicio, ahora), fin);
     return c.json({ playa: playa.breve, fecha, ...completarDia(playa, horas, fecha) }, 200);
   });
 }

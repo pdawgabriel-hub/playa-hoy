@@ -24,6 +24,13 @@ export function limitesDelDia(fecha: string) {
   };
 }
 
+const HORA_MS = 3_600_000;
+
+// Desde cuándo mostrar: la hora en curso, nunca una que ya pasó. No se confía en que el job
+// haya borrado las horas pasadas.
+export const desdeAhora = (inicio: Date, ahora: Date) =>
+  new Date(Math.max(inicio.getTime(), Math.floor(ahora.getTime() / HORA_MS) * HORA_MS));
+
 export async function cargarPlaya(db: Db, id: number) {
   const { playas, municipios, zonas, playaServicios } = esquema;
   const [fila] = await db
@@ -172,6 +179,56 @@ export function completarDia(playa: Playa, horas: Hora[], fecha: string) {
       snorkel: franja("snorkel"),
       sol: franja("sol"),
       surf: franja("surf"),
+    },
+  };
+}
+
+type HoraCompleta = ReturnType<typeof completarDia>["horas"][number];
+
+const maximo = (valores: (number | null)[]) => {
+  const conocidos = valores.filter((v): v is number => v !== null);
+  return conocidos.length === 0 ? null : Math.max(...conocidos);
+};
+const minimo = (valores: (number | null)[]) => {
+  const conocidos = valores.filter((v): v is number => v !== null);
+  return conocidos.length === 0 ? null : Math.min(...conocidos);
+};
+const media = (valores: (number | null)[]) => {
+  const conocidos = valores.filter((v): v is number => v !== null);
+  if (conocidos.length === 0) return null;
+  return Math.round((conocidos.reduce((a, b) => a + b, 0) / conocidos.length) * 10) / 10;
+};
+
+const GRAVEDAD = { verde: 0, amarilla: 1, roja: 2 } as const;
+
+// Resumen de un día: la luz, la mejor franja y la nota máxima de cada plan, y las condiciones
+// de las horas de día (las de noche no cuentan para ir a la playa). Null si al día no le queda
+// ninguna hora de día: hoy, a última hora de la tarde.
+export function resumirDia(playa: Playa, horas: Hora[], fecha: string) {
+  const { luz, franjas, horas: completas } = completarDia(playa, horas, fecha);
+  const deDia: HoraCompleta[] = completas.filter((h) => h.deDia);
+  if (deDia.length === 0) return null;
+  const notaMaxima = (perfil: Perfil) => maximo(deDia.map((h) => h.notas[perfil]?.nota ?? null));
+  const banderas = deDia.flatMap((h) => (h.bandera === null ? [] : [h.bandera]));
+
+  return {
+    fecha,
+    luz,
+    franjas,
+    notaMaxima: {
+      familia: notaMaxima("familia"),
+      snorkel: notaMaxima("snorkel"),
+      sol: notaMaxima("sol"),
+      surf: notaMaxima("surf"),
+    },
+    condiciones: {
+      olaOrillaMaxima: maximo(deDia.map((h) => h.olaOrilla)),
+      vientoMaximo: maximo(deDia.map((h) => h.viento.velocidad)),
+      rachaMaxima: maximo(deDia.map((h) => h.viento.racha)),
+      temperaturaAireMaxima: maximo(deDia.map((h) => h.temperaturaAire)),
+      temperaturaAireMinima: minimo(deDia.map((h) => h.temperaturaAire)),
+      temperaturaAgua: media(deDia.map((h) => h.temperaturaAgua)),
+      banderaPeor: banderas.toSorted((a, b) => GRAVEDAD[b] - GRAVEDAD[a])[0] ?? null,
     },
   };
 }

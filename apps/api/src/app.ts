@@ -4,6 +4,7 @@ import type { Db } from "@playa-hoy/db";
 import { rutasCatalogo } from "./rutas/catalogo.ts";
 import { estado } from "./rutas/estado.ts";
 import { rutasPlayaHoy } from "./rutas/playa-hoy.ts";
+import { rutasPlayaSemana } from "./rutas/playa-semana.ts";
 import { rutasPlayas } from "./rutas/playas.ts";
 
 // La aplicación se crea con la conexión a la base de datos y se exporta sin arrancar, para
@@ -18,6 +19,7 @@ export function crearApp(db: Db, { reloj = () => new Date() } = {}) {
   app.route("/", rutasCatalogo(db));
   app.route("/", rutasPlayas(db));
   app.route("/", rutasPlayaHoy(db, { reloj }));
+  app.route("/", rutasPlayaSemana(db, { reloj }));
 
   app.get("/", (c) =>
     c.json({ nombre: "playa·hoy API", estado: "ok", especificacion: "/openapi.json" }),
