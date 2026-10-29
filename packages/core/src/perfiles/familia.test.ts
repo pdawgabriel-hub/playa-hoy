@@ -13,6 +13,7 @@ const PERFECTO: Condiciones = {
   nubosidad: 10,
   claridad: 0.9,
   socorrista: true,
+  suelo: "arena_fina",
 };
 
 const nota = (cambios: Partial<Condiciones>) => notaFamilia({ ...PERFECTO, ...cambios })?.nota;

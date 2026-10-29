@@ -1,5 +1,6 @@
 // Piezas comunes de los perfiles: las condiciones de una playa a una hora, las rampas que
 // convierten cada dato en un factor de 0 a 1 y la forma de combinarlos en una nota.
+import type { Suelo } from "../suelo.ts";
 import type { Entrada } from "../viento.ts";
 
 // Lo que se sabe de una playa a una hora, ya calculado por el resto del motor. Nulo es que
@@ -18,6 +19,8 @@ export type Condiciones = {
   // De 1 (agua quieta) a 0 (estimarClaridad)
   claridad: number | null;
   socorrista: boolean | null;
+  // Suelo de la playa (ITREM)
+  suelo: Suelo | null;
 };
 
 export type Factor = {

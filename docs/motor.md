@@ -131,3 +131,26 @@ Los umbrales son criterio de playa·hoy, no una norma; están juntos en cada per
 - **El socorrista pesa poco** porque OpenStreetMap no dice en qué meses hay.
 
 Ejemplos: un día perfecto da 100; 0,4 m de ola y 20 km/h de mar, 72; 0,6 m de ola o más, 0.
+
+### Snorkel
+
+`notaSnorkel` (`perfiles/snorkel.ts`). Sin claridad o sin ola no hay nota.
+
+| Factor               | Peso | Tipo           | 1            | 0 (o el suelo) |
+| -------------------- | ---- | -------------- | ------------ | -------------- |
+| Claridad             | 35 % | Imprescindible | ≥ 0,85       | ≤ 0,4          |
+| Ola en la orilla     | 25 % | Seguridad      | ≤ 0,15 m     | ≥ 0,5 m        |
+| Fondo                | 15 % | Comodidad      | roca o bolos | arena (0,4)    |
+| Viento               | 10 % | Seguridad      | ≤ 12 km/h    | ≥ 30 km/h      |
+| Viento de tierra     | —    | Seguridad      | ≤ 10 km/h    | ≥ 25 km/h      |
+| Temperatura del agua | 10 % | Comodidad      | ≥ 24 °C      | ≤ 18 °C (0,2)  |
+| Nubosidad            | 5 %  | Comodidad      | ≤ 30 %       | 100 % (0,6)    |
+
+- **El agua turbia veta:** con la claridad en 0,4 o menos (ola equivalente de 0,6 m) no se ve nada bajo el agua.
+- **El fondo cuenta al revés que para una familia:** roca y bolos 1, arena y grava 0,7, grava 0,6, arena 0,4 y sin datos 0,6. En la roca está la vida marina.
+- **La ola veta antes** que en familia (0,5 m), porque la resaca empuja contra las rocas, y el viento de tierra aleja de la orilla al que nada.
+- Con sol se ve más y con más color, pero el cielo cubierto resta poco.
+
+Con las mismas condiciones, una playa de arena con el mar plano y el agua aún turbia tras un temporal puede ser buena para una familia y estar vetada para el snorkel.
+
+**Límite:** el perfil no sabe del estado ecológico de cada sitio. La bahía de Portmán, colmatada por los vertidos de la minería, puntúa como cualquier otra playa de arena y grava con el mar en calma.
