@@ -63,9 +63,41 @@ con U el viento en m/s, F los metros de laguna que tiene en contra (el alcance e
 
 F se limita a 21 km. El rayo más largo dentro de la laguna mide 20,7 km (de La Puntica a Playa Honda, de un extremo al otro); algunos rayos se escapan al Mediterráneo por las golas de La Manga y llegan a 50 km, pero la ola solo se forma sobre la laguna.
 
-### Límites
+### Límites del oleaje
 
 - **No hay propagación del oleaje.** Ni refracción ni difracción alrededor de los cabos, ni el efecto del fondo: es una estimación geométrica. Una bahía cerrada por un cabo recibe algo de ola que lo rodea, y aquí sale casi 0.
 - **El periodo no se usa todavía.** Un mar de fondo de periodo largo rompe más en la orilla que una mar de viento de la misma altura.
 - **En el Mar Menor no se limita por la profundidad**, de 4 a 7 m: con vientos muy fuertes la fórmula puede pasarse un poco.
 - Si falta la orientación, los alcances o los datos de la hora, el resultado es `null`: no se inventa.
+
+## Claridad del agua
+
+`estimarClaridad(alturas, fondo)` (`claridad.ts`) estima si el agua está cristalina, buena o turbia. El oleaje remueve el fondo y el agua tarda horas en aclararse mientras el sedimento se posa, así que no basta con la ola de la hora: se acumula la de las horas previas.
+
+1. Se toma la ola en la orilla de cada hora, de la más antigua a la actual.
+2. Se calcula la media de su energía (H²) ponderada por la antigüedad: la hora actual pesa 1 y cada **semivida** el peso se reduce a la mitad. Se cuentan 4 semividas; más allá, una hora pesa menos de 1/16.
+3. La **ola equivalente** es la raíz de esa media: la ola constante que habría removido el fondo lo mismo. Con oleaje sostenido, es esa misma ola.
+4. Estado: **cristalina** por debajo de 0,2 m, **buena** hasta 0,5 m y **turbia** desde 0,5 m. Además devuelve `claridad`, de 1 (agua quieta) a 0 (ola equivalente de 1 m o más), que vale 0,5 en el corte de turbia.
+
+La semivida depende del fondo (`fondoDePlaya`, con el suelo de ITREM):
+
+| Fondo               | Semivida | Memoria | Por qué                                                   |
+| ------------------- | -------- | ------- | --------------------------------------------------------- |
+| Grava, bolos, roca  | 6 h      | 24 h    | Casi sin sedimento fino                                   |
+| Arena (o sin datos) | 12 h     | 48 h    | Lo más común en la costa de Murcia                        |
+| Mar Menor           | 24 h     | 96 h    | Somero y de fondo fangoso: se enturbia y tarda en aclarar |
+
+Después de un día de temporal de 1 m en la orilla, con el mar ya casi plano (0,1 m):
+
+| Horas de calma | 0      | 12     | 24         | 36         | 48         | 72         |
+| -------------- | ------ | ------ | ---------- | ---------- | ---------- | ---------- |
+| Grava          | turbia | buena  | cristalina | cristalina | cristalina | cristalina |
+| Arena          | turbia | turbia | buena      | buena      | cristalina | cristalina |
+| Mar Menor      | turbia | turbia | turbia     | buena      | buena      | buena      |
+
+### Límites de la claridad
+
+- **Las semividas y los cortes son estimaciones razonables, no valores medidos.** Hay que calibrarlos en la fase 12 con la transparencia del agua que mide el satélite (Copernicus Marine publica a diario la turbidez de la costa, con el coeficiente de atenuación KD490).
+- **Solo ve el oleaje.** No sabe de lluvias y ramblas que arrastran barro, de algas, ni del estado ecológico del Mar Menor (los episodios de agua verde de 2016 y 2019 no los explica el oleaje).
+- El suelo de ITREM es el de la playa, no el del fondo a unos metros; en la orilla suelen coincidir.
+- Necesita las horas previas: quien la llame tiene que pasar al menos 4 semividas de historia (96 h en el Mar Menor). Las previsiones de horas pasadas se conservan (ver la retención en [modelo-datos.md](modelo-datos.md)).

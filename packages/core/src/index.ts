@@ -2,6 +2,7 @@
 // sin I/O, sin acceso a la base de datos y sin dependencias de framework.
 export * from "./abrigo.ts";
 export * from "./angulos.ts";
+export * from "./claridad.ts";
 export * from "./nombres.ts";
 export * from "./oleaje.ts";
 export * from "./orientacion.ts";
