@@ -15,7 +15,8 @@
     "@playa-hoy/core": "workspace:*",
     "@playa-hoy/db": "workspace:*",
     "@playa-hoy/shared": "workspace:*",
-    "drizzle-orm": "0.45.4",
+    "@upstash/ratelimit": "2.2.0",
+    "@upstash/redis": "1.39.0",
     "hono": "4.13.13",
     "zod": "4.6.7"
   },

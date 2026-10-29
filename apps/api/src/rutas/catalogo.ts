@@ -1,7 +1,6 @@
 // Municipios y zonas: las dos formas de agrupar las playas
 import { createRoute, z } from "@hono/zod-openapi";
-import { type Db, esquema } from "@playa-hoy/db";
-import { count, eq } from "drizzle-orm";
+import { type Db, esquema, count, eq } from "@playa-hoy/db";
 
 import { CACHE_CATALOGO } from "../cache.ts";
 import { lista, porNombre } from "../comun.ts";

@@ -1,8 +1,7 @@
 // Las mejores playas para un plan a una hora, en una zona o en toda la costa
 import { createRoute, z } from "@hono/zod-openapi";
-import { type Db, esquema } from "@playa-hoy/db";
+import { type Db, esquema, type SQL, and, eq } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
-import { type SQL, and, eq } from "drizzle-orm";
 
 import { cachePrevision } from "../cache.ts";
 import { porNombre } from "../comun.ts";

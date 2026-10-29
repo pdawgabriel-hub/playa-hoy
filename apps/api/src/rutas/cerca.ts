@@ -1,8 +1,7 @@
 // Las playas más cercanas a un punto, con PostGIS
 import { createRoute, z } from "@hono/zod-openapi";
-import { type Db, esquema } from "@playa-hoy/db";
+import { type Db, esquema, and, eq, inArray, sql } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
-import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { CACHE_CATALOGO, cachePrevision } from "../cache.ts";
 import { EsquemaNota, EsquemaPlayaBreve } from "../esquemas.ts";

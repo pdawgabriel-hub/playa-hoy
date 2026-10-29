@@ -2,6 +2,7 @@ import type { Db } from "@playa-hoy/db";
 
 import { CACHE_CATALOGO, SIN_CACHE } from "./cache.ts";
 import { crearRouter, cuerpoError } from "./errores.ts";
+import { type Limitador, limitarPeticiones } from "./limitador.ts";
 import { rutasCatalogo } from "./rutas/catalogo.ts";
 import { rutasCerca } from "./rutas/cerca.ts";
 import { estado } from "./rutas/estado.ts";
@@ -14,8 +15,11 @@ import { rutasPlayas } from "./rutas/playas.ts";
 // poder testearla con una base de datos temporal y desplegarla en Vercel.
 // Cada ruta se declara con esquemas Zod (@hono/zod-openapi): validan la petición y la
 // respuesta y, a la vez, generan la especificación OpenAPI de /openapi.json.
-// `reloj` permite fijar la hora en los tests.
-export function crearApp(db: Db, { reloj = () => new Date() } = {}) {
+// `reloj` permite fijar la hora en los tests. Sin `limitador`, no se limitan las peticiones.
+export function crearApp(
+  db: Db,
+  { reloj = () => new Date(), limitador }: { reloj?: () => Date; limitador?: Limitador } = {},
+) {
   const app = crearRouter();
 
   // Cada ruta dice cuánto se puede cachear su respuesta; lo que no lo diga (errores, estado)
@@ -24,6 +28,7 @@ export function crearApp(db: Db, { reloj = () => new Date() } = {}) {
     await next();
     if (!c.res.headers.has("Cache-Control")) c.res.headers.set("Cache-Control", SIN_CACHE);
   });
+  if (limitador) app.use("/v1/*", limitarPeticiones(limitador, { reloj }));
   // La especificación solo cambia con cada despliegue
   app.use("/openapi.json", async (c, next) => {
     await next();

@@ -1,7 +1,6 @@
 // Lista de playas, con filtros por zona, municipio y servicios
 import { createRoute, z } from "@hono/zod-openapi";
-import { type Db, esquema } from "@playa-hoy/db";
-import { type SQL, and, desc, eq } from "drizzle-orm";
+import { type Db, esquema, type SQL, and, desc, eq } from "@playa-hoy/db";
 
 import { CACHE_CATALOGO } from "../cache.ts";
 import { lista, porNombre } from "../comun.ts";

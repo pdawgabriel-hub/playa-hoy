@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { esquemaAemet, esquemaBaseDatos, esquemaServidor, leerEntorno } from "./entorno.ts";
+import {
+  esquemaAemet,
+  esquemaBaseDatos,
+  esquemaLimitador,
+  esquemaServidor,
+  leerEntorno,
+} from "./entorno.ts";
 
 describe("leerEntorno", () => {
   it("acepta una cadena de conexión de PostgreSQL", () => {
@@ -36,6 +42,18 @@ describe("leerEntorno", () => {
 
   it("rechaza una clave de AEMET vacía", () => {
     expect(() => leerEntorno(esquemaAemet, { AEMET_API_KEY: "" })).toThrow(/AEMET_API_KEY/);
+  });
+
+  it("las variables de Upstash son opcionales, pero van juntas", () => {
+    const url = "https://ejemplo.upstash.io";
+
+    expect(leerEntorno(esquemaLimitador, {})).toEqual({});
+    expect(
+      leerEntorno(esquemaLimitador, { UPSTASH_REDIS_REST_URL: url, UPSTASH_REDIS_REST_TOKEN: "t" }),
+    ).toEqual({ UPSTASH_REDIS_REST_URL: url, UPSTASH_REDIS_REST_TOKEN: "t" });
+    expect(() => leerEntorno(esquemaLimitador, { UPSTASH_REDIS_REST_URL: url })).toThrow(
+      /las dos variables de Upstash/,
+    );
   });
 
   it("convierte PORT a número y usa 3001 si no se indica", () => {

@@ -8,9 +8,8 @@ import {
   ortoYOcaso,
   vientoLocal,
 } from "@playa-hoy/core";
-import { type Db, esquema } from "@playa-hoy/db";
+import { type Db, esquema, and, asc, desc, eq, gte, lt } from "@playa-hoy/db";
 import { enHoraEspana, horaEspanaAUtc } from "@playa-hoy/shared";
-import { and, asc, desc, eq, gte, lt } from "drizzle-orm";
 
 const DIA_MS = 86_400_000;
 

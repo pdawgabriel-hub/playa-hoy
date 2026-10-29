@@ -7,6 +7,7 @@ const CODIGOS = [
   "parametro_no_valido",
   "no_encontrado",
   "ruta_no_existe",
+  "demasiadas_peticiones",
   "error_interno",
 ] as const;
 type Codigo = (typeof CODIGOS)[number];
