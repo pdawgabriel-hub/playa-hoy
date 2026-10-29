@@ -154,3 +154,21 @@ Ejemplos: un día perfecto da 100; 0,4 m de ola y 20 km/h de mar, 72; 0,6 m de o
 Con las mismas condiciones, una playa de arena con el mar plano y el agua aún turbia tras un temporal puede ser buena para una familia y estar vetada para el snorkel.
 
 **Límite:** el perfil no sabe del estado ecológico de cada sitio. La bahía de Portmán, colmatada por los vertidos de la minería, puntúa como cualquier otra playa de arena y grava con el mar en calma.
+
+### Tomar el sol
+
+`notaSol` (`perfiles/sol.ts`). Sin nubosidad o sin temperatura del aire no hay nota.
+
+| Factor               | Peso | Tipo           | 1         | 0 (o el suelo)    |
+| -------------------- | ---- | -------------- | --------- | ----------------- |
+| Nubosidad            | 35 % | Imprescindible | ≤ 20 %    | ≥ 90 %            |
+| Temperatura del aire | 30 % | Imprescindible | 22-30 °C  | ≤ 14 °C o ≥ 38 °C |
+| Viento               | 25 % | Seguridad      | ≤ 10 km/h | ≥ 30 km/h         |
+| Ola en la orilla     | 5 %  | Comodidad      | ≤ 0,5 m   | ≥ 1,5 m (0,7)     |
+| Temperatura del agua | 5 %  | Comodidad      | ≥ 22 °C   | ≤ 18 °C (0,6)     |
+
+- **El calor veta a partir de 38 °C**, por el riesgo de golpe de calor: a 30 °C la nota es 100, a 34 °C 81 y a 37 °C 54. En la Región de Murcia se superan a menudo en verano.
+- **El viento pesa más que en los otros perfiles**, porque tumbado se nota mucho, pero da igual de dónde venga: no hay hinchables ni nadadores que arrastrar.
+- **La ola apenas cuenta**: un día despejado con 1 m de ola es bueno para tomar el sol y está vetado para una familia.
+
+**Mejora pendiente: el índice UV.** AEMET solo da el máximo del día y para 27 playas. Open-Meteo Forecast tiene `uv_index` por horas: añadirlo a la ingesta permitiría avisar de las horas de radiación más alta.
