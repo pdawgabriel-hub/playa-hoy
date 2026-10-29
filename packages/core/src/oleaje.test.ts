@@ -14,10 +14,14 @@ const playaAbierta: PlayaOleaje = { mira: ESTE, laguna: false, alcances: abierta
 const hora = (cambios: Partial<HoraOleaje>): HoraOleaje => ({
   olaAltura: 1,
   olaDireccion: ESTE,
+  olaPeriodo: 7,
   vientoVelocidad: 20,
   vientoDireccion: ESTE,
   ...cambios,
 });
+
+const periodoConViento = (playa: PlayaOleaje, kmh: number) =>
+  oleajeEnOrilla(playa, hora({ vientoVelocidad: kmh }))?.periodo ?? 0;
 
 const alturaConViento = (playa: PlayaOleaje, kmh: number) =>
   oleajeEnOrilla(playa, hora({ vientoVelocidad: kmh }))?.altura ?? 0;
@@ -47,7 +51,11 @@ describe("alcanceEn", () => {
 
 describe("oleajeEnOrilla en el Mediterráneo", () => {
   it("una ola de frente con mar abierto llega entera", () => {
-    expect(oleajeEnOrilla(playaAbierta, hora({}))).toEqual({ altura: 1, origen: "mar_adentro" });
+    expect(oleajeEnOrilla(playaAbierta, hora({}))).toEqual({
+      altura: 1,
+      periodo: 7,
+      origen: "mar_adentro",
+    });
   });
 
   it("una ola oblicua llega con la raíz del coseno del ángulo", () => {
@@ -88,10 +96,31 @@ describe("oleajeEnOrilla en el Mar Menor", () => {
 
   it("con viento de la laguna, la ola sale del viento y del alcance", () => {
     // 30 km/h = 8,33 m/s; 0,0016 · 8,33 · √(10.000 / 9,81) = 0,43 m
+    // y un periodo de 0,2857 · (8,33 / 9,81) · ∛(9,81 · 10.000 / 8,33²) = 2,7 s
     expect(oleajeEnOrilla(laguna, hora({ vientoVelocidad: 30 }))).toEqual({
       altura: 0.43,
+      periodo: 2.7,
       origen: "viento_local",
     });
+  });
+
+  it("la ola de la laguna es de periodo corto, y crece con el viento y el alcance", () => {
+    const larga = { ...laguna, alcances: Array.from({ length: 37 }, () => 21_000) };
+
+    expect(periodoConViento(laguna, 50)).toBeGreaterThan(periodoConViento(laguna, 20));
+    expect(periodoConViento(larga, 30)).toBeGreaterThan(periodoConViento(laguna, 30));
+    // Con 40 km/h y toda la laguna en contra se queda en 3,8 s; con 50 km/h llega a 4,1 s
+    expect(periodoConViento(larga, 40)).toBe(3.8);
+    expect(periodoConViento(larga, 50)).toBe(4.1);
+  });
+
+  it("con viento de tierra o sin viento no hay ola ni periodo", () => {
+    expect(oleajeEnOrilla(laguna, hora({ vientoDireccion: 270 }))).toEqual({
+      altura: 0,
+      periodo: null,
+      origen: "viento_local",
+    });
+    expect(oleajeEnOrilla(laguna, hora({ vientoVelocidad: 0 }))?.periodo).toBeNull();
   });
 
   it("ignora la ola del Mediterráneo: el modelo marino no cubre la laguna", () => {

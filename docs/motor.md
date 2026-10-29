@@ -53,20 +53,21 @@ Usar el alcance en la dirección exacta, y no el abrigo medio, importa en playas
 
 ### Playas del Mar Menor
 
-El modelo marino de Open-Meteo no cubre la laguna, así que la ola se estima con el viento local, con la relación de oleaje limitado por el alcance de JONSWAP del Coastal Engineering Manual (US Army Corps of Engineers):
+El modelo marino de Open-Meteo no cubre la laguna, así que la ola se estima con el viento local, con las relaciones de oleaje limitado por el alcance del Shore Protection Manual (US Army Corps of Engineers, 1984), basadas en JONSWAP:
 
 ```
 H = 0,0016 · U · √(F / g)
+T = 0,2857 · (U / g) · ∛(g · F / U²)
 ```
 
-con U el viento en m/s, F los metros de laguna que tiene en contra (el alcance en la dirección del viento) y g = 9,81 m/s². Con 30 km/h y 10 km de laguna da 0,43 m. Se aplica también el factor del ángulo de llegada, y el viento de tierra no levanta ola en la orilla.
+con U el viento en m/s, F los metros de laguna que tiene en contra (el alcance en la dirección del viento) y g = 9,81 m/s². Con 30 km/h y 10 km de laguna da 0,43 m y 2,7 s. Se aplica también el factor del ángulo de llegada, y el viento de tierra no levanta ola en la orilla. El periodo, muy corto, es lo que distingue la ola de viento de la laguna del mar de fondo: con 40 km/h y toda la laguna en contra se queda en 3,8 s.
 
 F se limita a 21 km. El rayo más largo dentro de la laguna mide 20,7 km (de La Puntica a Playa Honda, de un extremo al otro); algunos rayos se escapan al Mediterráneo por las golas de La Manga y llegan a 50 km, pero la ola solo se forma sobre la laguna.
 
 ### Límites del oleaje
 
 - **No hay propagación del oleaje.** Ni refracción ni difracción alrededor de los cabos, ni el efecto del fondo: es una estimación geométrica. Una bahía cerrada por un cabo recibe algo de ola que lo rodea, y aquí sale casi 0.
-- **El periodo no se usa todavía.** Un mar de fondo de periodo largo rompe más en la orilla que una mar de viento de la misma altura.
+- **El periodo no modifica la altura en la orilla.** Un mar de fondo de periodo largo rompe más que una mar de viento de la misma altura; el periodo solo lo usa el perfil surf.
 - **En el Mar Menor no se limita por la profundidad**, de 4 a 7 m: con vientos muy fuertes la fórmula puede pasarse un poco.
 - Si falta la orientación, los alcances o los datos de la hora, el resultado es `null`: no se inventa.
 
@@ -172,3 +173,30 @@ Con las mismas condiciones, una playa de arena con el mar plano y el agua aún t
 - **La ola apenas cuenta**: un día despejado con 1 m de ola es bueno para tomar el sol y está vetado para una familia.
 
 **Mejora pendiente: el índice UV.** AEMET solo da el máximo del día y para 27 playas. Open-Meteo Forecast tiene `uv_index` por horas: añadirlo a la ingesta permitiría avisar de las horas de radiación más alta.
+
+### Surf
+
+`notaSurf` (`perfiles/surf.ts`), con la lógica al revés que los demás: se busca la ola. Sin ola no hay nota.
+
+| Factor               | Peso | Tipo           | 1             | 0 (o el suelo)         |
+| -------------------- | ---- | -------------- | ------------- | ---------------------- |
+| Ola en la orilla     | 40 % | Imprescindible | 0,7-1,8 m     | ≤ 0,3 m o ≥ 2,8 m      |
+| Periodo              | 25 % | Calidad        | ≥ 8 s         | ≤ 4 s                  |
+| Viento               | 25 % | Calidad        | según entrada | según entrada          |
+| Temperatura del agua | 5 %  | Comodidad      | ≥ 20 °C       | ≤ 14 °C (0,5)          |
+| Temperatura del aire | 5 %  | Comodidad      | 15-32 °C      | ≤ 8 °C o ≥ 38 °C (0,5) |
+
+El viento, según cómo entra en la playa:
+
+| Entrada | 1         | 0         | Por qué                                |
+| ------- | --------- | --------- | -------------------------------------- |
+| Tierra  | ≤ 25 km/h | ≥ 45 km/h | Peina la ola; muy fuerte, cuesta remar |
+| Lado    | ≤ 10 km/h | ≥ 30 km/h |                                        |
+| Mar     | ≤ 8 km/h  | ≥ 25 km/h | Deshace la ola                         |
+| Calma   | 1         |           |                                        |
+
+- **La ola veta por los dos lados:** sin ola no hay surf y, en una costa sin picos de ola grande, a partir de 2,8 m es peligroso. Los días buenos de levante dan 1-1,5 m en la orilla.
+- **El periodo corta en 4 s**, por debajo de lo que se pediría en el Atlántico, porque el Mediterráneo rara vez pasa de 9 s.
+- **El abrigo no es un factor aparte:** ya está dentro de la ola en la orilla.
+- **El Mar Menor queda fuera por la física, no por una excepción:** hasta 40 km/h su ola de viento no llega a 4 s de periodo, y con más viento, que tiene que entrar desde la laguna para levantar ola, lo veta el viento de mar.
+- Un buen día de surf veta a la familia, y un día de mar plano veta el surf.

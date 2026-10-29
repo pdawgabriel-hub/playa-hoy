@@ -7,6 +7,7 @@ import { notaSol } from "./sol.ts";
 // Una mañana de junio despejada y sin viento
 const PERFECTO: Condiciones = {
   olaOrilla: 0.2,
+  olaPeriodo: 6,
   vientoVelocidad: 6,
   entradaViento: "mar",
   temperaturaAire: 27,

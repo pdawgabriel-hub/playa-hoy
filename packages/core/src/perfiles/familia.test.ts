@@ -6,6 +6,7 @@ import { notaFamilia } from "./familia.ts";
 // Un día perfecto de agosto en el Mar Menor
 const PERFECTO: Condiciones = {
   olaOrilla: 0.1,
+  olaPeriodo: 6,
   vientoVelocidad: 8,
   entradaViento: "mar",
   temperaturaAire: 28,

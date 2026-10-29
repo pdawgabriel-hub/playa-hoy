@@ -7,6 +7,7 @@ import { notaSnorkel } from "./snorkel.ts";
 // Una cala de roca con el mar plano, el agua clara y sol
 const PERFECTO: Condiciones = {
   olaOrilla: 0.05,
+  olaPeriodo: 6,
   vientoVelocidad: 8,
   entradaViento: "mar",
   temperaturaAire: 28,

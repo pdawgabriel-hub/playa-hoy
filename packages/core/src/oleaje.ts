@@ -21,9 +21,11 @@ export type PlayaOleaje = {
 };
 
 export type HoraOleaje = {
-  // Mar adentro: altura significativa en m y dirección de la que viene, en grados
+  // Mar adentro: altura significativa en m, dirección de la que viene en grados y periodo
+  // en s
   olaAltura: number | null;
   olaDireccion: number | null;
+  olaPeriodo: number | null;
   // km/h y grados de los que viene
   vientoVelocidad: number | null;
   vientoDireccion: number | null;
@@ -32,6 +34,9 @@ export type HoraOleaje = {
 export type OleajeOrilla = {
   // Altura significativa en la orilla, en m
   altura: number;
+  // Periodo en s: el del modelo marino o, en el Mar Menor, el estimado de la ola de viento.
+  // Nulo si no se sabe o si no hay ola.
+  periodo: number | null;
   // De dónde sale: del modelo marino o, en el Mar Menor, del viento local
   origen: "mar_adentro" | "viento_local";
 };
@@ -58,34 +63,43 @@ const redondear = (metros: number) => Math.round(metros * 100) / 100;
 // Mediterráneo: la ola mar adentro, reducida por el ángulo de llegada y por lo que tape la
 // costa en esa dirección (con 30 km de mar libre o más, entra entera).
 function oleajeMarAdentro(mira: number, alcances: number[], hora: HoraOleaje) {
-  const { olaAltura, olaDireccion } = hora;
+  const { olaAltura, olaDireccion, olaPeriodo } = hora;
   if (olaAltura === null || olaDireccion === null) return null;
   const alcance = alcanceEn(mira, alcances, olaDireccion);
   const apertura = alcance === null ? 0 : Math.min(alcance / ALCANCE_ABIERTO_M, 1);
-  return olaAltura * factorAngulo(separacion(mira, olaDireccion)) * apertura;
+  const altura = olaAltura * factorAngulo(separacion(mira, olaDireccion)) * apertura;
+  return { altura, periodo: olaPeriodo };
 }
 
-// Mar Menor: ola de viento limitada por el alcance, con la relación de JONSWAP del Coastal
-// Engineering Manual (US Army Corps of Engineers): g·H / U² = 0,0016 · (g·F / U²)^½, es
-// decir, H = 0,0016 · U · √(F / g), con U el viento en m/s y F los metros de laguna que
-// tiene en contra. El viento de tierra no levanta ola en la orilla.
+// Mar Menor: ola de viento limitada por el alcance, con las relaciones del Shore Protection
+// Manual (US Army Corps of Engineers, 1984), basadas en JONSWAP:
+//   g·H / U² = 0,0016 · (g·F / U²)^½      ->  H = 0,0016 · U · √(F / g)
+//   g·T / U  = 0,2857 · (g·F / U²)^⅓
+// con U el viento en m/s y F los metros de laguna que tiene en contra. El viento de tierra
+// no levanta ola en la orilla.
 function oleajeVientoLocal(mira: number, alcances: number[], hora: HoraOleaje) {
   const { vientoVelocidad, vientoDireccion } = hora;
   if (vientoVelocidad === null || vientoDireccion === null) return null;
   const alcance = alcanceEn(mira, alcances, vientoDireccion);
-  if (alcance === null) return 0;
+  const viento = vientoVelocidad / KMH_POR_MS;
+  if (alcance === null || viento <= 0) return { altura: 0, periodo: null };
   const metrosLaguna = Math.min(alcance, ALCANCE_MAXIMO_LAGUNA_M);
-  const altura = 0.0016 * (vientoVelocidad / KMH_POR_MS) * Math.sqrt(metrosLaguna / G);
-  return altura * factorAngulo(separacion(mira, vientoDireccion));
+  const altura = 0.0016 * viento * Math.sqrt(metrosLaguna / G);
+  const periodo = 0.2857 * (viento / G) * Math.cbrt((G * metrosLaguna) / viento ** 2);
+  return { altura: altura * factorAngulo(separacion(mira, vientoDireccion)), periodo };
 }
 
 // Oleaje en la orilla de una playa a una hora. Null si falta algún dato para calcularlo.
 export function oleajeEnOrilla(playa: PlayaOleaje, hora: HoraOleaje): OleajeOrilla | null {
   const { mira, alcances, laguna } = playa;
   if (mira === null || alcances === null) return null;
-  const altura = laguna
+  const ola = laguna
     ? oleajeVientoLocal(mira, alcances, hora)
     : oleajeMarAdentro(mira, alcances, hora);
-  if (altura === null) return null;
-  return { altura: redondear(altura), origen: laguna ? "viento_local" : "mar_adentro" };
+  if (ola === null) return null;
+  return {
+    altura: redondear(ola.altura),
+    periodo: ola.periodo === null ? null : Math.round(ola.periodo * 10) / 10,
+    origen: laguna ? "viento_local" : "mar_adentro",
+  };
 }

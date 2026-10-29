@@ -8,6 +8,8 @@ import type { Entrada } from "../viento.ts";
 export type Condiciones = {
   // Ola en la orilla, en m (oleajeEnOrilla)
   olaOrilla: number | null;
+  // Periodo de la ola en s (oleajeEnOrilla): en el Mar Menor, el de la ola de viento local
+  olaPeriodo: number | null;
   // km/h
   vientoVelocidad: number | null;
   entradaViento: Entrada | null;
