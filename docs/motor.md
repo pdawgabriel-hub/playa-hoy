@@ -223,3 +223,11 @@ Ejemplo real (Pedrucho Norte, 30 de octubre de 2026 a las 12:00):
 | Snorkel | 58   | Agua algo turbia: poca visibilidad · Ola de 0,4 m en la orilla · Fondo de arena: poca vida marina |
 | Sol     | 61   | Nubes (73 % del cielo) · Temperatura agradable (22 °C) · Viento suave (7 km/h)                    |
 | Surf    | 0    | Mar de viento, sin ola surfeable (4 s) · Poca ola (0,4 m en la orilla)                            |
+
+## Mejor franja del día
+
+`mejorFranja(horas, luz)` (`franja.ts`) busca las tres horas seguidas de mejor nota media de un plan, solo entre las horas de luz. Una hora cuenta si entera es de día: empieza después del orto y acaba antes del ocaso. Si dos franjas empatan, gana la más temprana; las horas sin nota cortan la franja, y si la mejor media es 0 no hay franja que recomendar.
+
+Las horas de luz salen de `ortoYOcaso(día, lat, lon)` (`luz.ts`), con la ecuación del orto (el método simplificado de la NOAA): el sol sale cuando su borde superior asoma, con el centro a 0,833° bajo el horizonte por la refracción y el radio del disco. Contrastado con Open-Meteo en Cartagena en los dos solsticios y los dos días de cambio de hora de 2025: acierta con menos de un minuto de diferencia. Así las horas de día cambian con la fecha y el lugar (en junio el día dura 14 h 45 min; en diciembre, 9 h 30 min).
+
+Ejemplo real (Bolnuevo, 30 de octubre de 2026, sol de 07:27 a 18:09): familia de 12:00 a 15:00 (98), snorkel y sol de 08:00 a 11:00 (87 y 86), y surf sin franja.
