@@ -96,7 +96,9 @@ describe.skipIf(!url)("GET /v1/playas contra PostgreSQL real", () => {
     const res = await app.request("/v1/playas?zona=atlantida");
 
     expect(res.status).toBe(404);
-    expect(await res.json()).toEqual({ error: "No existe la zona atlantida" });
+    expect(await res.json()).toEqual({
+      error: { codigo: "no_encontrado", mensaje: "No existe la zona atlantida" },
+    });
     expect((await app.request("/v1/playas?municipio=madrid")).status).toBe(404);
   });
 

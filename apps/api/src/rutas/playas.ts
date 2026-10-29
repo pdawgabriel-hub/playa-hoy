@@ -1,9 +1,10 @@
 // Lista de playas, con filtros por zona, municipio y servicios
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 import { type Db, esquema } from "@playa-hoy/db";
 import { type SQL, and, desc, eq } from "drizzle-orm";
 
 import { lista, porNombre } from "../comun.ts";
+import { EsquemaError, crearRouter, cuerpoError, respuestaError } from "../errores.ts";
 
 const SERVICIOS = ["socorrista", "perros", "accesible", "aseos", "duchas", "nudista"] as const;
 
@@ -70,8 +71,6 @@ const EsquemaPlaya = z
   })
   .openapi("Playa");
 
-const EsquemaNoEncontrado = z.object({ error: z.string() }).openapi("NoEncontrado");
-
 const ruta = createRoute({
   method: "get",
   path: "/v1/playas",
@@ -82,13 +81,14 @@ const ruta = createRoute({
     "con ningún filtro de ese servicio: no se presenta como dato lo que no lo es.",
   request: { query: EsquemaFiltros },
   responses: {
+    400: respuestaError("Parámetros no válidos"),
     200: {
       description: "Las playas que cumplen los filtros, por orden alfabético",
       content: { "application/json": { schema: lista(EsquemaPlaya) } },
     },
     404: {
       description: "La zona o el municipio no existen",
-      content: { "application/json": { schema: EsquemaNoEncontrado } },
+      content: { "application/json": { schema: EsquemaError } },
     },
   },
 });
@@ -96,7 +96,7 @@ const ruta = createRoute({
 export function rutasPlayas(db: Db) {
   const { playas, municipios, zonas, playaServicios, calidadAgua } = esquema;
 
-  return new OpenAPIHono().openapi(ruta, async (c) => {
+  return crearRouter().openapi(ruta, async (c) => {
     const filtros = c.req.valid("query");
     const condiciones: SQL[] = [];
 
@@ -105,7 +105,8 @@ export function rutasPlayas(db: Db) {
         .select({ id: zonas.id })
         .from(zonas)
         .where(eq(zonas.slug, filtros.zona));
-      if (!zona) return c.json({ error: `No existe la zona ${filtros.zona}` }, 404);
+      if (!zona)
+        return c.json(cuerpoError("no_encontrado", `No existe la zona ${filtros.zona}`), 404);
       condiciones.push(eq(playas.zonaId, zona.id));
     }
     if (filtros.municipio !== undefined) {
@@ -113,7 +114,11 @@ export function rutasPlayas(db: Db) {
         .select({ id: municipios.id })
         .from(municipios)
         .where(eq(municipios.slug, filtros.municipio));
-      if (!municipio) return c.json({ error: `No existe el municipio ${filtros.municipio}` }, 404);
+      if (!municipio)
+        return c.json(
+          cuerpoError("no_encontrado", `No existe el municipio ${filtros.municipio}`),
+          404,
+        );
       condiciones.push(eq(playas.municipioId, municipio.id));
     }
     if (filtros.laguna !== undefined)

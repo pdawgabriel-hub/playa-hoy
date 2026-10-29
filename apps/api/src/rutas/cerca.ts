@@ -1,10 +1,11 @@
 // Las playas más cercanas a un punto, con PostGIS
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 import { type Db, esquema } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
 import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { EsquemaNota, EsquemaPlayaBreve } from "../esquemas.ts";
+import { crearRouter, respuestaError } from "../errores.ts";
 
 const HORA_MS = 3_600_000;
 const PLANES = ["familia", "snorkel", "sol", "surf"] as const;
@@ -56,6 +57,7 @@ const ruta = createRoute({
     "De la más cercana a la más lejana, dentro del radio. La distancia es en línea recta.",
   request: { query: EsquemaConsulta },
   responses: {
+    400: respuestaError("Parámetros no válidos"),
     200: {
       description: "Las playas cercanas",
       content: { "application/json": { schema: EsquemaCerca } },
@@ -66,7 +68,7 @@ const ruta = createRoute({
 export function rutasCerca(db: Db, { reloj = () => new Date() } = {}) {
   const { playas, municipios, zonas, notas } = esquema;
 
-  return new OpenAPIHono().openapi(ruta, async (c) => {
+  return crearRouter().openapi(ruta, async (c) => {
     const { lat, lon, radio, limite, plan } = c.req.valid("query");
     const punto = sql`ST_SetSRID(ST_MakePoint(${lon}, ${lat}), 4326)::geography`;
     // <-> ordena con el índice playas_ubicacion_geography_idx; ST_DWithin filtra por el radio

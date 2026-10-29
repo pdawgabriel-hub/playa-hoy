@@ -1,9 +1,10 @@
 // Municipios y zonas: las dos formas de agrupar las playas
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 import { type Db, esquema } from "@playa-hoy/db";
 import { count, eq } from "drizzle-orm";
 
 import { lista, porNombre } from "../comun.ts";
+import { crearRouter } from "../errores.ts";
 
 const EsquemaMunicipio = z
   .object({
@@ -56,7 +57,7 @@ const rutaZonas = createRoute({
 export function rutasCatalogo(db: Db) {
   const { municipios, zonas, playas } = esquema;
 
-  return new OpenAPIHono()
+  return crearRouter()
     .openapi(rutaMunicipios, async (c) => {
       const filas = await db
         .select({

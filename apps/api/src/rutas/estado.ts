@@ -1,4 +1,5 @@
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
+import { crearRouter } from "../errores.ts";
 
 const EsquemaEstado = z
   .object({
@@ -21,6 +22,6 @@ const ruta = createRoute({
   },
 });
 
-export const estado = new OpenAPIHono().openapi(ruta, (c) =>
+export const estado = crearRouter().openapi(ruta, (c) =>
   c.json({ nombre: "playa·hoy API", estado: "ok" as const, version: "1" }, 200),
 );

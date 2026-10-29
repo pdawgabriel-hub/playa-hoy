@@ -1,8 +1,6 @@
 // Esquemas de respuesta que comparten varias rutas
 import { z } from "@hono/zod-openapi";
 
-export const EsquemaNoEncontrado = z.object({ error: z.string() }).openapi("NoEncontrado");
-
 export const EsquemaPlayaBreve = z
   .object({
     id: z.number().int(),

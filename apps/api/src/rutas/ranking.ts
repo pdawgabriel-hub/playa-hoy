@@ -1,11 +1,12 @@
 // Las mejores playas para un plan a una hora, en una zona o en toda la costa
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 import { type Db, esquema } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
 import { type SQL, and, eq } from "drizzle-orm";
 
 import { porNombre } from "../comun.ts";
-import { EsquemaNoEncontrado, EsquemaPlayaBreve, EsquemaRazon } from "../esquemas.ts";
+import { EsquemaPlayaBreve, EsquemaRazon } from "../esquemas.ts";
+import { EsquemaError, crearRouter, cuerpoError, respuestaError } from "../errores.ts";
 
 const HORA_MS = 3_600_000;
 const PLANES = ["familia", "snorkel", "sol", "surf"] as const;
@@ -73,10 +74,11 @@ const rutaZona = createRoute({
     query: EsquemaConsulta,
   },
   responses: {
+    400: respuestaError("Parámetros no válidos"),
     200: respuesta,
     404: {
       description: "La zona no existe",
-      content: { "application/json": { schema: EsquemaNoEncontrado } },
+      content: { "application/json": { schema: EsquemaError } },
     },
   },
 });
@@ -87,7 +89,10 @@ const rutaCosta = createRoute({
   tags: ["Ranking"],
   summary: "Las mejores playas de toda la costa para un plan a una hora",
   request: { query: EsquemaConsulta },
-  responses: { 200: respuesta },
+  responses: {
+    200: respuesta,
+    400: respuestaError("Parámetros no válidos"),
+  },
 });
 
 type Consulta = z.infer<typeof EsquemaConsulta>;
@@ -149,14 +154,15 @@ async function ranking(
 }
 
 export function rutasRanking(db: Db, { reloj = () => new Date() } = {}) {
-  return new OpenAPIHono()
+  return crearRouter()
     .openapi(rutaZona, async (c) => {
       const { id } = c.req.valid("param");
       const [zona] = await db
         .select({ id: esquema.zonas.id, nombre: esquema.zonas.nombre, slug: esquema.zonas.slug })
         .from(esquema.zonas)
         .where(eq(esquema.zonas.id, id));
-      if (!zona) return c.json({ error: `No existe la zona ${id.toString()}` }, 404);
+      if (!zona)
+        return c.json(cuerpoError("no_encontrado", `No existe la zona ${id.toString()}`), 404);
       return c.json({ zona, ...(await ranking(db, zona.id, c.req.valid("query"), reloj())) }, 200);
     })
     .openapi(rutaCosta, async (c) =>

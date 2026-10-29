@@ -202,7 +202,9 @@ describe.skipIf(!url)("GET /v1/playas/{id}/hoy contra PostgreSQL real", () => {
     const res = await pedir("/v1/playas/999999/hoy");
 
     expect(res.status).toBe(404);
-    expect(await res.json()).toEqual({ error: "No existe la playa 999999" });
+    expect(await res.json()).toEqual({
+      error: { codigo: "no_encontrado", mensaje: "No existe la playa 999999" },
+    });
     expect((await pedir("/v1/playas/la-azohia/hoy")).status).toBe(400);
   });
 });

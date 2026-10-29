@@ -1,5 +1,5 @@
 // Los próximos días en una playa, resumidos: la mejor franja y la nota máxima de cada plan
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 import type { Db } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
 
@@ -10,8 +10,9 @@ import {
   limitesDelDia,
   resumirDia,
 } from "../consultas/dia.ts";
-import { EsquemaFranja, EsquemaNoEncontrado, EsquemaPlayaBreve, porPlan } from "../esquemas.ts";
+import { EsquemaFranja, EsquemaPlayaBreve, porPlan } from "../esquemas.ts";
 import { EsquemaIdPlaya, EsquemaLuz } from "./playa-hoy.ts";
+import { EsquemaError, crearRouter, cuerpoError, respuestaError } from "../errores.ts";
 
 // La previsión llega a unos 10 días
 const DIAS = 10;
@@ -57,6 +58,7 @@ const ruta = createRoute({
     "El detalle por horas está en /hoy.",
   request: { params: EsquemaIdPlaya },
   responses: {
+    400: respuestaError("Parámetros no válidos"),
     200: {
       description: "Los días con previsión",
       content: {
@@ -67,16 +69,17 @@ const ruta = createRoute({
     },
     404: {
       description: "La playa no existe",
-      content: { "application/json": { schema: EsquemaNoEncontrado } },
+      content: { "application/json": { schema: EsquemaError } },
     },
   },
 });
 
 export function rutasPlayaSemana(db: Db, { reloj = () => new Date() } = {}) {
-  return new OpenAPIHono().openapi(ruta, async (c) => {
+  return crearRouter().openapi(ruta, async (c) => {
     const { id } = c.req.valid("param");
     const playa = await cargarPlaya(db, id);
-    if (!playa) return c.json({ error: `No existe la playa ${id.toString()}` }, 404);
+    if (!playa)
+      return c.json(cuerpoError("no_encontrado", `No existe la playa ${id.toString()}`), 404);
 
     const ahora = reloj();
     const hoy = enHoraEspana(ahora).fecha;

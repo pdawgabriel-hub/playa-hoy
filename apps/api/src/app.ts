@@ -1,6 +1,6 @@
-import { OpenAPIHono } from "@hono/zod-openapi";
 import type { Db } from "@playa-hoy/db";
 
+import { crearRouter, cuerpoError } from "./errores.ts";
 import { rutasCatalogo } from "./rutas/catalogo.ts";
 import { rutasCerca } from "./rutas/cerca.ts";
 import { estado } from "./rutas/estado.ts";
@@ -15,7 +15,7 @@ import { rutasPlayas } from "./rutas/playas.ts";
 // respuesta y, a la vez, generan la especificación OpenAPI de /openapi.json.
 // `reloj` permite fijar la hora en los tests.
 export function crearApp(db: Db, { reloj = () => new Date() } = {}) {
-  const app = new OpenAPIHono();
+  const app = crearRouter();
 
   app.route("/", estado);
   app.route("/", rutasCatalogo(db));
@@ -28,6 +28,17 @@ export function crearApp(db: Db, { reloj = () => new Date() } = {}) {
   app.get("/", (c) =>
     c.json({ nombre: "playa·hoy API", estado: "ok", especificacion: "/openapi.json" }),
   );
+
+  app.notFound((c) =>
+    c.json(cuerpoError("ruta_no_existe", `No existe la ruta ${c.req.path}`), 404),
+  );
+
+  // Un fallo inesperado (la base de datos no responde…) no debe enseñar detalles internos a
+  // quien llama: el error completo va al registro del servidor
+  app.onError((error, c) => {
+    console.error(error);
+    return c.json(cuerpoError("error_interno", "Error interno: inténtalo de nuevo más tarde"), 500);
+  });
 
   app.doc31("/openapi.json", {
     openapi: "3.1.0",
