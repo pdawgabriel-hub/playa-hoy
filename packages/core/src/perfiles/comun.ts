@@ -25,11 +25,18 @@ export type Condiciones = {
   suelo: Suelo | null;
 };
 
+export type Perfil = "familia" | "snorkel" | "sol" | "surf";
+
+export type Lado = "bajo" | "alto";
+
 export type Factor = {
   nombre: string;
   // De 0 a 1; nulo si falta el dato
   valor: number | null;
   peso: number;
+  // En los factores de meseta, si falla por abajo (frío, poca ola) o por arriba (calor,
+  // demasiada ola). Lo usan las razones para elegir la frase.
+  lado?: Lado | undefined;
 };
 
 export type NotaPerfil = {
@@ -55,6 +62,12 @@ export function meseta(
   maximo: number,
 ): number {
   return valor < desde ? rampa(valor, desde, minimo) : rampa(valor, hasta, maximo);
+}
+
+// Por qué lado del tramo bueno de una meseta queda un valor; dentro del tramo, ninguno
+export function ladoDeMeseta(valor: number | null, desde: number, hasta: number) {
+  if (valor === null) return undefined;
+  return valor < desde ? "bajo" : valor > hasta ? "alto" : undefined;
 }
 
 // Un factor de comodidad resta pero no veta: nunca baja de `suelo`

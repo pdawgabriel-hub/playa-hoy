@@ -5,7 +5,15 @@
 // Los umbrales son criterio de playa·hoy, no una norma: están aquí juntos para poder
 // revisarlos y explicarlos (ver docs/motor.md).
 import type { Entrada } from "../viento.ts";
-import { type Condiciones, type NotaPerfil, combinar, conSuelo, meseta, rampa } from "./comun.ts";
+import {
+  type Condiciones,
+  type NotaPerfil,
+  combinar,
+  conSuelo,
+  ladoDeMeseta,
+  meseta,
+  rampa,
+} from "./comun.ts";
 
 // Viento bueno y malo en km/h según cómo entra en la playa. Un viento de tierra muy fuerte
 // también estorba: cuesta remar hasta el pico.
@@ -38,10 +46,15 @@ export function notaSurf(c: Condiciones): NotaPerfil | null {
     c.temperaturaAire === null ? null : conSuelo(meseta(c.temperaturaAire, 8, 15, 32, 38), 0.5);
 
   return combinar([
-    { nombre: "ola", valor: ola, peso: 0.4 },
+    { nombre: "ola", valor: ola, peso: 0.4, lado: ladoDeMeseta(c.olaOrilla, 0.7, 1.8) },
     { nombre: "periodo", valor: periodo, peso: 0.25 },
     { nombre: "viento", valor: viento, peso: 0.25 },
     { nombre: "temperatura_agua", valor: agua, peso: 0.05 },
-    { nombre: "temperatura_aire", valor: aire, peso: 0.05 },
+    {
+      nombre: "temperatura_aire",
+      valor: aire,
+      peso: 0.05,
+      lado: ladoDeMeseta(c.temperaturaAire, 15, 32),
+    },
   ]);
 }

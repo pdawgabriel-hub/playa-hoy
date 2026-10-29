@@ -3,7 +3,15 @@
 //
 // Los umbrales son criterio de playa·hoy, no una norma: están aquí juntos para poder
 // revisarlos y explicarlos (ver docs/motor.md).
-import { type Condiciones, type NotaPerfil, combinar, conSuelo, meseta, rampa } from "./comun.ts";
+import {
+  type Condiciones,
+  type NotaPerfil,
+  combinar,
+  conSuelo,
+  ladoDeMeseta,
+  meseta,
+  rampa,
+} from "./comun.ts";
 
 export function notaSol(c: Condiciones): NotaPerfil | null {
   // Sin saber si hay sol ni qué temperatura hace, no se puede recomendar
@@ -26,7 +34,12 @@ export function notaSol(c: Condiciones): NotaPerfil | null {
 
   return combinar([
     { nombre: "nubosidad", valor: sol, peso: 0.35 },
-    { nombre: "temperatura_aire", valor: aire, peso: 0.3 },
+    {
+      nombre: "temperatura_aire",
+      valor: aire,
+      peso: 0.3,
+      lado: ladoDeMeseta(c.temperaturaAire, 22, 30),
+    },
     { nombre: "viento", valor: viento, peso: 0.25 },
     { nombre: "ola", valor: ola, peso: 0.05 },
     { nombre: "temperatura_agua", valor: agua, peso: 0.05 },

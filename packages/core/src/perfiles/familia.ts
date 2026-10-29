@@ -3,7 +3,15 @@
 //
 // Los umbrales son criterio de playa·hoy, no una norma: están aquí juntos para poder
 // revisarlos y explicarlos (ver docs/motor.md).
-import { type Condiciones, type NotaPerfil, combinar, conSuelo, meseta, rampa } from "./comun.ts";
+import {
+  type Condiciones,
+  type NotaPerfil,
+  combinar,
+  conSuelo,
+  ladoDeMeseta,
+  meseta,
+  rampa,
+} from "./comun.ts";
 
 export function notaFamilia(c: Condiciones): NotaPerfil | null {
   // Sin la ola o el viento no se puede recomendar una playa a una familia
@@ -25,7 +33,12 @@ export function notaFamilia(c: Condiciones): NotaPerfil | null {
   return combinar([
     { nombre: "ola", valor: ola, peso: 0.35 },
     { nombre: "viento", valor: viento, peso: 0.2 },
-    { nombre: "temperatura_aire", valor: aire, peso: 0.15 },
+    {
+      nombre: "temperatura_aire",
+      valor: aire,
+      peso: 0.15,
+      lado: ladoDeMeseta(c.temperaturaAire, 24, 30),
+    },
     { nombre: "temperatura_agua", valor: agua, peso: 0.15 },
     { nombre: "claridad", valor: claridad, peso: 0.1 },
     { nombre: "socorrista", valor: socorrista, peso: 0.05 },

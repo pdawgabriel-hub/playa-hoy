@@ -200,3 +200,26 @@ El viento, según cómo entra en la playa:
 - **El abrigo no es un factor aparte:** ya está dentro de la ola en la orilla.
 - **El Mar Menor queda fuera por la física, no por una excepción:** hasta 40 km/h su ola de viento no llega a 4 s de periodo, y con más viento, que tiene que entrar desde la laguna para levantar ola, lo veta el viento de mar.
 - Un buen día de surf veta a la familia, y un día de mar plano veta el surf.
+
+## Razones
+
+`generarRazones(perfil, nota, condiciones)` (`razones.ts`) convierte el detalle de factores de una nota en frases cortas, con su cifra y con coma decimal. Cada factor da como mucho una frase, según su valor:
+
+| Tipo        | Valor del factor | Ejemplo                                       |
+| ----------- | ---------------- | --------------------------------------------- |
+| `descarta`  | 0                | Demasiada ola para niños (0,8 m en la orilla) |
+| `en_contra` | menos de 0,65    | Agua fría (19 °C)                             |
+| `a_favor`   | 0,9 o más        | Poca ola en la orilla (0,1 m)                 |
+
+Entre 0,65 y 0,9 no se dice nada: ni ayuda ni estorba lo bastante. Las razones van de la más a la menos importante (primero lo que descarta, luego lo que más resta, peso × lo que le falta para 1, y luego lo que más suma) y se devuelven como mucho 4. Si algo descarta la playa, no se dan razones a favor, que confundirían.
+
+Las frases cambian con el perfil cuando cambia el sentido: el viento de tierra es «cuidado con los hinchables» en familia, «aleja de la orilla» en snorkel y «peina la ola» en surf. En los factores de meseta, el perfil indica si fallan por abajo o por arriba (`lado`), para distinguir «Fresco» de «Calor» o «Poca ola» de «Ola grande» sin repetir los umbrales.
+
+Ejemplo real (Pedrucho Norte, 30 de octubre de 2026 a las 12:00):
+
+| Plan    | Nota | Razones                                                                                           |
+| ------- | ---- | ------------------------------------------------------------------------------------------------- |
+| Familia | 80   | Ola de 0,4 m en la orilla · Viento suave (7 km/h) · Agua templada (24 °C)                         |
+| Snorkel | 58   | Agua algo turbia: poca visibilidad · Ola de 0,4 m en la orilla · Fondo de arena: poca vida marina |
+| Sol     | 61   | Nubes (73 % del cielo) · Temperatura agradable (22 °C) · Viento suave (7 km/h)                    |
+| Surf    | 0    | Mar de viento, sin ola surfeable (4 s) · Poca ola (0,4 m en la orilla)                            |
