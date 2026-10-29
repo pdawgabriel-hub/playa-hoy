@@ -21,7 +21,7 @@ export const ingestas = pgTable(
       .default(sql`'{}'`),
   },
   (t) => [
-    check("ingestas_fuente", sql`${t.fuente} IN ('open_meteo', 'aemet')`),
+    check("ingestas_fuente", sql`${t.fuente} IN ('open_meteo', 'aemet', 'aemet_observaciones')`),
     check("ingestas_estado", sql`${t.estado} IN ('ok', 'parcial', 'error')`),
     check("ingestas_filas", sql`${t.filas} >= 0`),
     // Última ingesta de cada fuente

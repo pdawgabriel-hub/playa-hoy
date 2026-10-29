@@ -142,7 +142,7 @@ erDiagram
 
     ingestas {
         int id PK
-        text fuente "open_meteo | aemet"
+        text fuente "open_meteo | aemet | aemet_observaciones"
         timestamptz empezada_en
         timestamptz terminada_en
         text estado "ok | parcial | error"
@@ -170,8 +170,8 @@ erDiagram
 | `previsiones`       | Previsión por horas de cada punto, con **todas** las emisiones                                                     | Open-Meteo                                                                          | 4    |
 | `previsiones_aemet` | Predicción diaria de las playas con código de AEMET: agua, máxima y UV. Solo la última de cada día                 | AEMET (`ingerir:aemet`)                                                             | 4    |
 | `notas`             | Nota vigente de cada playa por plan y hora, con sus razones                                                        | Motor de puntuación (`packages/core`)                                               | 5    |
-| `estaciones`        | Estaciones y boyas que miden                                                                                       | AEMET y Puertos del Estado                                                          | 4    |
-| `observaciones`     | Datos medidos por hora, comparables columna a columna con la previsión                                             | AEMET y Puertos del Estado                                                          | 4    |
+| `estaciones`        | Estaciones y boyas que miden                                                                                       | AEMET (`ingerir:observaciones`); boyas de Puertos del Estado en la fase 12          | 4    |
+| `observaciones`     | Datos medidos por hora, comparables columna a columna con la previsión                                             | AEMET, cada 6 horas; boyas en la fase 12                                            | 4    |
 | `ingestas`          | Una fila por ejecución de la ingesta y fuente: estado, filas guardadas y errores                                   | Los jobs de ingesta                                                                 | 4    |
 | `costa`             | Línea de costa por tramos, con el mar a la derecha del sentido de la línea                                         | OpenStreetMap                                                                       | 3    |
 
@@ -197,19 +197,19 @@ El detalle de cada fuente está en [fuentes.md](fuentes.md).
 
 Las reglas importantes están en la propia base de datos, no solo en el código:
 
-| Tabla                          | Regla                                                                                            |
-| ------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `municipios`                   | El id es un código INE de 5 dígitos; slug en formato URL                                         |
-| `zonas`, `playas`              | Slug único en formato URL                                                                        |
-| `playas`                       | `mira` entre 0 y menos de 360; `abrigo` entre 0 y 1; código del censo u OSM obligatorio          |
-| `playa_servicios`              | Fuentes entre `itrem`, `osm` y `manual`; suelo y ocupación de su lista de valores                |
-| `calidad_agua`                 | Calificación de la escala actual; temporada desde 2011                                           |
-| `notas`                        | Perfil conocido; nota entre 0 y 100                                                              |
-| `previsiones`, `observaciones` | Direcciones entre 0 y 360; velocidades, alturas y periodos no negativos; nubosidad entre 0 y 100 |
-| `previsiones`                  | La hora prevista no es anterior a la emisión                                                     |
-| `previsiones_aemet`            | UV no negativo                                                                                   |
-| `estaciones`                   | Fuente `aemet` o `puertos_estado`                                                                |
-| `ingestas`                     | Fuente `open_meteo` o `aemet`; estado `ok`, `parcial` o `error`; filas no negativas              |
+| Tabla                          | Regla                                                                                                      |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| `municipios`                   | El id es un código INE de 5 dígitos; slug en formato URL                                                   |
+| `zonas`, `playas`              | Slug único en formato URL                                                                                  |
+| `playas`                       | `mira` entre 0 y menos de 360; `abrigo` entre 0 y 1; código del censo u OSM obligatorio                    |
+| `playa_servicios`              | Fuentes entre `itrem`, `osm` y `manual`; suelo y ocupación de su lista de valores                          |
+| `calidad_agua`                 | Calificación de la escala actual; temporada desde 2011                                                     |
+| `notas`                        | Perfil conocido; nota entre 0 y 100                                                                        |
+| `previsiones`, `observaciones` | Direcciones entre 0 y 360; velocidades, alturas y periodos no negativos; nubosidad entre 0 y 100           |
+| `previsiones`                  | La hora prevista no es anterior a la emisión                                                               |
+| `previsiones_aemet`            | UV no negativo                                                                                             |
+| `estaciones`                   | Fuente `aemet` o `puertos_estado`                                                                          |
+| `ingestas`                     | Fuente `open_meteo`, `aemet` o `aemet_observaciones`; estado `ok`, `parcial` o `error`; filas no negativas |
 
 Borrar una playa, un punto de consulta o una estación borra en cascada sus datos dependientes. Borrar un municipio o una zona con playas no está permitido.
 

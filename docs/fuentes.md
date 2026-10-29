@@ -91,8 +91,8 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 
 ## AEMET observación
 
-- **Endpoint:** `GET /observacion/convencional/todas`, con la misma clave y el mismo sistema de dos pasos.
-- Devuelve los datos horarios de las **últimas 24 horas** de todas las estaciones de España en una sola llamada.
+- **Endpoint:** `GET /observacion/convencional/datos/estacion/{idema}`, con la misma clave y el mismo sistema de dos pasos. Existe también `/observacion/convencional/todas`, con todas las estaciones de España en una llamada, pero son 3,5 MB para la misma ventana de horas: para 5 estaciones compensa pedirlas de una en una (10 peticiones pequeñas).
+- **Horas en UTC:** `fint` es el final de la hora observada (`2026-10-29T05:00:00+0000`). El viento es la media de los 10 minutos anteriores y la temperatura, la del instante de `fint`, así que se comparan con la previsión de esa misma hora.
 - **Variables:** `vv` (viento medio, m/s), `dv` (dirección, grados), `vmax` (racha), `ta` (temperatura), `hr` (humedad), `prec` (lluvia) y, en algunas estaciones, `inso` (horas de sol).
 
 | Estación                        | Código | Altitud | Zona                     |
@@ -103,7 +103,8 @@ Resultado de la fase 0: qué da cada fuente, cómo se accede, en qué condicione
 | Cartagena/Salinas Cabo de Palos | 7019X  | 2,5 m   | La Manga y Cabo de Palos |
 | Murcia/San Javier               | 7031X  | 4 m     | Mar Menor                |
 
-- **Solo guarda 24 horas.** Para tener histórico hay que descargarlas al menos una vez al día. Los valores climatológicos de años anteriores son diarios, no horarios.
+- **Solo guarda 12 horas, en una ventana móvil.** Comprobado el 29 de octubre de 2026: a las 17:00 UTC la primera hora era las 05:00, y una hora después, las 06:00 (la documentación habla de 24 horas, y el endpoint de todas las estaciones da la misma ventana). Por eso `ingerir:observaciones` corre cada 6 horas: cada hora se descarga dos veces y una ejecución fallida no deja huecos. Los valores climatológicos de años anteriores son diarios, no horarios.
+- **Ingesta:** `ingerir:observaciones` crea las 5 estaciones en `estaciones` (con la ubicación y la altitud que da AEMET) y guarda sus horas en `observaciones`, con el viento pasado a km/h. Una hora que ya estaba se sustituye, por si AEMET corrige un dato. Lo que una estación no midió en una hora queda en nulo.
 - No miden oleaje ni temperatura del agua.
 
 ## Censo de zonas de aguas de baño
@@ -202,7 +203,7 @@ Uso, con los tres en un solo fichero PEM: `curl --cacert fnmt-ca.pem` o, en Node
 3. **La guía de playas no existe como fuente.** Los servicios salen de ITREM (accesible, suelo, ocupación, nudista) y OpenStreetMap (socorrista, perros, aseos, duchas).
 4. **La calidad del agua sale de la EEA**, porque el censo no la trae. Se cruza por el código del censo.
 5. **El catálogo de playas necesita dos fuentes:** el censo para las zonas oficiales y OpenStreetMap para calas y playas no vigiladas.
-6. **Las observaciones de AEMET deben descargarse desde la fase 4**, no en la 12, porque solo se guardan 24 horas.
+6. **Las observaciones de AEMET se descargan desde la fase 4**, no en la 12, porque AEMET solo guarda las últimas 12 horas.
 7. **La fiabilidad de la previsión no requiere esperar meses**, porque Open-Meteo guarda las previsiones por antelación desde 2024.
 
 ## Decisiones pendientes

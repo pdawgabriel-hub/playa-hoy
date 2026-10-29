@@ -1,0 +1,2 @@
+ALTER TABLE "ingestas" DROP CONSTRAINT "ingestas_fuente";--> statement-breakpoint
+ALTER TABLE "ingestas" ADD CONSTRAINT "ingestas_fuente" CHECK ("ingestas"."fuente" IN ('open_meteo', 'aemet', 'aemet_observaciones'));

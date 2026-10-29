@@ -4,7 +4,8 @@ name: Ingesta
 # Las horas de cron van en UTC. GitHub puede retrasar unos minutos las ejecuciones programadas.
 on:
   schedule:
-    # Open-Meteo: 4 emisiones al día (la retención de previsiones cuenta con ellas)
+    # Open-Meteo, 4 emisiones al día (la retención de previsiones cuenta con ellas), y las
+    # observaciones de AEMET, que solo guarda las últimas 12 horas
     - cron: "0 */6 * * *"
     # AEMET elabora la predicción de playas una vez al día, sobre las 7:00 UTC
     - cron: "0 9 * * *"
@@ -13,7 +14,7 @@ on:
       fuente:
         description: Fuente que se descarga
         type: choice
-        options: [todas, open_meteo, aemet]
+        options: [todas, open_meteo, aemet, aemet_observaciones]
         default: todas
 
 permissions:
@@ -42,7 +43,7 @@ jobs:
     needs: migrar
     if: >-
       github.event.schedule == '0 */6 * * *' ||
-      (github.event_name == 'workflow_dispatch' && inputs.fuente != 'aemet')
+      (github.event_name == 'workflow_dispatch' && contains(fromJSON('["todas","open_meteo"]'), inputs.fuente))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # Nunca dos ingestas de la misma fuente a la vez; la segunda espera a la primera
@@ -59,7 +60,7 @@ jobs:
     needs: migrar
     if: >-
       github.event.schedule == '0 9 * * *' ||
-      (github.event_name == 'workflow_dispatch' && inputs.fuente != 'open_meteo')
+      (github.event_name == 'workflow_dispatch' && contains(fromJSON('["todas","aemet"]'), inputs.fuente))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     concurrency:
@@ -69,5 +70,23 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/preparar
       - run: pnpm --filter @playa-hoy/jobs ingerir:aemet
+        env:
+          AEMET_API_KEY: ${{ secrets.AEMET_API_KEY }}
+
+  observaciones:
+    name: Observaciones de AEMET
+    needs: migrar
+    if: >-
+      github.event.schedule == '0 */6 * * *' ||
+      (github.event_name == 'workflow_dispatch' && contains(fromJSON('["todas","aemet_observaciones"]'), inputs.fuente))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: ingesta-aemet-observaciones
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/preparar
+      - run: pnpm --filter @playa-hoy/jobs ingerir:observaciones
         env:
           AEMET_API_KEY: ${{ secrets.AEMET_API_KEY }}

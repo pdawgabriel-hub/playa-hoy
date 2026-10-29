@@ -1,6 +1,6 @@
 import { type Db, esquema } from "@playa-hoy/db";
 
-export type Fuente = "open_meteo" | "aemet";
+export type Fuente = "open_meteo" | "aemet" | "aemet_observaciones";
 
 // Lo que devuelve una tarea que ha guardado algo: cuántas filas y qué falló por el camino.
 // Si no ha podido guardar nada, la tarea lanza un error (AggregateError si son varios).

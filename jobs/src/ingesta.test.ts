@@ -5,6 +5,7 @@ import { asc, eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { registrarIngesta } from "./ingestas.ts";
+import { ingerirObservaciones } from "./observaciones.ts";
 import { ingerirAemet } from "./playas-aemet.ts";
 import { ingerirPrevisiones } from "./previsiones.ts";
 import { simularAemet } from "./pruebas/aemet.ts";
@@ -50,6 +51,11 @@ describe.skipIf(!url)("ingestas completas con las APIs simuladas", () => {
   afterAll(async () => {
     await conexion?.borrar();
   });
+
+  const ingerirObservacionesDePrueba = () =>
+    registrarIngesta(conexion.db, "aemet_observaciones", () =>
+      ingerirObservaciones(conexion.db, "clave", { ...rapido, pausaMs: 1 }),
+    );
 
   const ingerirAemetDePrueba = (clave: string) =>
     registrarIngesta(conexion.db, "aemet", () =>
@@ -138,6 +144,37 @@ describe.skipIf(!url)("ingestas completas con las APIs simuladas", () => {
       expect(registro).toMatchObject({ estado: "error", filas: 0 });
       expect(registro.errores).toEqual([expect.stringMatching(/HTTP 401/)]);
       expect(peticiones).toHaveLength(1);
+    });
+  });
+
+  describe("observaciones de AEMET", () => {
+    it("crea las 5 estaciones de la costa y guarda sus horas", async () => {
+      simularAemet();
+
+      expect(await ingerirObservacionesDePrueba()).toMatchObject({ estado: "ok", filas: 60 });
+      const estaciones = await conexion.db
+        .select({ id: esquema.estaciones.id, nombre: esquema.estaciones.nombre })
+        .from(esquema.estaciones)
+        .orderBy(asc(esquema.estaciones.id));
+      expect(estaciones.map((e) => e.id)).toEqual(["7002Y", "7007Y", "7012X", "7019X", "7031X"]);
+      expect(estaciones[3]?.nombre).toBe("Cartagena/Salinas Cabo de Palos");
+      expect(await conexion.db.$count(esquema.observaciones)).toBe(60);
+    });
+
+    it("repetirla no duplica ni estaciones ni horas", async () => {
+      simularAemet();
+      await ingerirObservacionesDePrueba();
+
+      expect(await conexion.db.$count(esquema.estaciones)).toBe(5);
+      expect(await conexion.db.$count(esquema.observaciones)).toBe(60);
+    });
+
+    it("si cae una estación, guarda las demás y lo registra como parcial", async () => {
+      simularAemet({ caidas: ["7031X"] });
+      const registro = await ingerirObservacionesDePrueba();
+
+      expect(registro).toMatchObject({ estado: "parcial", filas: 48 });
+      expect(registro.errores).toEqual([expect.stringMatching(/^estación 7031X: .*HTTP 500/)]);
     });
   });
 });
