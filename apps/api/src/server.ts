@@ -1,10 +1,15 @@
 import { serve } from "@hono/node-server";
-import { esquemaServidor, leerEntorno } from "@playa-hoy/shared";
+import { crearDb } from "@playa-hoy/db";
+import { esquemaBaseDatos, esquemaServidor, leerEntorno } from "@playa-hoy/shared";
 
-import { app } from "./app.ts";
+import { crearApp } from "./app.ts";
 
-const { PORT } = leerEntorno(esquemaServidor, process.env);
+const { PORT, DATABASE_URL } = leerEntorno(
+  esquemaServidor.extend(esquemaBaseDatos.shape),
+  process.env,
+);
+const { db } = crearDb(DATABASE_URL);
 
-serve({ fetch: app.fetch, port: PORT }, (info) => {
+serve({ fetch: crearApp(db).fetch, port: PORT }, (info) => {
   console.log(`API escuchando en http://localhost:${info.port}`);
 });

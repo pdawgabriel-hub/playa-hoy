@@ -190,9 +190,15 @@ importers:
       '@hono/zod-openapi':
         specifier: 1.6.3
         version: 1.6.3(hono@4.13.13)(zod@4.6.7)
+      '@playa-hoy/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@playa-hoy/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(postgres@3.4.9)
       hono:
         specifier: 4.13.13
         version: 4.13.13

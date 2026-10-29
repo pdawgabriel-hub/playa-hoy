@@ -1,7 +1,11 @@
+import { crearDb } from "@playa-hoy/db";
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
-import { app } from "./app.ts";
+import { crearApp } from "./app.ts";
+
+// Estas rutas no consultan la base de datos: la conexión es perezosa y nunca se abre
+const app = crearApp(crearDb("postgresql://sin-conexion@localhost:1/ninguna").db);
 
 const EsquemaEspecificacion = z.object({
   openapi: z.string(),
