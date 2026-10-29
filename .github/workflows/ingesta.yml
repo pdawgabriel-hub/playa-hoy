@@ -1,0 +1,73 @@
+name: Ingesta
+
+# Descarga las previsiones y las guarda en la base de datos de producción (Neon).
+# Las horas de cron van en UTC. GitHub puede retrasar unos minutos las ejecuciones programadas.
+on:
+  schedule:
+    # Open-Meteo: 4 emisiones al día (la retención de previsiones cuenta con ellas)
+    - cron: "0 */6 * * *"
+    # AEMET elabora la predicción de playas una vez al día, sobre las 7:00 UTC
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    inputs:
+      fuente:
+        description: Fuente que se descarga
+        type: choice
+        options: [todas, open_meteo, aemet]
+        default: todas
+
+permissions:
+  contents: read
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+jobs:
+  # Antes de escribir, las migraciones pendientes de main. Va en su propia tarea para que
+  # dos ingestas en paralelo no migren a la vez.
+  migrar:
+    name: Migraciones
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: migraciones
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/preparar
+      - run: pnpm db:migrate
+
+  open-meteo:
+    name: Open-Meteo
+    needs: migrar
+    if: >-
+      github.event.schedule == '0 */6 * * *' ||
+      (github.event_name == 'workflow_dispatch' && inputs.fuente != 'aemet')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Nunca dos ingestas de la misma fuente a la vez; la segunda espera a la primera
+    concurrency:
+      group: ingesta-open-meteo
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/preparar
+      - run: pnpm --filter @playa-hoy/jobs ingerir:previsiones
+
+  aemet:
+    name: AEMET
+    needs: migrar
+    if: >-
+      github.event.schedule == '0 9 * * *' ||
+      (github.event_name == 'workflow_dispatch' && inputs.fuente != 'open_meteo')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: ingesta-aemet
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/preparar
+      - run: pnpm --filter @playa-hoy/jobs ingerir:aemet
+        env:
+          AEMET_API_KEY: ${{ secrets.AEMET_API_KEY }}

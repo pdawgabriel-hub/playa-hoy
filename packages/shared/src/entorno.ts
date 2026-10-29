@@ -3,7 +3,13 @@ import { z } from "zod";
 // Un esquema por grupo de variables: cada app valida al arrancar solo las que usa.
 
 export const esquemaBaseDatos = z.object({
-  DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
+  DATABASE_URL: z
+    .url({ protocol: /^postgres(ql)?$/ })
+    // Neon la añade a sus URLs, pero el driver postgres la manda al servidor como si fuera
+    // un ajuste y la conexión falla con un error confuso
+    .refine((url) => !/[?&]channel_binding=/.test(url), {
+      message: "quita channel_binding de la URL: el driver postgres no lo admite",
+    }),
 });
 
 export const esquemaAemet = z.object({

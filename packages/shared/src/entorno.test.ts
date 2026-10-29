@@ -15,6 +15,15 @@ describe("leerEntorno", () => {
     expect(leerEntorno(esquemaBaseDatos, { DATABASE_URL: url }).DATABASE_URL).toBe(url);
   });
 
+  it("rechaza channel_binding, que Neon añade y el driver no admite, y dice qué hacer", () => {
+    const url =
+      "postgresql://u:c@ep-ejemplo.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+
+    expect(() => leerEntorno(esquemaBaseDatos, { DATABASE_URL: url })).toThrow(
+      /quita channel_binding/,
+    );
+  });
+
   it("rechaza una URL que no es de PostgreSQL", () => {
     expect(() => leerEntorno(esquemaBaseDatos, { DATABASE_URL: "mysql://localhost/db" })).toThrow(
       /DATABASE_URL/,

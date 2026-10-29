@@ -130,26 +130,50 @@ pnpm dev:api           # API en http://localhost:3001
 
 ### Comandos
 
-| Comando           | Qué hace                                                      |
-| ----------------- | ------------------------------------------------------------- |
-| `pnpm dev:web`    | Arranca la web con recarga automática                         |
-| `pnpm dev:api`    | Arranca la API con recarga automática                         |
-| `pnpm lint`       | Linter (oxlint) y comprobación de formato (Prettier)          |
-| `pnpm format`     | Formatea todo el código                                       |
-| `pnpm typecheck`  | Comprueba los tipos de todos los paquetes                     |
-| `pnpm test`       | Ejecuta los tests (`pnpm test:watch` para repetir al guardar) |
-| `pnpm db:up`      | Arranca la base de datos y espera a que esté lista            |
-| `pnpm db:stop`    | Para la base de datos (los datos se conservan)                |
-| `pnpm db:psql`    | Abre una consola SQL en la base de datos local                |
-| `pnpm db:migrate` | Aplica las migraciones pendientes                             |
-| `pnpm db:seed`    | Carga datos de ejemplo (solo en la base de datos local)       |
-| `pnpm db:studio`  | Abre Drizzle Studio para ver las tablas en el navegador       |
+| Comando                                         | Qué hace                                                      |
+| ----------------------------------------------- | ------------------------------------------------------------- |
+| `pnpm dev:web`                                  | Arranca la web con recarga automática                         |
+| `pnpm dev:api`                                  | Arranca la API con recarga automática                         |
+| `pnpm lint`                                     | Linter (oxlint) y comprobación de formato (Prettier)          |
+| `pnpm format`                                   | Formatea todo el código                                       |
+| `pnpm typecheck`                                | Comprueba los tipos de todos los paquetes                     |
+| `pnpm test`                                     | Ejecuta los tests (`pnpm test:watch` para repetir al guardar) |
+| `pnpm db:up`                                    | Arranca la base de datos y espera a que esté lista            |
+| `pnpm db:stop`                                  | Para la base de datos (los datos se conservan)                |
+| `pnpm db:psql`                                  | Abre una consola SQL en la base de datos local                |
+| `pnpm db:migrate`                               | Aplica las migraciones pendientes                             |
+| `pnpm db:seed`                                  | Carga datos de ejemplo (solo en la base de datos local)       |
+| `pnpm db:studio`                                | Abre Drizzle Studio para ver las tablas en el navegador       |
+| `pnpm --filter @playa-hoy/jobs cargar:catalogo` | Carga el catálogo de playas completo, en orden                |
 
 Los tests de base de datos crean su propia base de datos temporal en el PostgreSQL local, así que necesitan `pnpm db:up`. Si `DATABASE_URL` no está definida, se saltan.
 
 Los tests no salen nunca a internet. Las APIs externas (Open-Meteo, AEMET y Overpass) se simulan con MSW y responden con respuestas reales guardadas en `jobs/src/**/pruebas/`, y cualquier petición sin simular hace fallar el test (`jobs/src/pruebas/red.ts`). Así se prueban las ingestas completas, incluidos los fallos de cada fuente, sin red ni claves.
 
 El CI ejecuta `pnpm lint`, `pnpm typecheck` y `pnpm test` en cada push, con su propio PostgreSQL + PostGIS, y comprueba que no falte ninguna migración por generar.
+
+## Ingesta programada
+
+El workflow `.github/workflows/ingesta.yml` descarga las previsiones y las guarda en la base de datos de producción (Neon):
+
+| Fuente     | Cuándo (UTC)                   | Script                                              |
+| ---------- | ------------------------------ | --------------------------------------------------- |
+| Open-Meteo | Cada 6 horas (00, 06, 12 y 18) | `pnpm --filter @playa-hoy/jobs ingerir:previsiones` |
+| AEMET      | Una vez al día, a las 09:00    | `pnpm --filter @playa-hoy/jobs ingerir:aemet`       |
+
+Antes de ingerir aplica las migraciones pendientes. Cada ejecución queda en la tabla `ingestas`, y si una fuente no guarda nada, su tarea falla y GitHub avisa por correo. También se puede lanzar a mano desde la pestaña Actions (Run workflow), eligiendo la fuente.
+
+Necesita dos secrets en el repositorio (Settings → Secrets and variables → Actions): `DATABASE_URL`, la cadena de conexión de Neon, y `AEMET_API_KEY`.
+
+Para cargar el catálogo de playas en Neon por primera vez, o cuando cambie, se ejecuta desde local con su URL (unos 8 minutos):
+
+```bash
+export DATABASE_URL='postgresql://...neon.tech/neondb?sslmode=require'
+pnpm db:migrate
+pnpm --filter @playa-hoy/jobs cargar:catalogo
+```
+
+GitHub desactiva los workflows programados de un repositorio público tras 60 días sin actividad; se reactivan desde la pestaña Actions.
 
 ## Fuentes de datos
 
