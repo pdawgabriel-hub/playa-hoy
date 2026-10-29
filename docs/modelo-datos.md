@@ -15,6 +15,7 @@ erDiagram
     playas ||--o| playa_servicios : "tiene"
     playas ||--o{ calidad_agua : "calificada por temporada"
     playas ||--o{ notas : "puntuada"
+    playas ||--o{ condiciones : "en la orilla"
     playas ||--o{ previsiones_aemet : "predicción diaria de AEMET"
     puntos_consulta |o--o{ playas : "da la previsión a"
 
@@ -73,7 +74,21 @@ erDiagram
         text perfil PK "familia | snorkel | sol | surf"
         timestamptz hora PK
         smallint nota "0 a 100"
-        text_array razones
+        jsonb razones "tipo, factor y texto"
+        timestamptz emitida_en
+    }
+
+    condiciones {
+        int playa_id PK, FK
+        timestamptz hora PK
+        real ola_orilla "m"
+        real ola_periodo "s"
+        text entrada_viento "mar | lado | tierra | calma"
+        real claridad "0 a 1"
+        text estado_agua "cristalina | buena | turbia"
+        real temperatura_agua "°C"
+        text fuente_temperatura_agua "open_meteo | aemet"
+        text bandera "verde | amarilla | roja"
         timestamptz emitida_en
     }
 
@@ -160,21 +175,22 @@ erDiagram
 
 ## Tablas
 
-| Tabla               | Qué guarda                                                                                                         | Origen de los datos                                                                 | Fase |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ---- |
-| `municipios`        | División administrativa                                                                                            | INE                                                                                 | 3    |
-| `zonas`             | División que entiende la gente (Mar Menor, La Manga…), con una descripción para su página                          | `jobs/datos/zonas.json`, definidas a mano                                           | 3    |
-| `playas`            | Catálogo: ubicación, orientación, abrigo, laguna                                                                   | Censo de aguas de baño; orientación, abrigo y laguna calculados con la costa de OSM | 3    |
-| `playa_servicios`   | Accesible, suelo, ocupación, nudista, socorrista, perros, aseos, duchas                                            | ITREM y OpenStreetMap                                                               | 3    |
-| `calidad_agua`      | Calificación oficial por temporada                                                                                 | Agencia Europea de Medio Ambiente                                                   | 3    |
-| `puntos_consulta`   | Coordenadas que se piden a las APIs de previsión: una por grupo de playas que caen en las mismas celdas del modelo | Open-Meteo (`calcular:puntos`)                                                      | 4    |
-| `previsiones`       | Previsión por horas de cada punto, con **todas** las emisiones                                                     | Open-Meteo                                                                          | 4    |
-| `previsiones_aemet` | Predicción diaria de las playas con código de AEMET: agua, máxima y UV. Solo la última de cada día                 | AEMET (`ingerir:aemet`)                                                             | 4    |
-| `notas`             | Nota vigente de cada playa por plan y hora, con sus razones                                                        | Motor de puntuación (`packages/core`)                                               | 5    |
-| `estaciones`        | Estaciones y boyas que miden                                                                                       | AEMET (`ingerir:observaciones`); boyas de Puertos del Estado en la fase 12          | 4    |
-| `observaciones`     | Datos medidos por hora, comparables columna a columna con la previsión                                             | AEMET, cada 6 horas; boyas en la fase 12                                            | 4    |
-| `ingestas`          | Una fila por ejecución de la ingesta y fuente: estado, filas guardadas y errores                                   | Los jobs de ingesta                                                                 | 4    |
-| `costa`             | Línea de costa por tramos, con el mar a la derecha del sentido de la línea                                         | OpenStreetMap                                                                       | 3    |
+| Tabla               | Qué guarda                                                                                                                                  | Origen de los datos                                                                 | Fase |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---- |
+| `municipios`        | División administrativa                                                                                                                     | INE                                                                                 | 3    |
+| `zonas`             | División que entiende la gente (Mar Menor, La Manga…), con una descripción para su página                                                   | `jobs/datos/zonas.json`, definidas a mano                                           | 3    |
+| `playas`            | Catálogo: ubicación, orientación, abrigo, laguna                                                                                            | Censo de aguas de baño; orientación, abrigo y laguna calculados con la costa de OSM | 3    |
+| `playa_servicios`   | Accesible, suelo, ocupación, nudista, socorrista, perros, aseos, duchas                                                                     | ITREM y OpenStreetMap                                                               | 3    |
+| `calidad_agua`      | Calificación oficial por temporada                                                                                                          | Agencia Europea de Medio Ambiente                                                   | 3    |
+| `puntos_consulta`   | Coordenadas que se piden a las APIs de previsión: una por grupo de playas que caen en las mismas celdas del modelo                          | Open-Meteo (`calcular:puntos`)                                                      | 4    |
+| `previsiones`       | Previsión por horas de cada punto, con **todas** las emisiones                                                                              | Open-Meteo                                                                          | 4    |
+| `previsiones_aemet` | Predicción diaria de las playas con código de AEMET: agua, máxima y UV. Solo la última de cada día                                          | AEMET (`ingerir:aemet`)                                                             | 4    |
+| `notas`             | Nota vigente de cada playa por plan y hora, con sus razones                                                                                 | Motor de puntuación (`packages/core`)                                               | 5    |
+| `condiciones`       | Lo que pasa en la orilla de cada playa por hora: ola y periodo, entrada del viento, claridad, temperatura del agua usada y bandera probable | Motor de puntuación (`calcular:notas`)                                              | 5    |
+| `estaciones`        | Estaciones y boyas que miden                                                                                                                | AEMET (`ingerir:observaciones`); boyas de Puertos del Estado en la fase 12          | 4    |
+| `observaciones`     | Datos medidos por hora, comparables columna a columna con la previsión                                                                      | AEMET, cada 6 horas; boyas en la fase 12                                            | 4    |
+| `ingestas`          | Una fila por ejecución de la ingesta y fuente: estado, filas guardadas y errores                                                            | Los jobs de ingesta                                                                 | 4    |
+| `costa`             | Línea de costa por tramos, con el mar a la derecha del sentido de la línea                                                                  | OpenStreetMap                                                                       | 3    |
 
 El detalle de cada fuente está en [fuentes.md](fuentes.md).
 
@@ -184,7 +200,10 @@ El detalle de cada fuente está en [fuentes.md](fuentes.md).
 - **Todas las emisiones.** La clave de `previsiones` incluye `emitida_en`, así que la misma hora aparece una vez por cada emisión que la predijo. Así se mide cómo cambia la previsión con la antelación.
 - **Una emisión por hora de descarga.** `emitida_en` es la hora de la descarga redondeada hacia abajo, y se guardan solo las horas desde ahí en adelante (restricción `previsiones_hora_tras_emision`). Repetir la ingesta dentro de la misma hora sobrescribe esa emisión en lugar de duplicarla, y cada emisión entra entera o no entra (transacción). La hace `ingerir:previsiones` (`jobs/src/previsiones.ts`).
 - **Retención: 14 días completos y después la última previsión.** Guardarlo todo ocuparía unos 1,7 GB al año con 4 descargas diarias (medido: 168 bytes por fila con índices), y Neon gratis da 0,5 GB. Durante 14 días se conservan todas las emisiones; pasado ese plazo, de cada hora solo queda la última que se hizo antes de que llegara, unos 44 MB al año. Para medir el error según la antelación en la fase 12 se usará `previous-runs` de Open-Meteo, que guarda las previsiones por antelación desde 2024.
-- **Solo la nota vigente.** `notas` no guarda una nota por emisión: cada ingesta sustituye las anteriores.
+- **Solo el cálculo vigente.** `notas` y `condiciones` no guardan una fila por emisión: `calcular:notas` (tras cada ingesta de Open-Meteo) borra el cálculo anterior e inserta el nuevo en una transacción, así que quien lee ve el viejo o el nuevo, nunca una mezcla. Cubren desde la hora actual hasta donde llega la previsión (unos 9 días), con la última emisión de cada hora.
+- **Razones con su tipo.** `notas.razones` es `jsonb`: cada razón lleva su tipo (`a_favor`, `en_contra`, `descarta`), el factor y el texto, para que la web las muestre distinto.
+- **La franja no se guarda.** La mejor franja del día es una función pura de las notas del día (`mejorFranja` de `core`): la API la calcula al vuelo.
+- **Tamaño de las notas.** Unas 73.000 filas (83 playas, ~220 horas, 4 planes) ocupan 28 MB, 271 bytes de cada fila son las razones. Al sustituirse enteras, el espacio de las filas borradas queda hasta que el autovacuum lo reutiliza: en la práctica, unos 55 MB estables. Si hiciera falta espacio, la API podría generar las razones al vuelo, como la franja.
 - **Una fuente caída no tumba la ingesta.** Cada ejecución queda en `ingestas`: `ok`; `parcial` si se guardó algo pero hubo fallos (una playa de AEMET que no respondió), y `error` si no se guardó nada. Si es `error`, el proceso termina con código 1 para que GitHub Actions lo marque. Open-Meteo es todo o nada: una emisión sin oleaje o sin viento no se guarda y sigue valiendo la anterior.
 - **Reintentar solo lo que puede arreglarse.** `jobs/src/red.ts` reintenta tres veces con espera creciente los fallos de red, los 5xx, el 408 y el 429 (este con una espera de un minuto). Un 4xx es un error de la petición y no se repite; con un 401 o 403 de AEMET (la clave no vale) se para en la primera playa.
 - **Nulo significa desconocido.** `mira`, `abrigo` y los servicios son nulos mientras no se conocen, nunca 0 ni `false` por defecto. Así los filtros no presentan como dato lo que no lo es.
@@ -198,19 +217,20 @@ El detalle de cada fuente está en [fuentes.md](fuentes.md).
 
 Las reglas importantes están en la propia base de datos, no solo en el código:
 
-| Tabla                          | Regla                                                                                                      |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------- |
-| `municipios`                   | El id es un código INE de 5 dígitos; slug en formato URL                                                   |
-| `zonas`, `playas`              | Slug único en formato URL                                                                                  |
-| `playas`                       | `mira` entre 0 y menos de 360; `abrigo` entre 0 y 1; código del censo u OSM obligatorio                    |
-| `playa_servicios`              | Fuentes entre `itrem`, `osm` y `manual`; suelo y ocupación de su lista de valores                          |
-| `calidad_agua`                 | Calificación de la escala actual; temporada desde 2011                                                     |
-| `notas`                        | Perfil conocido; nota entre 0 y 100                                                                        |
-| `previsiones`, `observaciones` | Direcciones entre 0 y 360; velocidades, alturas y periodos no negativos; nubosidad entre 0 y 100           |
-| `previsiones`                  | La hora prevista no es anterior a la emisión                                                               |
-| `previsiones_aemet`            | UV no negativo                                                                                             |
-| `estaciones`                   | Fuente `aemet` o `puertos_estado`                                                                          |
-| `ingestas`                     | Fuente `open_meteo`, `aemet` o `aemet_observaciones`; estado `ok`, `parcial` o `error`; filas no negativas |
+| Tabla                          | Regla                                                                                                                                 |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `municipios`                   | El id es un código INE de 5 dígitos; slug en formato URL                                                                              |
+| `zonas`, `playas`              | Slug único en formato URL                                                                                                             |
+| `playas`                       | `mira` entre 0 y menos de 360; `abrigo` entre 0 y 1; código del censo u OSM obligatorio                                               |
+| `playa_servicios`              | Fuentes entre `itrem`, `osm` y `manual`; suelo y ocupación de su lista de valores                                                     |
+| `calidad_agua`                 | Calificación de la escala actual; temporada desde 2011                                                                                |
+| `notas`                        | Perfil conocido; nota entre 0 y 100                                                                                                   |
+| `condiciones`                  | Entrada del viento, estado del agua, fuente de la temperatura y bandera de su lista; claridad entre 0 y 1; ola y periodo no negativos |
+| `previsiones`, `observaciones` | Direcciones entre 0 y 360; velocidades, alturas y periodos no negativos; nubosidad entre 0 y 100                                      |
+| `previsiones`                  | La hora prevista no es anterior a la emisión                                                                                          |
+| `previsiones_aemet`            | UV no negativo                                                                                                                        |
+| `estaciones`                   | Fuente `aemet` o `puertos_estado`                                                                                                     |
+| `ingestas`                     | Fuente `open_meteo`, `aemet` o `aemet_observaciones`; estado `ok`, `parcial` o `error`; filas no negativas                            |
 
 Borrar una playa, un punto de consulta o una estación borra en cascada sus datos dependientes. Borrar un municipio o una zona con playas no está permitido.
 
@@ -227,6 +247,7 @@ Además de los de las claves primarias y únicas:
 | `estaciones_ubicacion_idx`                | GiST   | Estación más cercana a cada zona           |
 | `costa_linea_idx`                         | GiST   | Tramos de costa cercanos a cada playa      |
 | `notas_ranking_idx`                       | B-tree | Ranking por plan y hora, ordenado por nota |
+| `condiciones_hora_idx`                    | B-tree | Condiciones de todas las playas a una hora |
 | `previsiones_hora_idx`                    | B-tree | Previsto frente a medido a una hora        |
 | `previsiones_emitida_en_idx`              | B-tree | Última emisión y retención                 |
 | `ingestas_fuente_empezada_en_idx`         | B-tree | Última ingesta de cada fuente              |

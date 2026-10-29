@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { clasificarSuelo } from "./suelo.ts";
+import { clasificarSuelo, esSuelo } from "./suelo.ts";
 
 describe("clasificarSuelo", () => {
   // Los 25 valores distintos que aparecen en los datos de ITREM
@@ -37,5 +37,13 @@ describe("clasificarSuelo", () => {
   it("devuelve null con un texto vacío o desconocido", () => {
     expect(clasificarSuelo("")).toBeNull();
     expect(clasificarSuelo("LODO")).toBeNull();
+  });
+});
+
+describe("esSuelo", () => {
+  it("acepta las clases de suelo y rechaza lo demás", () => {
+    expect(esSuelo("roca")).toBe(true);
+    expect(esSuelo("ARENA")).toBe(false);
+    expect(esSuelo(null)).toBe(false);
   });
 });

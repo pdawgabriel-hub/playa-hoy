@@ -3,6 +3,7 @@ import {
   check,
   index,
   integer,
+  jsonb,
   pgTable,
   primaryKey,
   smallint,
@@ -25,11 +26,12 @@ export const notas = pgTable(
     perfil: text().notNull(),
     hora: timestamp(enUtc).notNull(),
     nota: smallint().notNull(),
-    // Explicación en lenguaje claro: "ola de 0,3 m en la orilla", "viento de tierra flojo"…
-    razones: text()
-      .array()
+    // Explicación en lenguaje claro, con su tipo para mostrarla: a favor ("Poca ola en la
+    // orilla (0,1 m)"), en contra o lo que descarta la playa
+    razones: jsonb()
+      .$type<{ tipo: "descarta" | "en_contra" | "a_favor"; factor: string; texto: string }[]>()
       .notNull()
-      .default(sql`'{}'::text[]`),
+      .default(sql`'[]'::jsonb`),
     // Emisión de la previsión de la que sale la nota
     emitidaEn: timestamp(enUtc).notNull(),
   },

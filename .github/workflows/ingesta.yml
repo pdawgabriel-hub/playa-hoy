@@ -54,6 +54,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/preparar
       - run: pnpm --filter @playa-hoy/jobs ingerir:previsiones
+      # Con la emisión nueva, las notas de los cuatro planes
+      - run: pnpm --filter @playa-hoy/jobs calcular:notas
 
   aemet:
     name: AEMET

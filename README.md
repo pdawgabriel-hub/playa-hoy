@@ -156,11 +156,11 @@ El CI ejecuta `pnpm lint`, `pnpm typecheck` y `pnpm test` en cada push, con su p
 
 El workflow `.github/workflows/ingesta.yml` descarga las previsiones y las guarda en la base de datos de producción (Neon):
 
-| Fuente                      | Cuándo (UTC)                   | Script                                                |
-| --------------------------- | ------------------------------ | ----------------------------------------------------- |
-| Open-Meteo                  | Cada 6 horas (00, 06, 12 y 18) | `pnpm --filter @playa-hoy/jobs ingerir:previsiones`   |
-| AEMET, predicción de playas | Una vez al día, a las 09:00    | `pnpm --filter @playa-hoy/jobs ingerir:aemet`         |
-| AEMET, observaciones        | Cada 6 horas (00, 06, 12 y 18) | `pnpm --filter @playa-hoy/jobs ingerir:observaciones` |
+| Fuente                          | Cuándo (UTC)                   | Script                                                |
+| ------------------------------- | ------------------------------ | ----------------------------------------------------- |
+| Open-Meteo, y después las notas | Cada 6 horas (00, 06, 12 y 18) | `ingerir:previsiones` y `calcular:notas`              |
+| AEMET, predicción de playas     | Una vez al día, a las 09:00    | `pnpm --filter @playa-hoy/jobs ingerir:aemet`         |
+| AEMET, observaciones            | Cada 6 horas (00, 06, 12 y 18) | `pnpm --filter @playa-hoy/jobs ingerir:observaciones` |
 
 Antes de ingerir aplica las migraciones pendientes. Cada ejecución queda en la tabla `ingestas`, y si una fuente no guarda nada, su tarea falla y GitHub avisa por correo. También se puede lanzar a mano desde la pestaña Actions (Run workflow), eligiendo la fuente.
 

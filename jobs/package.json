@@ -19,6 +19,7 @@
     "ingerir:previsiones": "node --env-file-if-exists=../.env src/ingerir-previsiones.ts",
     "ingerir:aemet": "node --env-file-if-exists=../.env src/ingerir-aemet.ts",
     "ingerir:observaciones": "node --env-file-if-exists=../.env src/ingerir-observaciones.ts",
+    "calcular:notas": "node --env-file-if-exists=../.env src/calcular-notas.ts",
     "cargar:catalogo": "pnpm importar:municipios && pnpm importar:playas && pnpm importar:itrem && pnpm importar:aemet && pnpm importar:osm && pnpm importar:zonas && pnpm importar:costa && pnpm calcular:geografia && pnpm calcular:puntos",
     "typecheck": "tsc -p ."
   },

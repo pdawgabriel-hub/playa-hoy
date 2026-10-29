@@ -4,6 +4,7 @@ export * from "./abrigo.ts";
 export * from "./angulos.ts";
 export * from "./bandera.ts";
 export * from "./claridad.ts";
+export * from "./evaluar.ts";
 export * from "./franja.ts";
 export * from "./luz.ts";
 export * from "./nombres.ts";

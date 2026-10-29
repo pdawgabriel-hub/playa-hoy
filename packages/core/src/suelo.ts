@@ -1,4 +1,9 @@
-export type Suelo = "arena_fina" | "arena" | "arena_y_grava" | "grava" | "bolos" | "roca";
+export const SUELOS = ["arena_fina", "arena", "arena_y_grava", "grava", "bolos", "roca"] as const;
+export type Suelo = (typeof SUELOS)[number];
+
+// Para valores que llegan como texto (la base de datos)
+export const esSuelo = (valor: unknown): valor is Suelo =>
+  typeof valor === "string" && SUELOS.some((s) => s === valor);
 
 // Clasifica la descripción del suelo de ITREM ("ARENA FINA Y DORADA", "BOLOS Y PIEDRAS"...)
 // por el material dominante, que es el primero que se nombra. El color no cuenta.

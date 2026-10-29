@@ -249,3 +249,15 @@ Devuelve también los motivos de la amarilla o la roja (`ola`, `viento`, `viento
 Con la previsión de la última semana de octubre de 2026 (playas con socorrista, de 10:00 a 19:00), salen 1.335 horas verdes y 15 amarillas, todas en San Ginés por viento de tierra de 22-24 km/h con el mar plano.
 
 **Pendiente de contrastar:** la bandera real que se iza. Algunos ayuntamientos la publican a diario; compararla con la estimada sería la forma de calibrar estos cortes.
+
+## De la previsión a las notas
+
+`evaluarPlaya(playa, horas, desde)` (`evaluar.ts`) une todas las piezas para una playa: de la serie de previsión mar adentro por horas saca, para cada hora desde `desde`, el oleaje en la orilla, la entrada del viento, la claridad (con las horas previas de la serie), las notas de los cuatro planes con sus razones y la bandera probable.
+
+El job `calcular:notas` (`jobs/src/notas.ts`) prepara la serie de cada playa y guarda el resultado en `condiciones` y `notas`:
+
+- De cada hora usa la previsión de la **última emisión**; para la claridad toma también las 96 horas anteriores (4 semividas en el Mar Menor), de la emisión que las cubría.
+- En el **Mar Menor**, la temperatura del agua es la de AEMET de ese día, de la playa de laguna con predicción más cercana; si no la hay, la de Open-Meteo (la de una celda del Mediterráneo).
+- Corre tras cada ingesta de Open-Meteo, en el mismo paso del workflow. Con 83 playas tarda unos 15 segundos.
+
+Con la previsión del 29 de octubre de 2026, la nota media de familia es 74, la de snorkel 75, la de tomar el sol 43 (otoño, con nubes) y la de surf 3: sin mar de fondo, casi ninguna hora tiene ola surfeable.
