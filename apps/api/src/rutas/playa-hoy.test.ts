@@ -147,6 +147,16 @@ describe.skipIf(!url)("GET /v1/playas/{id}/hoy contra PostgreSQL real", () => {
     expect(horas.at(-1)?.horaLocal).toBe("23:00");
   });
 
+  it("se puede cachear hasta la siguiente hora en punto; un 404, nunca", async () => {
+    // A las 08:00 UTC: la ingesta de las 06:00 ya acabó y la siguiente hora es a las 09:00
+    const res = await pedir(`/v1/playas/${conSocorrista.toString()}/hoy`);
+
+    expect(res.headers.get("Cache-Control")).toBe(
+      "public, max-age=3600, s-maxage=3600, stale-while-revalidate=60",
+    );
+    expect((await pedir("/v1/playas/999999/hoy")).headers.get("Cache-Control")).toBe("no-store");
+  });
+
   it("de madrugada, el día entero", async () => {
     const { horas } = await dia(conSocorrista, new Date("2026-07-14T22:10:00Z"));
 

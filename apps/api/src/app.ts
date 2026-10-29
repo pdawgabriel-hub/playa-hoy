@@ -1,5 +1,6 @@
 import type { Db } from "@playa-hoy/db";
 
+import { CACHE_CATALOGO, SIN_CACHE } from "./cache.ts";
 import { crearRouter, cuerpoError } from "./errores.ts";
 import { rutasCatalogo } from "./rutas/catalogo.ts";
 import { rutasCerca } from "./rutas/cerca.ts";
@@ -16,6 +17,18 @@ import { rutasPlayas } from "./rutas/playas.ts";
 // `reloj` permite fijar la hora en los tests.
 export function crearApp(db: Db, { reloj = () => new Date() } = {}) {
   const app = crearRouter();
+
+  // Cada ruta dice cuánto se puede cachear su respuesta; lo que no lo diga (errores, estado)
+  // no se guarda nunca
+  app.use("*", async (c, next) => {
+    await next();
+    if (!c.res.headers.has("Cache-Control")) c.res.headers.set("Cache-Control", SIN_CACHE);
+  });
+  // La especificación solo cambia con cada despliegue
+  app.use("/openapi.json", async (c, next) => {
+    await next();
+    c.res.headers.set("Cache-Control", CACHE_CATALOGO);
+  });
 
   app.route("/", estado);
   app.route("/", rutasCatalogo(db));

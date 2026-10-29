@@ -3,6 +3,7 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { type Db, esquema } from "@playa-hoy/db";
 import { type SQL, and, desc, eq } from "drizzle-orm";
 
+import { CACHE_CATALOGO } from "../cache.ts";
 import { lista, porNombre } from "../comun.ts";
 import { EsquemaError, crearRouter, cuerpoError, respuestaError } from "../errores.ts";
 
@@ -175,6 +176,7 @@ export function rutasPlayas(db: Db) {
           : null,
       };
     });
+    c.header("Cache-Control", CACHE_CATALOGO);
     return c.json({ datos: datos.toSorted(porNombre) }, 200);
   });
 }

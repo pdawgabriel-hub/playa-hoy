@@ -4,6 +4,7 @@ import { type Db, esquema } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
 import { and, eq, inArray, sql } from "drizzle-orm";
 
+import { CACHE_CATALOGO, cachePrevision } from "../cache.ts";
 import { EsquemaNota, EsquemaPlayaBreve } from "../esquemas.ts";
 import { crearRouter, respuestaError } from "../errores.ts";
 
@@ -86,7 +87,8 @@ export function rutasCerca(db: Db, { reloj = () => new Date() } = {}) {
       .orderBy(sql`${playas.ubicacion}::geography <-> ${punto}`)
       .limit(limite);
 
-    const hora = new Date(Math.floor(reloj().getTime() / HORA_MS) * HORA_MS);
+    const ahora = reloj();
+    const hora = new Date(Math.floor(ahora.getTime() / HORA_MS) * HORA_MS);
     const notasPorPlaya = new Map<
       number,
       { nota: number; razones: (typeof notas.$inferSelect)["razones"] }
@@ -108,6 +110,8 @@ export function rutasCerca(db: Db, { reloj = () => new Date() } = {}) {
       for (const n of deLaHora) notasPorPlaya.set(n.playaId, { nota: n.nota, razones: n.razones });
     }
 
+    // Sin plan solo depende del catálogo; con plan, de las notas
+    c.header("Cache-Control", plan === undefined ? CACHE_CATALOGO : cachePrevision(ahora));
     return c.json(
       {
         origen: { lat, lon },

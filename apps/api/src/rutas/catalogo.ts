@@ -3,6 +3,7 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { type Db, esquema } from "@playa-hoy/db";
 import { count, eq } from "drizzle-orm";
 
+import { CACHE_CATALOGO } from "../cache.ts";
 import { lista, porNombre } from "../comun.ts";
 import { crearRouter } from "../errores.ts";
 
@@ -69,6 +70,7 @@ export function rutasCatalogo(db: Db) {
         .from(municipios)
         .leftJoin(playas, eq(playas.municipioId, municipios.id))
         .groupBy(municipios.id);
+      c.header("Cache-Control", CACHE_CATALOGO);
       return c.json({ datos: filas.toSorted(porNombre) }, 200);
     })
     .openapi(rutaZonas, async (c) => {
@@ -97,6 +99,7 @@ export function rutasCatalogo(db: Db) {
             .toSorted(porNombre),
         }))
         .toSorted(porNombre);
+      c.header("Cache-Control", CACHE_CATALOGO);
       return c.json({ datos }, 200);
     });
 }

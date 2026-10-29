@@ -3,6 +3,7 @@ import { createRoute, z } from "@hono/zod-openapi";
 import type { Db } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
 
+import { cachePrevision } from "../cache.ts";
 import {
   cargarHoras,
   cargarPlaya,
@@ -96,6 +97,7 @@ export function rutasPlayaSemana(db: Db, { reloj = () => new Date() } = {}) {
       const resumen = resumirDia(playa, porFecha.get(fecha) ?? [], fecha);
       return resumen ? [resumen] : [];
     });
+    c.header("Cache-Control", cachePrevision(ahora));
     return c.json({ playa: playa.breve, dias }, 200);
   });
 }

@@ -4,6 +4,7 @@ import { type Db, esquema } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
 import { type SQL, and, eq } from "drizzle-orm";
 
+import { cachePrevision } from "../cache.ts";
 import { porNombre } from "../comun.ts";
 import { EsquemaPlayaBreve, EsquemaRazon } from "../esquemas.ts";
 import { EsquemaError, crearRouter, cuerpoError, respuestaError } from "../errores.ts";
@@ -163,9 +164,13 @@ export function rutasRanking(db: Db, { reloj = () => new Date() } = {}) {
         .where(eq(esquema.zonas.id, id));
       if (!zona)
         return c.json(cuerpoError("no_encontrado", `No existe la zona ${id.toString()}`), 404);
-      return c.json({ zona, ...(await ranking(db, zona.id, c.req.valid("query"), reloj())) }, 200);
+      const ahora = reloj();
+      c.header("Cache-Control", cachePrevision(ahora));
+      return c.json({ zona, ...(await ranking(db, zona.id, c.req.valid("query"), ahora)) }, 200);
     })
-    .openapi(rutaCosta, async (c) =>
-      c.json({ zona: null, ...(await ranking(db, null, c.req.valid("query"), reloj())) }, 200),
-    );
+    .openapi(rutaCosta, async (c) => {
+      const ahora = reloj();
+      c.header("Cache-Control", cachePrevision(ahora));
+      return c.json({ zona: null, ...(await ranking(db, null, c.req.valid("query"), ahora)) }, 200);
+    });
 }
