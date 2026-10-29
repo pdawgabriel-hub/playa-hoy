@@ -231,3 +231,21 @@ Ejemplo real (Pedrucho Norte, 30 de octubre de 2026 a las 12:00):
 Las horas de luz salen de `ortoYOcaso(día, lat, lon)` (`luz.ts`), con la ecuación del orto (el método simplificado de la NOAA): el sol sale cuando su borde superior asoma, con el centro a 0,833° bajo el horizonte por la refracción y el radio del disco. Contrastado con Open-Meteo en Cartagena en los dos solsticios y los dos días de cambio de hora de 2025: acierta con menos de un minuto de diferencia. Así las horas de día cambian con la fecha y el lugar (en junio el día dura 14 h 45 min; en diciembre, 9 h 30 min).
 
 Ejemplo real (Bolnuevo, 30 de octubre de 2026, sol de 07:27 a 18:09): familia de 12:00 a 15:00 (98), snorkel y sol de 08:00 a 11:00 (87 y 86), y surf sin franja.
+
+## Bandera probable
+
+`banderaProbable(ola, viento, entrada)` (`bandera.ts`) estima la bandera que es de esperar que ice el socorrista. La decide el socorrista en la playa, coordinado con el ayuntamiento: es una **estimación** y así hay que presentarla, y solo tiene sentido en playas con socorrista.
+
+| Bandera  | Condición                                                                        |
+| -------- | -------------------------------------------------------------------------------- |
+| Verde    | Ola en la orilla de menos de 0,5 m y sin viento peligroso                        |
+| Amarilla | Ola de 0,5 m o más, viento de tierra de 20 km/h o más, o viento de 40 km/h o más |
+| Roja     | Ola en la orilla de 2 m o más                                                    |
+
+Devuelve también los motivos de la amarilla o la roja (`ola`, `viento`, `viento_tierra`). Sin la ola no se estima.
+
+**De dónde salen los cortes.** No hay criterios oficiales con cifras: el plan COPLA de la Región de Murcia (Plan de Vigilancia y Rescate en Playas y Salvamento en la Mar) no los fija. La única referencia encontrada con una cifra es el [plan de salvamento de Vélez-Málaga](https://www.velezmalaga.es/contenido/datos/playas/documentos/FASE-PLANIFICACION-KZ79e0.pdf): verde con «mar tranquilo, sin peligro o riesgo aparente», amarilla con «olas de 1,5 m de altura, corrientes moderadamente fuertes» y roja cuando se prohíbe el baño. Por eso 1,5 m queda dentro de la amarilla y la roja empieza en 2 m. El corte de la verde (0,5 m) y los del viento son criterio de playa·hoy; el del viento de tierra sigue la práctica de la costa de Murcia y Alicante de izar la amarilla con poniente, que arrastra las colchonetas mar adentro (el mismo umbral que veta el perfil familia).
+
+Con la previsión de la última semana de octubre de 2026 (playas con socorrista, de 10:00 a 19:00), salen 1.335 horas verdes y 15 amarillas, todas en San Ginés por viento de tierra de 22-24 km/h con el mar plano.
+
+**Pendiente de contrastar:** la bandera real que se iza. Algunos ayuntamientos la publican a diario; compararla con la estimada sería la forma de calibrar estos cortes.
