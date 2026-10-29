@@ -3,11 +3,7 @@ import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import { type Db, esquema } from "@playa-hoy/db";
 import { count, eq } from "drizzle-orm";
 
-// Orden alfabético en español, en la API y no en SQL: la intercalación de la base de datos
-// puede cambiar entre servidores, y "Águilas" no debe ir detrás de la "Z"
-const alfabetico = new Intl.Collator("es");
-const porNombre = <T extends { nombre: string }>(a: T, b: T) =>
-  alfabetico.compare(a.nombre, b.nombre);
+import { lista, porNombre } from "../comun.ts";
 
 const EsquemaMunicipio = z
   .object({
@@ -30,9 +26,6 @@ const EsquemaZona = z
       .openapi({ description: "Municipios con playas en la zona" }),
   })
   .openapi("Zona");
-
-const lista = <T extends z.ZodType>(esquemaElemento: T) =>
-  z.object({ datos: z.array(esquemaElemento) });
 
 const rutaMunicipios = createRoute({
   method: "get",

@@ -20,9 +20,9 @@ export const playaServicios = pgTable(
     duchas: boolean(),
     nudista: boolean(),
     // Material dominante de la playa
-    suelo: text(),
+    suelo: text().$type<"arena_fina" | "arena" | "arena_y_grava" | "grava" | "bolos" | "roca">(),
     // Afluencia habitual en temporada
-    ocupacion: text(),
+    ocupacion: text().$type<"baja" | "media" | "alta">(),
     // De dónde salen los datos de la fila: una playa puede combinar varias fuentes
     fuentes: text()
       .array()

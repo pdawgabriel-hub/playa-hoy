@@ -1,4 +1,4 @@
-import { type HoraPrevision, esSuelo, evaluarPlaya } from "@playa-hoy/core";
+import { type HoraPrevision, evaluarPlaya } from "@playa-hoy/core";
 import { type Db, esquema } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
 import { eq, gte, isNotNull, sql } from "drizzle-orm";
@@ -87,8 +87,7 @@ export async function calcularNotas(db: Db, { ahora = new Date() }: { ahora?: Da
       nubosidad: p.nubosidad,
     }));
 
-    const suelo = esSuelo(playa.suelo) ? playa.suelo : null;
-    for (const h of evaluarPlaya({ ...playa, suelo }, horas, desde)) {
+    for (const h of evaluarPlaya(playa, horas, desde)) {
       const emitidaEn = emitida.get(h.hora.getTime()) ?? desde;
       const deAemet = aguaPorDia?.has(enHoraEspana(h.hora).fecha) ?? false;
       if (deAemet) horasConAguaAemet++;

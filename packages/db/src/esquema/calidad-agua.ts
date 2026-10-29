@@ -13,7 +13,9 @@ export const calidadAgua = pgTable(
       .notNull()
       .references(() => playas.id, { onDelete: "cascade" }),
     temporada: integer().notNull(),
-    calificacion: text().notNull(),
+    calificacion: text()
+      .$type<"excelente" | "buena" | "suficiente" | "insuficiente" | "sin_clasificar">()
+      .notNull(),
   },
   (t) => [
     primaryKey({ columns: [t.playaId, t.temporada] }),

@@ -3,6 +3,7 @@ import type { Db } from "@playa-hoy/db";
 
 import { rutasCatalogo } from "./rutas/catalogo.ts";
 import { estado } from "./rutas/estado.ts";
+import { rutasPlayas } from "./rutas/playas.ts";
 
 // La aplicación se crea con la conexión a la base de datos y se exporta sin arrancar, para
 // poder testearla con una base de datos temporal y desplegarla en Vercel.
@@ -13,6 +14,7 @@ export function crearApp(db: Db) {
 
   app.route("/", estado);
   app.route("/", rutasCatalogo(db));
+  app.route("/", rutasPlayas(db));
 
   app.get("/", (c) =>
     c.json({ nombre: "playa·hoy API", estado: "ok", especificacion: "/openapi.json" }),
