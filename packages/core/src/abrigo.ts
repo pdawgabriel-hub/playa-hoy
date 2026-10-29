@@ -12,7 +12,7 @@ export type Alcance = {
 };
 
 // A partir de esta distancia de mar libre, el rayo cuenta como mar abierto
-const ALCANCE_ABIERTO_M = 30_000;
+export const ALCANCE_ABIERTO_M = 30_000;
 
 // Rumbos del abanico que tiene delante una playa: de mira - 90° a mira + 90°
 export function abanicoDeRayos(mira: number, pasoGrados = 5): number[] {

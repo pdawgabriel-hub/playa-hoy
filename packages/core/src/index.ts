@@ -3,6 +3,7 @@
 export * from "./abrigo.ts";
 export * from "./angulos.ts";
 export * from "./nombres.ts";
+export * from "./oleaje.ts";
 export * from "./orientacion.ts";
 export * from "./slug.ts";
 export * from "./suelo.ts";

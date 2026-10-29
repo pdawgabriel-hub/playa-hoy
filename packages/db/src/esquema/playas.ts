@@ -24,6 +24,10 @@ export const playas = pgTable(
     mira: real(),
     // Protección de cabos, bahías o puertos: 0 = expuesta, 1 = totalmente abrigada.
     abrigo: real(),
+    // Metros de mar libre delante de la playa en cada dirección: 37 rayos, de mira - 90° a
+    // mira + 90° cada 5°, hasta 50 km. Con ellos se calcula cuánta ola entra desde cada
+    // rumbo y, en el Mar Menor, cuánta laguna tiene el viento para levantarla.
+    alcances: real().array(),
     // Playas del Mar Menor: sin oleaje del Mediterráneo
     laguna: boolean().notNull().default(false),
     // Códigos de origen. Reimportar una fuente actualiza la playa en lugar de duplicarla.
@@ -37,6 +41,7 @@ export const playas = pgTable(
     check("playas_slug", condicionSlug(t.slug)),
     check("playas_mira", sql`${t.mira} >= 0 AND ${t.mira} < 360`),
     check("playas_abrigo", sql`${t.abrigo} BETWEEN 0 AND 1`),
+    check("playas_alcances", sql`cardinality(${t.alcances}) = 37`),
     // Toda playa sale del censo o de OpenStreetMap: no se inventan playas
     check("playas_origen", sql`${t.codigoCenso} IS NOT NULL OR ${t.osmId} IS NOT NULL`),
     // Mapa: playas dentro de un recuadro

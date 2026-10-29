@@ -40,6 +40,7 @@ erDiagram
         geometry ubicacion "Point, SRID 4326"
         real mira "grados, 0 = norte"
         real abrigo "0 a 1"
+        real_array alcances "37 rayos, m"
         bool laguna "Mar Menor"
         text codigo_censo UK "ES620M..."
         text codigo_aemet UK

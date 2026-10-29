@@ -40,6 +40,8 @@ De 0 (totalmente expuesta) a 1 (totalmente cerrada). Mide cuánto mar libre tien
 4. Los rayos de frente pesan más que los laterales (coseno del ángulo con `mira`), porque el oleaje que llega de lado rompe menos en la orilla.
 5. `abrigo` = 1 - la apertura media ponderada.
 
+Las 37 distancias se guardan también en `playas.alcances`, en el orden del abanico: el motor las usa para saber cuánta ola entra desde cada rumbo y, en el Mar Menor, cuánta laguna tiene el viento delante (ver [motor.md](motor.md)).
+
 ### Resultado
 
 | Abrigo             | Playas del Mediterráneo | Playas de la laguna |

@@ -184,7 +184,7 @@ GitHub desactiva los workflows programados de un repositorio público tras 60 d�
 - **[Turismo de la Región de Murcia (ITREM)](https://www.murciaturistica.es/)**: accesibilidad, tipo de suelo, ocupación y playas nudistas.
 - **[OpenStreetMap](https://www.openstreetmap.org/copyright)**: línea de costa para calcular la orientación de cada playa, y socorrista, perros, aseos y duchas. © colaboradores de OpenStreetMap, ODbL.
 
-El detalle de cada fuente (qué da, cómo se accede, licencia, límites y huecos) está en [docs/fuentes.md](docs/fuentes.md). Cómo se calculan la orientación, el abrigo y si una playa es de laguna, en [docs/geografia-playas.md](docs/geografia-playas.md); el esquema de la base de datos, en [docs/modelo-datos.md](docs/modelo-datos.md).
+El detalle de cada fuente (qué da, cómo se accede, licencia, límites y huecos) está en [docs/fuentes.md](docs/fuentes.md). Cómo se calculan la orientación, el abrigo y si una playa es de laguna, en [docs/geografia-playas.md](docs/geografia-playas.md); el esquema de la base de datos, en [docs/modelo-datos.md](docs/modelo-datos.md), y cómo se pasa de la previsión mar adentro a lo que pasa en cada playa, en [docs/motor.md](docs/motor.md).
 
 > La nota y la bandera son **estimaciones orientativas**. Consulta siempre la bandera oficial y las indicaciones del socorrista.
 

@@ -81,6 +81,7 @@ export async function calcularGeografiaPlayas(db: Db, marMenor: object, excepcio
     nombre: string;
     mira: number | null;
     abrigo: number | null;
+    alcances: number[] | null;
     laguna: boolean;
   }[] = [];
   for (const playa of playas) {
@@ -99,6 +100,7 @@ export async function calcularGeografiaPlayas(db: Db, marMenor: object, excepcio
     const mira = miraForzada.get(playa.codigoCenso ?? "") ?? calculada?.mira ?? null;
 
     let abrigo: number | null = null;
+    let alcances: number[] | null = null;
     if (mira !== null) {
       // Alcance de cada rayo: distancia al primer corte con la costa más allá de la orilla
       const azimuts = abanicoDeRayos(mira);
@@ -116,9 +118,11 @@ export async function calcularGeografiaPlayas(db: Db, marMenor: object, excepcio
         GROUP BY azimut
       `);
       const alcance = new Map(cortes.map((c) => [c.azimut, c.distancia]));
+      // En el orden del abanico, de mira - 90° a mira + 90°, redondeados al metro
+      alcances = azimuts.map((azimut) => Math.round(alcance.get(azimut) ?? LARGO_RAYO_M));
       abrigo = calcularAbrigo(
         mira,
-        azimuts.map((azimut) => ({ azimut, distanciaM: alcance.get(azimut) ?? LARGO_RAYO_M })),
+        azimuts.map((azimut, i) => ({ azimut, distanciaM: alcances?.[i] ?? LARGO_RAYO_M })),
       );
     }
 
@@ -131,13 +135,14 @@ export async function calcularGeografiaPlayas(db: Db, marMenor: object, excepcio
       nombre: playa.nombre,
       mira,
       abrigo,
+      alcances,
       laguna,
     });
   }
 
   await db.transaction(async (tx) => {
-    for (const { id, mira, abrigo, laguna } of resultados) {
-      await tx.update(tPlayas).set({ mira, abrigo, laguna }).where(eq(tPlayas.id, id));
+    for (const { id, mira, abrigo, alcances, laguna } of resultados) {
+      await tx.update(tPlayas).set({ mira, abrigo, alcances, laguna }).where(eq(tPlayas.id, id));
     }
   });
 
