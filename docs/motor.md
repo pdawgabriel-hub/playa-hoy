@@ -275,3 +275,17 @@ Con la previsión del 29 de octubre de 2026, la nota media de familia es 74, la 
 | Brisa de tarde (sudeste, 18 km/h)          | Familia algo más baja que en calma, sin bandera roja ni vetos; sin surf (mar de viento de 4 s)                                                                                                                                                   |
 
 Si un cambio en el motor rompe uno de estos escenarios, o el cambio es un error o el escenario tiene que revisarse con un motivo.
+
+## Tests de propiedades
+
+`packages/core/src/propiedades.test.ts` usa [fast-check](https://fast-check.dev/) para comprobar reglas que el motor debe cumplir con **cualquier** entrada: genera 2.000 casos al azar por regla, con nulos y valores extremos (olas de 6 m, vientos de 150 km/h, rumbos de -720° a 720°), y si uno rompe una regla lo reduce al caso más simple que la rompe.
+
+- La nota es siempre un entero entre 0 y 100, o `null` si faltan datos; cada factor, entre 0 y 1.
+- Un factor en 0 deja la nota en 0, y si falta un dato imprescindible de un plan, la nota es `null`.
+- Las notas se mueven en el sentido que deben, con todo lo demás igual: más ola nunca sube familia ni snorkel; más viento nunca sube familia ni sol; agua más clara nunca baja snorkel; más nubes nunca suben sol; un periodo más largo nunca baja surf.
+- Como mucho cuatro razones; si alguna descarta la playa, la nota es 0 y no hay razones a favor.
+- Los rumbos normalizados están en [0, 360) y los giros en (-180, 180]; `haciaTierra` entre -1 y 1.
+- En el Mediterráneo la ola en la orilla nunca es mayor que mar adentro; la claridad está entre 0 y 1 y su ola equivalente no pasa de la más alta; más ola nunca baja la bandera.
+- Si hay mejor franja, son tres horas de día con nota entre 1 y 100.
+
+Para comprobar que las reglas sirven, se rompió a propósito `rampa` (sin limitar a [0, 1]): fallaron 8 de las 16.
