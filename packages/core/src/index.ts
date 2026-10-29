@@ -6,6 +6,7 @@ export * from "./claridad.ts";
 export * from "./nombres.ts";
 export * from "./oleaje.ts";
 export * from "./orientacion.ts";
+export * from "./perfiles/index.ts";
 export * from "./slug.ts";
 export * from "./suelo.ts";
 export * from "./viento.ts";

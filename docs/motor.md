@@ -101,3 +101,33 @@ Después de un día de temporal de 1 m en la orilla, con el mar ya casi plano (0
 - **Solo ve el oleaje.** No sabe de lluvias y ramblas que arrastran barro, de algas, ni del estado ecológico del Mar Menor (los episodios de agua verde de 2016 y 2019 no los explica el oleaje).
 - El suelo de ITREM es el de la playa, no el del fondo a unos metros; en la orilla suelen coincidir.
 - Necesita las horas previas: quien la llame tiene que pasar al menos 4 semividas de historia (96 h en el Mar Menor). Las previsiones de horas pasadas se conservan (ver la retención en [modelo-datos.md](modelo-datos.md)).
+
+## Perfiles
+
+Cada perfil convierte las condiciones de una playa a una hora (`Condiciones`, en `perfiles/comun.ts`: ola en la orilla, viento y su entrada, temperaturas, nubosidad, claridad y socorrista) en una nota de 0 a 100, con el detalle de cada factor para poder explicarla.
+
+- Cada dato se convierte en un **factor** de 0 a 1 con una **rampa** lineal entre un valor bueno (1) y uno malo (0), o una **meseta** si lo bueno es un tramo intermedio (la temperatura del aire).
+- La nota es la **media geométrica ponderada** de los factores: `100 × Π factor^peso`. Un factor en 0 deja la nota en 0, así que un factor de **seguridad** veta la playa aunque todo lo demás sea perfecto. Los factores de **comodidad** tienen un suelo: restan, pero nunca vetan.
+- Si falta un dato de comodidad, su peso se reparte entre los demás. Si falta uno imprescindible para el perfil, la nota es `null`.
+
+Los umbrales son criterio de playa·hoy, no una norma; están juntos en cada perfil para poder revisarlos.
+
+### Familia con niños
+
+`notaFamilia` (`perfiles/familia.ts`). Sin ola o sin viento no hay nota.
+
+| Factor               | Peso | Tipo      | 1         | 0 (o el suelo)           |
+| -------------------- | ---- | --------- | --------- | ------------------------ |
+| Ola en la orilla     | 35 % | Seguridad | ≤ 0,2 m   | ≥ 0,6 m                  |
+| Viento               | 20 % | Seguridad | ≤ 12 km/h | ≥ 35 km/h                |
+| Viento de tierra     | —    | Seguridad | ≤ 8 km/h  | ≥ 20 km/h                |
+| Temperatura del aire | 15 % | Comodidad | 24-30 °C  | ≤ 16 °C o ≥ 38 °C (0,2)  |
+| Temperatura del agua | 15 % | Comodidad | ≥ 24 °C   | ≤ 18 °C (0,2)            |
+| Claridad             | 10 % | Comodidad | ≥ 0,8     | 0 (0,5)                  |
+| Socorrista           | 5 %  | Comodidad | sí        | no (0,6); sin datos, 0,8 |
+
+- **El viento de tierra tiene su propia rampa, más estricta,** porque arrastra colchonetas e hinchables mar adentro. Con 20 km/h de mar la nota baja a 92; con 20 km/h de tierra, a 0.
+- **En calma**, el viento no resta.
+- **El socorrista pesa poco** porque OpenStreetMap no dice en qué meses hay.
+
+Ejemplos: un día perfecto da 100; 0,4 m de ola y 20 km/h de mar, 72; 0,6 m de ola o más, 0.
