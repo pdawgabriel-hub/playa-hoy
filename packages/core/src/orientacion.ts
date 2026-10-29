@@ -1,6 +1,7 @@
 // Hacia dónde mira una playa, a partir de la línea de costa de OpenStreetMap.
 // En OSM la costa se dibuja con la tierra a la izquierda y el mar a la derecha: la playa
 // mira hacia la perpendicular a la costa por la derecha.
+import { normalizarRumbo } from "./angulos.ts";
 
 export type Coordenadas = { lon: number; lat: number };
 
@@ -130,9 +131,9 @@ export function calcularOrientacion(
 
   // Perpendicular por la derecha de la dirección de la costa: (dx, dy) -> (dy, -dx)
   const grados = (Math.atan2(suma.y, -suma.x) * 180) / Math.PI;
-  const mira = Math.round((((grados % 360) + 360) % 360) * 10) / 10;
   return {
-    mira: mira === 360 ? 0 : mira,
+    // El segundo normalizarRumbo cubre que 359,96 se redondee a 360
+    mira: normalizarRumbo(Math.round(normalizarRumbo(grados) * 10) / 10),
     confianza: Math.round((largoSuma / sumaLargos) * 100) / 100,
   };
 }
