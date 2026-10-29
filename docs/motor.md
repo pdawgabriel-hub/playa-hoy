@@ -211,7 +211,13 @@ El viento, según cómo entra en la playa:
 | `en_contra` | menos de 0,65    | Agua fría (19 °C)                             |
 | `a_favor`   | 0,9 o más        | Poca ola en la orilla (0,1 m)                 |
 
-Entre 0,65 y 0,9 no se dice nada: ni ayuda ni estorba lo bastante. Las razones van de la más a la menos importante (primero lo que descarta, luego lo que más resta, peso × lo que le falta para 1, y luego lo que más suma) y se devuelven como mucho 4. Si algo descarta la playa, no se dan razones a favor, que confundirían.
+Entre 0,65 y 0,9 no se dice nada: ni ayuda ni estorba lo bastante. Se devuelven como mucho 4, en este orden:
+
+- **Si algo descarta la playa**: lo que la descarta y lo que resta. Las razones a favor confundirían.
+- **Con nota alta (70 o más)**: la razón a favor que más pesa, después todo lo que resta y después el resto a favor. Un 97 de snorkel empieza por «Agua cristalina» y no por «Nubes», aunque resten un poco; y una advertencia como «cuidado con los hinchables» cabe siempre.
+- **Con nota baja**: primero lo que resta.
+
+Lo que resta va de más a menos (peso × lo que le falta para 1); lo que suma, por su peso.
 
 Las frases cambian con el perfil cuando cambia el sentido: el viento de tierra es «cuidado con los hinchables» en familia, «aleja de la orilla» en snorkel y «peina la ola» en surf. En los factores de meseta, el perfil indica si fallan por abajo o por arriba (`lado`), para distinguir «Fresco» de «Calor» o «Poca ola» de «Ola grande» sin repetir los umbrales.
 

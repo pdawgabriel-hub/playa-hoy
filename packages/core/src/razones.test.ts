@@ -78,6 +78,23 @@ describe("generarRazones", () => {
     const enContra = lista.filter((r) => r.tipo === "en_contra").map((r) => r.factor);
 
     expect(enContra).toEqual(["temperatura_agua", "viento"]);
+  });
+
+  it("una nota alta empieza por lo que más suma, pero las advertencias caben siempre", () => {
+    // Nota 76: primero la ola (a favor), después lo que resta
+    const lista = razones.familia({ temperaturaAgua: 19, vientoVelocidad: 22 });
+
+    expect(lista.map((r) => r.tipo)).toEqual(["a_favor", "en_contra", "en_contra", "a_favor"]);
+    expect(lista[0]?.factor).toBe("ola");
+  });
+
+  it("una nota baja empieza por lo que resta", () => {
+    // Ola de 0,45 m y agua a 19 °C: nota por debajo de 70
+    const c = { ...BASE, olaOrilla: 0.45, temperaturaAgua: 19 };
+    const nota = notaFamilia(c);
+    const lista = nota ? generarRazones("familia", nota, c) : [];
+
+    expect(nota?.nota).toBeLessThan(70);
     expect(lista[0]?.tipo).toBe("en_contra");
   });
 

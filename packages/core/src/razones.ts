@@ -158,34 +158,52 @@ const POR_PERFIL: Record<Perfil, Record<string, Frases>> = {
 const frase = (perfil: Perfil, factor: string, clave: keyof Frases) =>
   POR_PERFIL[perfil][factor]?.[clave] ?? COMUNES[factor]?.[clave];
 
-// Las razones de una nota, de la más a la menos importante: primero lo que descarta la
-// playa, luego lo que más resta (peso × lo que le falta para 1) y luego lo que más suma.
-// Si algo descarta la playa, no se dan razones a favor: confundirían.
-export function generarRazones(perfil: Perfil, { factores }: NotaPerfil, c: Condiciones): Razon[] {
-  const candidatas: (Razon & { orden: number })[] = [];
+// Desde esta nota, la explicación empieza por lo que suma; por debajo, por lo que resta
+export const NOTA_ALTA = 70;
+
+// Las razones de una nota, de la más a la menos importante:
+// - Si algo descarta la playa: lo que la descarta y lo que resta. Las razones a favor
+//   confundirían.
+// - Con nota alta: la razón a favor que más pesa, después todo lo que resta y después el resto
+//   a favor. Un 97 no debe empezar por "Nubes", pero una advertencia ("cuidado con los
+//   hinchables") tiene que caber siempre.
+// - Con nota baja: primero lo que resta.
+// Lo que resta, de más a menos (peso × lo que le falta para 1); lo que suma, por su peso.
+export function generarRazones(
+  perfil: Perfil,
+  { nota, factores }: NotaPerfil,
+  c: Condiciones,
+): Razon[] {
+  const descartan: (Razon & { peso: number })[] = [];
+  const restan: (Razon & { resta: number })[] = [];
+  const suman: (Razon & { peso: number })[] = [];
   for (const { nombre, valor, peso, lado } of factores) {
     if (valor === null) continue;
-    let tipo: Razon["tipo"] | null = null;
-    let texto: string | null | undefined;
     if (valor === 0) {
-      tipo = "descarta";
-      texto = (frase(perfil, nombre, "descarta") ?? frase(perfil, nombre, "contra"))?.(c, lado);
+      const texto = (frase(perfil, nombre, "descarta") ?? frase(perfil, nombre, "contra"))?.(
+        c,
+        lado,
+      );
+      if (texto) descartan.push({ tipo: "descarta", factor: nombre, texto, peso });
     } else if (valor < CONTRA) {
-      tipo = "en_contra";
-      texto = frase(perfil, nombre, "contra")?.(c, lado);
+      const texto = frase(perfil, nombre, "contra")?.(c, lado);
+      if (texto)
+        restan.push({ tipo: "en_contra", factor: nombre, texto, resta: peso * (1 - valor) });
     } else if (valor >= FAVOR) {
-      tipo = "a_favor";
-      texto = frase(perfil, nombre, "favor")?.(c, lado);
+      const texto = frase(perfil, nombre, "favor")?.(c, lado);
+      if (texto) suman.push({ tipo: "a_favor", factor: nombre, texto, peso });
     }
-    if (tipo === null || !texto) continue;
-    const orden =
-      tipo === "descarta" ? 2 + peso : tipo === "en_contra" ? 1 + peso * (1 - valor) : peso;
-    candidatas.push({ tipo, factor: nombre, texto, orden });
   }
-  const descartada = candidatas.some((r) => r.tipo === "descarta");
-  return candidatas
-    .filter((r) => !descartada || r.tipo !== "a_favor")
-    .toSorted((a, b) => b.orden - a.orden)
-    .slice(0, MAX_RAZONES)
-    .map(({ tipo, factor, texto }) => ({ tipo, factor, texto }));
+  const enContra = restan.toSorted((a, b) => b.resta - a.resta);
+  const aFavor = suman.toSorted((a, b) => b.peso - a.peso);
+
+  let orden: Razon[];
+  if (descartan.length > 0) {
+    orden = [...descartan.toSorted((a, b) => b.peso - a.peso), ...enContra];
+  } else if (nota >= NOTA_ALTA) {
+    orden = [...aFavor.slice(0, 1), ...enContra, ...aFavor.slice(1)];
+  } else {
+    orden = [...enContra, ...aFavor];
+  }
+  return orden.slice(0, MAX_RAZONES).map(({ tipo, factor, texto }) => ({ tipo, factor, texto }));
 }
