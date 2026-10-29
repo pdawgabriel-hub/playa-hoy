@@ -2,6 +2,7 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import type { Db } from "@playa-hoy/db";
 
 import { rutasCatalogo } from "./rutas/catalogo.ts";
+import { rutasCerca } from "./rutas/cerca.ts";
 import { estado } from "./rutas/estado.ts";
 import { rutasPlayaHoy } from "./rutas/playa-hoy.ts";
 import { rutasPlayaSemana } from "./rutas/playa-semana.ts";
@@ -19,6 +20,7 @@ export function crearApp(db: Db, { reloj = () => new Date() } = {}) {
   app.route("/", estado);
   app.route("/", rutasCatalogo(db));
   app.route("/", rutasPlayas(db));
+  app.route("/", rutasCerca(db, { reloj }));
   app.route("/", rutasPlayaHoy(db, { reloj }));
   app.route("/", rutasPlayaSemana(db, { reloj }));
   app.route("/", rutasRanking(db, { reloj }));
