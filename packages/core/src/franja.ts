@@ -15,8 +15,8 @@ export type Franja = {
   nota: number;
 };
 
-// Una hora cuenta si entera es de día: empieza después del orto y acaba antes del ocaso
-const deDia = (hora: Date, { orto, ocaso }: Luz) =>
+// Una hora es de día si entera lo es: empieza después del orto y acaba antes del ocaso
+export const esHoraDeDia = (hora: Date, { orto, ocaso }: Luz) =>
   hora.getTime() >= orto.getTime() && hora.getTime() + HORA_MS <= ocaso.getTime();
 
 // Entre las horas de luz de `luz`, las tres seguidas y con nota de mejor media. Si empatan,
@@ -24,7 +24,7 @@ const deDia = (hora: Date, { orto, ocaso }: Luz) =>
 // es 0: no hay nada que recomendar.
 export function mejorFranja(horas: NotaHora[], luz: Luz): Franja | null {
   const deLuz = horas
-    .filter((h): h is { hora: Date; nota: number } => h.nota !== null && deDia(h.hora, luz))
+    .filter((h): h is { hora: Date; nota: number } => h.nota !== null && esHoraDeDia(h.hora, luz))
     .toSorted((a, b) => a.hora.getTime() - b.hora.getTime());
 
   let mejor: Franja | null = null;

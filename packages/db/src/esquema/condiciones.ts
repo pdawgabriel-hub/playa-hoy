@@ -28,15 +28,15 @@ export const condiciones = pgTable(
     olaOrilla: real(),
     olaPeriodo: real(),
     // Cómo llega el viento: mar, lado, tierra o calma
-    entradaViento: text(),
+    entradaViento: text().$type<"mar" | "lado" | "tierra" | "calma">(),
     // De 1 (agua quieta) a 0, y su estado: cristalina, buena o turbia
     claridad: real(),
-    estadoAgua: text(),
+    estadoAgua: text().$type<"cristalina" | "buena" | "turbia">(),
     // La temperatura del agua usada y de dónde sale: en el Mar Menor, de AEMET si la hay
     temperaturaAgua: real(),
-    fuenteTemperaturaAgua: text(),
+    fuenteTemperaturaAgua: text().$type<"open_meteo" | "aemet">(),
     // Bandera probable (una estimación: la iza el socorrista)
-    bandera: text(),
+    bandera: text().$type<"verde" | "amarilla" | "roja">(),
     // Emisión de la previsión de la que sale
     emitidaEn: timestamp(enUtc).notNull(),
   },

@@ -3,18 +3,21 @@ import type { Db } from "@playa-hoy/db";
 
 import { rutasCatalogo } from "./rutas/catalogo.ts";
 import { estado } from "./rutas/estado.ts";
+import { rutasPlayaHoy } from "./rutas/playa-hoy.ts";
 import { rutasPlayas } from "./rutas/playas.ts";
 
 // La aplicación se crea con la conexión a la base de datos y se exporta sin arrancar, para
 // poder testearla con una base de datos temporal y desplegarla en Vercel.
 // Cada ruta se declara con esquemas Zod (@hono/zod-openapi): validan la petición y la
 // respuesta y, a la vez, generan la especificación OpenAPI de /openapi.json.
-export function crearApp(db: Db) {
+// `reloj` permite fijar la hora en los tests.
+export function crearApp(db: Db, { reloj = () => new Date() } = {}) {
   const app = new OpenAPIHono();
 
   app.route("/", estado);
   app.route("/", rutasCatalogo(db));
   app.route("/", rutasPlayas(db));
+  app.route("/", rutasPlayaHoy(db, { reloj }));
 
   app.get("/", (c) =>
     c.json({ nombre: "playa·hoy API", estado: "ok", especificacion: "/openapi.json" }),
