@@ -261,3 +261,17 @@ El job `calcular:notas` (`jobs/src/notas.ts`) prepara la serie de cada playa y g
 - Corre tras cada ingesta de Open-Meteo, en el mismo paso del workflow. Con 83 playas tarda unos 15 segundos.
 
 Con la previsión del 29 de octubre de 2026, la nota media de familia es 74, la de snorkel 75, la de tomar el sol 43 (otoño, con nubes) y la de surf 3: sin mar de fondo, casi ninguna hora tiene ola surfeable.
+
+## Escenarios de referencia
+
+`packages/core/src/escenarios.test.ts` prueba el motor con la geografía real de 8 playas (`pruebas/playas-referencia.json`: Galúa, El Galán, Los Narejos, Bolnuevo, Levante de Águilas, La Azohía, Calblanque y El Portús) y cinco situaciones típicas de la costa, sostenidas durante las 96 horas previas. Comprueban lo que se sabe de la costa, no cifras exactas:
+
+| Escenario                                  | Lo que debe salir                                                                                                                                                                                                                                |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Levante fuerte (1,8 m del este, 30 km/h)   | La Manga hacia el Mediterráneo, 0 para familias y bandera amarilla; al sur (Mazarrón, Águilas, Cartagena), resguardadas. En la orilla del Mar Menor de La Manga el levante es de tierra y arrastra los hinchables. Nadie toma el sol con 30 km/h |
+| Mar de fondo de levante con poniente suave | Día de surf en La Manga (90 o más): la ola entra y el poniente, de tierra, la peina. En las demás, abrigadas o de laguna, no hay ola                                                                                                             |
+| Poniente (30 km/h, 33 °C)                  | En La Manga hacia el Mediterráneo es de tierra: bandera amarilla por viento y 0 para familias. En el Mar Menor llega desde la laguna y levanta picado en la orilla de La Manga                                                                   |
+| Calma de verano                            | Familia 95 o más y sol 100 en todas; surf 0; para snorkel, mejor las calas de fondo mixto que la arena fina                                                                                                                                      |
+| Brisa de tarde (sudeste, 18 km/h)          | Familia algo más baja que en calma, sin bandera roja ni vetos; sin surf (mar de viento de 4 s)                                                                                                                                                   |
+
+Si un cambio en el motor rompe uno de estos escenarios, o el cambio es un error o el escenario tiene que revisarse con un motivo.
