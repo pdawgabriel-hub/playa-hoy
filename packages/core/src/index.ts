@@ -6,3 +6,4 @@ export * from "./nombres.ts";
 export * from "./orientacion.ts";
 export * from "./slug.ts";
 export * from "./suelo.ts";
+export * from "./viento.ts";
