@@ -1,4 +1,5 @@
 import type { Db } from "@playa-hoy/db";
+import { Scalar } from "@scalar/hono-api-reference";
 
 import { CACHE_CATALOGO, SIN_CACHE } from "./cache.ts";
 import { crearRouter, cuerpoError } from "./errores.ts";
@@ -15,6 +16,11 @@ import { rutasPlayas } from "./rutas/playas.ts";
 // poder testearla con una base de datos temporal y desplegarla en Vercel.
 // Cada ruta se declara con esquemas Zod (@hono/zod-openapi): validan la petición y la
 // respuesta y, a la vez, generan la especificación OpenAPI de /openapi.json.
+// Interfaz de Scalar fijada a una versión: por defecto carga la última del CDN, y la
+// documentación podría cambiar o romperse sola. Es la que salió con
+// @scalar/hono-api-reference 0.12.13 (16 de octubre de 2026).
+export const CDN_SCALAR = "https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.75.0";
+
 // `reloj` permite fijar la hora en los tests. Sin `limitador`, no se limitan las peticiones.
 export function crearApp(
   db: Db,
@@ -29,11 +35,13 @@ export function crearApp(
     if (!c.res.headers.has("Cache-Control")) c.res.headers.set("Cache-Control", SIN_CACHE);
   });
   if (limitador) app.use("/v1/*", limitarPeticiones(limitador, { reloj }));
-  // La especificación solo cambia con cada despliegue
-  app.use("/openapi.json", async (c, next) => {
-    await next();
-    c.res.headers.set("Cache-Control", CACHE_CATALOGO);
-  });
+  // La especificación y la documentación solo cambian con cada despliegue
+  for (const ruta of ["/openapi.json", "/docs"]) {
+    app.use(ruta, async (c, next) => {
+      await next();
+      c.res.headers.set("Cache-Control", CACHE_CATALOGO);
+    });
+  }
 
   app.route("/", estado);
   app.route("/", rutasCatalogo(db));
@@ -44,8 +52,16 @@ export function crearApp(
   app.route("/", rutasRanking(db, { reloj }));
 
   app.get("/", (c) =>
-    c.json({ nombre: "playa·hoy API", estado: "ok", especificacion: "/openapi.json" }),
+    c.json({
+      nombre: "playa·hoy API",
+      estado: "ok",
+      documentacion: "/docs",
+      especificacion: "/openapi.json",
+    }),
   );
+
+  // Documentación interactiva: se ven y se prueban los endpoints desde el navegador
+  app.get("/docs", Scalar({ url: "/openapi.json", pageTitle: "playa·hoy API", cdn: CDN_SCALAR }));
 
   app.notFound((c) =>
     c.json(cuerpoError("ruta_no_existe", `No existe la ruta ${c.req.path}`), 404),

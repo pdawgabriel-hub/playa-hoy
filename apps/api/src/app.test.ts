@@ -2,7 +2,7 @@ import { crearDb } from "@playa-hoy/db";
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 
-import { crearApp } from "./app.ts";
+import { CDN_SCALAR, crearApp } from "./app.ts";
 
 // Estas rutas no consultan la base de datos: la conexión es perezosa y nunca se abre
 const app = crearApp(crearDb("postgresql://sin-conexion@localhost:1/ninguna").db);
@@ -25,6 +25,7 @@ describe("GET /", () => {
     expect(await res.json()).toEqual({
       nombre: "playa·hoy API",
       estado: "ok",
+      documentacion: "/docs",
       especificacion: "/openapi.json",
     });
   });
@@ -54,6 +55,32 @@ describe("GET /openapi.json", () => {
     const { paths } = await especificacion();
 
     expect(Object.keys(paths)).not.toContain("/");
+  });
+});
+
+describe("GET /docs", () => {
+  it("sirve la documentación interactiva de Scalar, que lee la especificación", async () => {
+    const res = await app.request("/docs");
+    const html = await res.text();
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get("Content-Type")).toMatch(/text\/html/);
+    expect(html).toContain("<title>playa·hoy API</title>");
+    expect(html).toContain("/openapi.json");
+  });
+
+  it("carga la interfaz de Scalar en una versión fija, no la última del CDN", async () => {
+    const html = await (await app.request("/docs")).text();
+
+    expect(html).toContain(`src="${CDN_SCALAR}"`);
+    expect(CDN_SCALAR).toMatch(/@\d+\.\d+\.\d+$/);
+  });
+
+  it("se cachea como el catálogo y no aparece en la especificación", async () => {
+    const res = await app.request("/docs");
+
+    expect(res.headers.get("Cache-Control")).toMatch(/^public, max-age=3600/);
+    expect(Object.keys((await especificacion()).paths)).not.toContain("/docs");
   });
 });
 
