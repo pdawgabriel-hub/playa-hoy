@@ -1,7 +1,6 @@
 import { type HoraPrevision, evaluarPlaya } from "@playa-hoy/core";
-import { type Db, esquema } from "@playa-hoy/db";
+import { type Db, esquema, eq, gte, isNotNull, sql } from "@playa-hoy/db";
 import { enHoraEspana } from "@playa-hoy/shared";
-import { eq, gte, isNotNull, sql } from "drizzle-orm";
 
 import { truncarHora } from "./previsiones.ts";
 

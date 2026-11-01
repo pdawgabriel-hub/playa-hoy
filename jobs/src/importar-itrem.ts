@@ -1,9 +1,8 @@
 // Añade a las playas los datos de ITREM (accesible, nudista, suelo, ocupación) según la
 // tabla de correspondencias revisada: pnpm --filter @playa-hoy/jobs importar:itrem
 // Antes hay que importar las playas del censo.
-import { crearDb, esquema } from "@playa-hoy/db";
+import { crearDb, esquema, isNotNull } from "@playa-hoy/db";
 import { esquemaBaseDatos, leerEntorno } from "@playa-hoy/shared";
-import { isNotNull } from "drizzle-orm";
 
 import correspondencias from "../datos/correspondencias-itrem.json" with { type: "json" };
 import itrem from "../datos/itrem-playas.json" with { type: "json" };

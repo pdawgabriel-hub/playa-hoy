@@ -1,6 +1,4 @@
-import { type Db, esquema } from "@playa-hoy/db";
-import { and, asc, eq, exists, gt, lt, sql } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { type Db, esquema, and, asc, eq, exists, gt, lt, sql, alias } from "@playa-hoy/db";
 
 import type { ResultadoTarea } from "./ingestas.ts";
 import { type PrevisionTiempo, consultarForecast } from "./open-meteo/forecast.ts";

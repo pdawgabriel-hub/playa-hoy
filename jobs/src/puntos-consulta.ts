@@ -1,5 +1,4 @@
-import { type Db, esquema } from "@playa-hoy/db";
-import { and, eq, inArray, notExists, notInArray } from "drizzle-orm";
+import { type Db, esquema, and, eq, inArray, notExists, notInArray } from "@playa-hoy/db";
 
 import type { Coordenadas } from "./open-meteo/comun.ts";
 

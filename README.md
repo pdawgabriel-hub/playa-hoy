@@ -150,6 +150,8 @@ Los tests de base de datos crean su propia base de datos temporal en el PostgreS
 
 Los tests no salen nunca a internet. Las APIs externas (Open-Meteo, AEMET y Overpass) se simulan con MSW y responden con respuestas reales guardadas en `jobs/src/**/pruebas/`, y cualquier petición sin simular hace fallar el test (`jobs/src/pruebas/red.ts`). Así se prueban las ingestas completas, incluidos los fallos de cada fuente, sin red ni claves.
 
+Un test de extremo a extremo (`jobs/src/extremo-a-extremo.test.ts`) recorre la cadena entera: importa el catálogo real de `jobs/datos`, ingiere la previsión simulada, calcula las notas y consulta la API como lo haría la web. Comprueba que lo que escriben los jobs es lo que la API sabe leer.
+
 El CI ejecuta `pnpm lint`, `pnpm typecheck` y `pnpm test` en cada push, con su propio PostgreSQL + PostGIS, y comprueba que no falte ninguna migración por generar.
 
 ## Ingesta programada

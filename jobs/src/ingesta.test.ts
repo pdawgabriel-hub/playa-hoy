@@ -1,7 +1,6 @@
 // Las dos ingestas de principio a fin: base de datos real y APIs simuladas con MSW.
-import { esquema } from "@playa-hoy/db";
+import { esquema, asc, eq } from "@playa-hoy/db";
 import { crearBaseDatosPrueba } from "@playa-hoy/db/pruebas";
-import { asc, eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { registrarIngesta } from "./ingestas.ts";

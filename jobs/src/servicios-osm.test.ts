@@ -1,6 +1,5 @@
-import { esquema } from "@playa-hoy/db";
+import { esquema, eq } from "@playa-hoy/db";
 import { crearBaseDatosPrueba } from "@playa-hoy/db/pruebas";
-import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import type { ElementoOsm } from "./osm/overpass.ts";

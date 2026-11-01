@@ -1,6 +1,15 @@
 import { crearSlug } from "@playa-hoy/core";
-import { type Db, esquema } from "@playa-hoy/db";
-import { and, eq, inArray, isNotNull, notExists, notInArray, sql } from "drizzle-orm";
+import {
+  type Db,
+  esquema,
+  and,
+  eq,
+  inArray,
+  isNotNull,
+  notExists,
+  notInArray,
+  sql,
+} from "@playa-hoy/db";
 import { z } from "zod";
 
 const esquemaFichero = z.object({

@@ -27,10 +27,10 @@
     "@playa-hoy/core": "workspace:*",
     "@playa-hoy/db": "workspace:*",
     "@playa-hoy/shared": "workspace:*",
-    "drizzle-orm": "0.45.4",
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@playa-hoy/api": "workspace:*",
     "@types/node": "24.19.2",
     "msw": "2.15.0"
   }

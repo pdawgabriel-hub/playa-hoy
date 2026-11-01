@@ -1,5 +1,4 @@
-import { type Db, esquema } from "@playa-hoy/db";
-import { asc, eq, inArray, isNotNull, sql } from "drizzle-orm";
+import { type Db, esquema, asc, eq, inArray, isNotNull, sql } from "@playa-hoy/db";
 import { z } from "zod";
 
 import { type PrediccionPlayaAemet, consultarPlayasAemet } from "./aemet/playas.ts";

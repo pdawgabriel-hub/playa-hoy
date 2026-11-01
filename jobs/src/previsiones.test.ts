@@ -1,6 +1,5 @@
-import { esquema } from "@playa-hoy/db";
+import { esquema, asc } from "@playa-hoy/db";
 import { crearBaseDatosPrueba } from "@playa-hoy/db/pruebas";
-import { asc } from "drizzle-orm";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import type { PrevisionTiempo } from "./open-meteo/forecast.ts";

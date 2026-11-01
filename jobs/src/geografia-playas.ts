@@ -1,6 +1,5 @@
 import { abanicoDeRayos, calcularAbrigo, calcularOrientacion } from "@playa-hoy/core";
-import { type Db, esquema } from "@playa-hoy/db";
-import { eq, sql } from "drizzle-orm";
+import { type Db, esquema, eq, sql } from "@playa-hoy/db";
 import { z } from "zod";
 
 import type { ElementoOsm } from "./osm/overpass.ts";

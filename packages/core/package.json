@@ -5,7 +5,8 @@
   "description": "Lógica de dominio pura: orientación, oleaje en la orilla y notas por plan",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./pruebas/playas-referencia.json": "./src/pruebas/playas-referencia.json"
   },
   "scripts": {
     "typecheck": "tsc -p ."

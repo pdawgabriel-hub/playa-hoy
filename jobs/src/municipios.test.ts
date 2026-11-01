@@ -1,5 +1,4 @@
-import { esquema } from "@playa-hoy/db";
-import { eq } from "drizzle-orm";
+import { esquema, eq } from "@playa-hoy/db";
 import { crearBaseDatosPrueba } from "@playa-hoy/db/pruebas";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 

@@ -1,6 +1,5 @@
 import { crearSlug, nombreDesdeCenso } from "@playa-hoy/core";
-import { type Db, esquema } from "@playa-hoy/db";
-import { sql } from "drizzle-orm";
+import { type Db, esquema, sql } from "@playa-hoy/db";
 import { z } from "zod";
 
 const esquemaCenso = z.object({

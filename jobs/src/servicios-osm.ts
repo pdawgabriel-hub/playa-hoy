@@ -1,5 +1,4 @@
-import type { Db } from "@playa-hoy/db";
-import { sql } from "drizzle-orm";
+import { type Db, sql } from "@playa-hoy/db";
 
 import type { ElementoOsm } from "./osm/overpass.ts";
 import {
